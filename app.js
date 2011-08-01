@@ -37,7 +37,7 @@ var md5 = function(inString){
 
 
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/db');
+mongoose.connect(process.env.MONGOHQ_URL || 'mongodb://localhost/db');
 
 var Schema = mongoose.Schema, ObjectId = Schema.ObjectId;
 var UserSchema = new Schema({
