@@ -48,19 +48,40 @@ var UserSchema = new Schema({
   ],
   vendor_id: String
 });
-
+UserSchema.static('authenticate', function(email, password, next){
+  this.find({email:email,password_md5:md5(password)}, next)
+});
 //UserSchema.pre('authenticate', function (next, email,){
 //});
-
 var User = mongoose.model('User',UserSchema);
+
+
+var getUser = function(req, res, next){
+  User.find({},function(err, data){
+    req.data = data;
+    next();
+  });
+}
 
 // Routes
 
 app.get('/', function(req, res){
   res.render('index', {
-    title: 'Express'
+    title: 'KickbackCard.com'
   });
 });
+
+app.get('/login', function(req, res, next){
+  res.render('_login', {
+    layout: 'layout_partial.jade'
+  })
+})
+
+app.get('/test', getUser, function(req, res, next){
+  res.send({
+    all: req.data
+  });
+})
 
 app.listen(process.env.PORT || 3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);

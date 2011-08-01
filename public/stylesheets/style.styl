@@ -1,5 +1,17 @@
 @import "reset.css"
 
+font-size = 14px
+font = font-size "Lucida Grande", Helvetica, Arial, sans-serif
+
+very-dark = #333
+dark = #000
+very-light = #eee
+light = #BBF
+very-dark-alt = #669
+semi-dark = #999
+
+attention = #00B7FF
+
 border-radius(n)
   -webkit-border-radius n
   -moz-border-radius n
@@ -7,21 +19,22 @@ border-radius(n)
 opacity(n)
   opacity n
 absolute()
+  display none
   position absolute
   top 0
   left 0
 
 body
-  font 14px "Lucida Grande", Helvetica, Arial, sans-serif
-  background #333
-  color #eee
+  font font
+  background very-dark
+  color very-light
   a
-    color #00B7FF
+    color light
   .header
     background #FFF
-    color #333
+    color very-dark
     a
-      color #333
+      color very-dark-alt
     .container
       padding 15px 0
       overflow hidden
@@ -49,7 +62,7 @@ body
     font-size .8em
 
   .modal
-    background #000
+    background dark
     opacity(.7)
     height 100%
     width 100%
@@ -57,7 +70,33 @@ body
 
   .window
     background #fff
+    color very-dark
     border-radius(15px)
-    height 200px
+    height 150px
     width 500px
+    padding 30px
     absolute()
+    h2
+      font-size 1.2em
+    fieldset
+      .fields
+        margin 15px 0
+        overflow hidden
+        label
+          width 150px
+          display block
+          float left
+        .input
+          width 300px
+          display block
+          float right
+          border 1px solid semi-dark
+          border-radius(4px)
+          padding 4px 8px
+          margin 0
+      .submit input
+        float right
+        background very-light
+        color dark
+        border 1px solid semi-dark
+        border-radius(4px)

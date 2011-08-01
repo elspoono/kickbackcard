@@ -5,14 +5,14 @@ body {
   color: #eee;
 }
 body a {
-  color: #00b7ff;
+  color: #bbf;
 }
 body .header {
   background: #fff;
   color: #333;
 }
 body .header a {
-  color: #333;
+  color: #669;
 }
 body .header .container {
   padding: 15px 0;
@@ -51,18 +51,54 @@ body .modal {
   opacity: 0.7;
   height: 100%;
   width: 100%;
+  display: none;
   position: absolute;
   top: 0;
   left: 0;
 }
 body .window {
   background: #fff;
+  color: #333;
   -webkit-border-radius: 15px;
   -moz-border-radius: 15px;
   border-radius: 15px;
-  height: 200px;
+  height: 150px;
   width: 500px;
+  padding: 30px;
+  display: none;
   position: absolute;
   top: 0;
   left: 0;
+}
+body .window h2 {
+  font-size: 1.2em;
+}
+body .window fieldset .fields {
+  margin: 15px 0;
+  overflow: hidden;
+}
+body .window fieldset .fields label {
+  width: 150px;
+  display: block;
+  float: left;
+}
+body .window fieldset .fields .input {
+  width: 300px;
+  display: block;
+  float: right;
+  border: 1px solid #999;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  padding: 4px 8px;
+  margin: 0;
+}
+body .window fieldset .submit input {
+  float: right;
+  background: #eee;
+  color: #000;
+  border: 1px solid #999;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
 }
