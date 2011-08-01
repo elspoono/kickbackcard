@@ -19,7 +19,7 @@ body .header .container {
   overflow: hidden;
 }
 body .header .container .logo {
-  background: url("/images/KBLogo 114x114.png") no-repeat left top;
+  background: url("/images/KBlogo114x114.png") no-repeat left top;
   height: 114px;
   width: 114px;
   float: left;
@@ -45,4 +45,24 @@ body .container {
 body .footer {
   text-align: center;
   font-size: 0.8em;
+}
+body .modal {
+  background: #000;
+  opacity: 0.7;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+body .window {
+  background: #fff;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  border-radius: 15px;
+  height: 200px;
+  width: 500px;
+  position: absolute;
+  top: 0;
+  left: 0;
 }

@@ -15,7 +15,7 @@ app.configure(function(){
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.cookieParser());
-  app.use(express.session({ secret: 'your secret here' }));
+  app.use(express.session({ secret: 'We are never invisible enough.' }));
   app.use(require('stylus').middleware({ src: __dirname + '/public' }));
   app.use(app.router);
   app.use(express.static(__dirname + '/public'));
@@ -28,6 +28,31 @@ app.configure('development', function(){
 app.configure('production', function(){
   app.use(express.errorHandler()); 
 });
+
+
+
+var md5 = function(inString){
+  return inString;
+}
+
+
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/db');
+
+var Schema = mongoose.Schema, ObjectId = Schema.ObjectId;
+var UserSchema = new Schema({
+  email: { type: String, validate: /\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/ },
+  password_md5: String,
+  roles: [
+    {type: String, enum:['admin', 'vendor', 'customer', 'visitor'], default: 'visitor'}
+  ],
+  vendor_id: String
+});
+
+//UserSchema.pre('authenticate', function (next, email,){
+//});
+
+var User = mongoose.model('User',UserSchema);
 
 // Routes
 

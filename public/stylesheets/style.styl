@@ -1,5 +1,16 @@
 @import "reset.css"
 
+border-radius(n)
+  -webkit-border-radius n
+  -moz-border-radius n
+  border-radius n
+opacity(n)
+  opacity n
+absolute()
+  position absolute
+  top 0
+  left 0
+
 body
   font 14px "Lucida Grande", Helvetica, Arial, sans-serif
   background #333
@@ -36,3 +47,17 @@ body
   .footer
     text-align center
     font-size .8em
+
+  .modal
+    background #000
+    opacity(.7)
+    height 100%
+    width 100%
+    absolute()
+
+  .window
+    background #fff
+    border-radius(15px)
+    height 200px
+    width 500px
+    absolute()
