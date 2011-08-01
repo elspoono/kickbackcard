@@ -1,7 +1,48 @@
+@import "reset.css";
 body {
-  padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background: #333;
+  color: #eee;
 }
-a {
+body a {
   color: #00b7ff;
+}
+body .header {
+  background: #fff;
+  color: #333;
+}
+body .header a {
+  color: #333;
+}
+body .header .container {
+  padding: 15px 0;
+  overflow: hidden;
+}
+body .header .container .logo {
+  background: url("/images/KBLogo 114x114.png") no-repeat left top;
+  height: 114px;
+  width: 114px;
+  float: left;
+}
+body .header .container .login {
+  float: right;
+}
+body .body h1 {
+  font-size: 2em;
+  line-height: 2.5em;
+}
+body .body i {
+  font-style: italic;
+}
+body .body p {
+  margin: 15px 0;
+}
+body .container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 30px 0;
+}
+body .footer {
+  text-align: center;
+  font-size: 0.8em;
 }
