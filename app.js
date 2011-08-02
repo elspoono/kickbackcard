@@ -15,20 +15,23 @@ app.configure(function(){
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.cookieParser());
-  app.use(express.session({ secret: 'We are never invisible enough.' }));
+  app.use(express.session({ secret: 'fkd32aFD5Ssnfj$5#@$0k;' }));
   app.use(require('stylus').middleware({ src: __dirname + '/public' }));
   app.use(app.router);
   app.use(express.static(__dirname + '/public'));
 });
 
+var error = function(err){
+  console.log(err);
+}
 app.configure('development', function(){
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
 });
 
 app.configure('production', function(){
   app.use(express.errorHandler()); 
+  error = function(){};
 });
-
 
 
 var md5 = function(inString){
@@ -40,20 +43,35 @@ var mongoose = require('mongoose');
 mongoose.connect(process.env.MONGOHQ_URL || 'mongodb://localhost/db');
 
 var Schema = mongoose.Schema, ObjectId = Schema.ObjectId;
+var RoleSchema = new Schema({
+  key: String
+})
 var UserSchema = new Schema({
-  email: { type: String, validate: /\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/ },
+  email: { type: String, validate: /\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i },
   password_md5: String,
-  roles: [
-    {type: String, enum:['admin', 'vendor', 'customer', 'visitor'], default: 'visitor'}
-  ],
+  roles: [RoleSchema],
   vendor_id: String
 });
 UserSchema.static('authenticate', function(email, password, next){
   this.find({email:email,password_md5:md5(password)}, next)
 });
-//UserSchema.pre('authenticate', function (next, email,){
-//});
 var User = mongoose.model('User',UserSchema);
+
+User.count({},function(err,data){
+  if(err)
+    error(err)
+  else if (data == 0){
+    var user = new User();
+    user.email = 't@t.com';
+    user.password_md5 = md5('123456');
+    user.roles = [{key:'admin'}];
+    user.save(function(err,data){
+      if(err)
+        error(err)
+    })
+  }
+})
+
 
 
 var getUser = function(req, res, next){
