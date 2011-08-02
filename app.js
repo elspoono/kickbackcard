@@ -115,6 +115,32 @@ var getUser = function(req, res, next){
   });
 }
 
+var validateLogin = function(req, res, next){
+  var params = req.body
+  console.log(params);
+  User.authenticate(params.email,params.password,function(err, data){
+    if(err)
+      console.log(err)
+    else{
+      /* I think we'll base most decisions off of this, keep it safe */
+      req.session.role = data.roles[0].key
+      req.session.email = data.email
+    }
+    req.data = data;
+    req.err = err;
+    next()
+  })
+}
+
+var securedArea = function(req, res, next){
+  console.log(req.session)
+  if(req.session.role == 'admin')
+    next()
+  else
+    res.send({})
+}
+
+
 // Routes
 
 app.get('/', function(req, res){
@@ -129,24 +155,11 @@ app.get('/login', function(req, res, next){
   })
 })
 
-app.get('/test', getUser, function(req, res, next){
+app.get('/admin', securedArea, getUser, function(req, res, next){
   res.send({
     all: req.data
   });
 })
-
-var validateLogin = function(req, res, next){
-  var params = req.body
-  console.log(params);
-  User.authenticate(params.email,params.password,function(err, data){
-    if(err)
-      console.log(err)
-    req.data = data;
-    req.err = err;
-    next()
-  })
-}
-
 app.post('/login', validateLogin, function(req, res, next){
   res.send({
     data: req.data,
