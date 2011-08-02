@@ -40,9 +40,22 @@ $(function(){
           var email = form.find('.email').val();
           var password = form.find('.password').val();
           loadLoading({},function(err,win,modal){
-            setTimeout(function(){
-              modal.click();
-            },3000)
+            $.ajax({
+              url: '/login',
+              type: 'POST',
+              data: {
+                email: email,
+                password: password
+              },
+              success: function(data){
+                console.log(data)
+                modal.click();
+              },
+              error: function(jqXHR,textStatus,err){
+                console.log(jqXHR,textStatus,err)
+                modal.click();
+              }
+            })
           })
           return false;
         })

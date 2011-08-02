@@ -34,8 +34,28 @@ app.configure('production', function(){
 });
 
 
-var md5 = function(inString){
-  return inString;
+
+/*  
+  To hash a password:
+var bcrypt = require('bcrypt');
+var salt = bcrypt.gen_salt_sync(10);
+var hash = bcrypt.encrypt_sync("B4c0/\/", salt);
+
+To check a password:
+var bcrypt = require('bcrypt');
+var salt = bcrypt.gen_salt_sync(10);
+var hash = bcrypt.encrypt_sync("B4c0/\/", salt); bcrypt.compare_sync("B4c0/\/", hash); // true
+bcrypt.compare_sync("not_bacon", hash); // false
+*/
+var bcrypt = require('bcrypt');
+var encrypted = function(inString){
+  var salt = bcrypt.gen_salt_sync(10);
+  var hash = bcrypt.encrypt_sync(inString, salt);
+  return hash;
+}
+var compareEncrypted= function(inString,hash){
+  console.log(inString,hash)
+  return bcrypt.compare_sync(inString, hash);
 }
 
 
@@ -48,12 +68,26 @@ var RoleSchema = new Schema({
 })
 var UserSchema = new Schema({
   email: { type: String, validate: /\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i },
-  password_md5: String,
+  password_encrypted: String,
   roles: [RoleSchema],
   vendor_id: String
 });
 UserSchema.static('authenticate', function(email, password, next){
-  this.find({email:email,password_md5:md5(password)}, next)
+  this.find({email:email}, function(err,data){
+    console.log(data)
+    if(err){
+      error(err)
+      next(err)
+    }else{
+      if(data.length>0)
+        if (compareEncrypted(password,data[0].password_encrypted))
+          next(null,data[0])
+        else
+          next('Password incorrect.')
+      else
+        next('Email not found.')
+    }
+  })
 });
 var User = mongoose.model('User',UserSchema);
 
@@ -63,7 +97,7 @@ User.count({},function(err,data){
   else if (data == 0){
     var user = new User();
     user.email = 't@t.com';
-    user.password_md5 = md5('123456');
+    user.password_encrypted = encrypted('123456');
     user.roles = [{key:'admin'}];
     user.save(function(err,data){
       if(err)
@@ -99,6 +133,25 @@ app.get('/test', getUser, function(req, res, next){
   res.send({
     all: req.data
   });
+})
+
+var validateLogin = function(req, res, next){
+  var params = req.body
+  console.log(params);
+  User.authenticate(params.email,params.password,function(err, data){
+    if(err)
+      console.log(err)
+    req.data = data;
+    req.err = err;
+    next()
+  })
+}
+
+app.post('/login', validateLogin, function(req, res, next){
+  res.send({
+    data: req.data,
+    err: req.err
+  })
 })
 
 app.listen(process.env.PORT || 3000);
