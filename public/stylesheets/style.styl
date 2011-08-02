@@ -43,8 +43,12 @@ body
         height 114px
         width 114px
         float left
-      .login
+      .navigation
         float right
+        overflow hidden
+        li
+          float left
+          margin 0 0 0 15px
   .body
     h1
       font-size 2em
@@ -94,9 +98,22 @@ body
           border-radius(4px)
           padding 4px 8px
           margin 0
-      .submit input
-        float right
+    .buttons
+      overflow hidden
+      position absolute
+      bottom 0
+      left 0
+      width 100%
+      .submit,.cancel
+        font-size 1em
+        margin 30px
         background very-light
         color dark
         border 1px solid semi-dark
         border-radius(4px)
+      .submit
+        float right
+        font-weight bold
+        cursor pointer
+      .cancel
+        float left

@@ -24,8 +24,13 @@ body .header .container .logo {
   width: 114px;
   float: left;
 }
-body .header .container .login {
+body .header .container .navigation {
   float: right;
+  overflow: hidden;
+}
+body .header .container .navigation li {
+  float: left;
+  margin: 0 0 0 15px;
 }
 body .body h1 {
   font-size: 2em;
@@ -93,12 +98,29 @@ body .window fieldset .fields .input {
   padding: 4px 8px;
   margin: 0;
 }
-body .window fieldset .submit input {
-  float: right;
+body .window .buttons {
+  overflow: hidden;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+body .window .buttons .submit,
+body .window .buttons .cancel {
+  font-size: 1em;
+  margin: 30px;
   background: #eee;
   color: #000;
   border: 1px solid #999;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
+}
+body .window .buttons .submit {
+  float: right;
+  font-weight: bold;
+  cursor: pointer;
+}
+body .window .buttons .cancel {
+  float: left;
 }

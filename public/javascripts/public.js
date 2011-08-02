@@ -31,15 +31,18 @@ $(function(){
     }
     loadModal(modifiedOptions, next);
   }
-  $('a').click(function(){
+  $('.navigation .login').click(function(){
     loadModal({},function(err,win,modal){
-      $.get('/login',function(data){
+      $.get('/_login',function(data){
         win.html(data);
         var form = win.find('form')
+        var cancel = win.find('.cancel')
+        cancel.click(function(){modal.click()})
+        form.find('.email').focus()
         form.submit(function(){
           var email = form.find('.email').val();
           var password = form.find('.password').val();
-          loadLoading({},function(err,win,modal){
+          loadLoading({},function(err,win,loadingModal){
             $.ajax({
               url: '/login',
               type: 'POST',
@@ -48,12 +51,16 @@ $(function(){
                 password: password
               },
               success: function(data){
-                console.log(data)
-                modal.click();
+                loadingModal.click();
+                if(data.err)
+                  alert(data.err)
+                else{
+                  loadAdmin()
+                  modal.click()
+                }
               },
               error: function(jqXHR,textStatus,err){
                 console.log(jqXHR,textStatus,err)
-                modal.click();
               }
             })
           })
@@ -63,4 +70,12 @@ $(function(){
     })
     return false
   })
+  var loadAdmin = function(){
+    $.get('/_navigation_admin',function(data){
+      $('.navigation').html(data)
+    })
+    $.get('/_body_admin',function(data){
+      $('.body').html(data)
+    })
+  }
 })
