@@ -1,0 +1,20 @@
+.header
+  .container
+    .logo
+.body
+  .container
+    .window
+      form(method='POST')
+        h1 Login
+          - if (typeof(err) != 'undefined')
+            .error= err
+        fieldset
+          .fields
+            label email address
+            input.input.email(name='email',placeholder='(e.g. yourname@domain.com)')
+          .fields
+            label password
+            input.input.password(name='password',type='password',placeholder='(at least 6 characters, at least 1 uppercase)')
+        .buttons
+          input.submit(type='submit',value='Login')
+          input.cancel(type='button',value='Cancel')

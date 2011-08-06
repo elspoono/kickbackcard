@@ -21,9 +21,12 @@ app.configure(function(){
   app.use(express.static(__dirname + '/public'));
 });
 
+
 var error = function(err){
   console.log(err);
 }
+
+
 app.configure('development', function(){
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
 });
@@ -35,18 +38,18 @@ app.configure('production', function(){
 
 
 
-/*  
-  To hash a password:
-var bcrypt = require('bcrypt');
-var salt = bcrypt.gen_salt_sync(10);
-var hash = bcrypt.encrypt_sync("B4c0/\/", salt);
 
-To check a password:
-var bcrypt = require('bcrypt');
-var salt = bcrypt.gen_salt_sync(10);
-var hash = bcrypt.encrypt_sync("B4c0/\/", salt); bcrypt.compare_sync("B4c0/\/", hash); // true
-bcrypt.compare_sync("not_bacon", hash); // false
-*/
+
+
+
+/**********************************
+ * 
+ * Generic Libraries Setup
+ * 
+ * bcrypt and mongoose
+ * 
+ * 
+ **********************************/
 var bcrypt = require('bcrypt');
 var encrypted = function(inString){
   var salt = bcrypt.gen_salt_sync(10);
@@ -54,15 +57,28 @@ var encrypted = function(inString){
   return hash;
 }
 var compareEncrypted= function(inString,hash){
-  console.log(inString,hash)
   return bcrypt.compare_sync(inString, hash);
 }
-
-
 var mongoose = require('mongoose');
 mongoose.connect(process.env.MONGOHQ_URL || 'mongodb://localhost/db');
-
 var Schema = mongoose.Schema, ObjectId = Schema.ObjectId;
+
+
+
+
+
+
+
+
+/**********************************
+ * 
+ * User Schema
+ * 
+ * Role / User / Auth handling / Default Data
+ * 
+ * 
+ **********************************/
+/* Role / User mongoose Schemas */
 var RoleSchema = new Schema({
   key: String
 })
@@ -72,9 +88,9 @@ var UserSchema = new Schema({
   roles: [RoleSchema],
   vendor_id: String
 });
+/* Auth Handling */
 UserSchema.static('authenticate', function(email, password, next){
   this.find({email:email}, function(err,data){
-    console.log(data)
     if(err){
       error(err)
       next(err)
@@ -89,8 +105,8 @@ UserSchema.static('authenticate', function(email, password, next){
     }
   })
 });
+/* Default Data */
 var User = mongoose.model('User',UserSchema);
-
 User.count({},function(err,data){
   if(err)
     error(err)
@@ -108,20 +124,47 @@ User.count({},function(err,data){
 
 
 
+
+
+/**********************************
+ * 
+ * Route Middleware
+ * 
+ * Get User Data, login validation and security
+ * 
+ * 
+ **********************************/
+/* Returns all users for now */
 var getUser = function(req, res, next){
   User.find({},function(err, data){
     req.data = data;
     next();
   });
 }
-
+var checkEmail = function(req, res, next){
+  var params = req.body
+  req.email = params.email
+  User.count({email:params.email},function(err, data){
+    if(err)
+      error(err)
+    req.err = err
+    req.data = data
+    next()
+  })
+}
+/* Ensures a valid login, and sets session variables */
 var validateLogin = function(req, res, next){
   var params = req.body
   User.authenticate(params.email,params.password,function(err, data){
     if(err)
       error(err)
     else{
-      /* I think we'll base most decisions off of this, keep it safe */
+      
+      /*
+       * TODO : move session storage out of memory
+       */
+
+      /* I think we'll base most decisions off of this session.role */
       req.session.role = data.roles[0].key
       req.session.email = data.email
     }
@@ -130,39 +173,149 @@ var validateLogin = function(req, res, next){
     next()
   })
 }
-
+/* Secures an area based on the above session variables */
 var securedArea = function(req, res, next){
   if(req.session.role == 'admin')
     next()
-  else
-    res.send({})
+  else{
+    req.session.previousPath = req.route.path;
+    res.redirect('/login') 
+  }
 }
 
 
-// Routes
 
+
+
+
+/**********************************
+ * 
+ * User schema routes
+ * 
+ * checkEmail
+ * 
+ * 
+ **********************************/
+app.post('/checkEmail', checkEmail, function(req, res, next){
+  res.send({
+    err: req.err,
+    data: req.data,
+    email: req.email
+  })
+})
+
+
+
+/**********************************
+ * 
+ * Static Pages
+ * 
+ * Home page.
+ * 
+ * 
+ **********************************/
 app.get('/', function(req, res){
-  res.render('index', {
-    title: 'KickbackCard.com'
-  });
+  if(req.session.role == 'admin')
+    res.redirect('/admin')
+  else
+    res.render('index', {
+      title: 'KickbackCard.com'
+    });
 });
 
+
+
+
+
+/**********************************
+ * 
+ * Login
+ * 
+ * login get and post and error passing
+ * 
+ * 
+ **********************************/
+app.get('/login', function(req, res){
+  res.render('login', {
+    title: 'KickbackCard.com: Login'
+  })
+})
+app.post('/login', validateLogin, function(req, res, next){
+  if(req.err)
+    res.render('login', {
+      title: 'KickbackCard.com: Login: Error',
+      err: req.err
+    })
+  else{
+    if(typeof(req.session.previousPath)!='undefined'){
+      var myPreviousPath = req.session.previousPath
+      res.redirect(myPreviousPath)
+    }else
+      res.redirect('/admin')
+  }
+})
+
+
+
+
+
+/**********************************
+ * 
+ * Admin Navigation
+ * 
+ * After logging in, and users and vendors and logout.
+ * 
+ * 
+ **********************************/
+app.get('/admin', securedArea, getUser, function(req,res, next){
+  res.render('admin', {
+    all: req.data,
+    view: 'users',
+    title: 'KickbackCard.com: Admin'
+  })
+})
+app.get('/users', securedArea, getUser, function(req,res, next){
+  res.render('admin', {
+    all: req.data,
+    view: 'users',
+    title: 'KickbackCard.com: Admin: Users'
+  })
+})
+app.get('/vendors', securedArea, getUser, function(req,res, next){
+  res.render('admin', {
+    all: req.data,
+    view: 'vendors',
+    title: 'KickbackCard.com: Admin: Vendors'
+  })
+})
+app.get('/logout', function(req, res, next){
+  req.session.destroy(function(err){
+    next()
+  })
+}, function(req, res, next){
+  res.redirect('home')
+})
+
+
+
+
+
+/**********************************
+ * 
+ * Generic Handlers
+ * 
+ * partials.
+ * 
+ * 
+ **********************************/
 app.get('/_:partial', function(req, res, next){
   res.render('_'+req.params.partial, {
     layout: 'layout_partial.jade'
   })
 })
 
-app.get('/admin', securedArea, getUser, function(req, res, next){
-  res.send({
-    all: req.data
-  });
-})
-app.post('/login', validateLogin, function(req, res, next){
-  res.send({
-    err: req.err
-  })
-})
+
+
 
 app.listen(process.env.PORT || 3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);

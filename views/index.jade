@@ -3,7 +3,7 @@
     .logo
     ul.navigation
       li
-        a.login(href="#") login
+        a.login(href="/login") login
 .body
   .container
     .content-area
@@ -17,3 +17,7 @@
     a(href="http://twitter.com/#!/KickbackCard") twitter.com/#!/KickbackCard
     |  or
     a(href="http://facebook.com/KickbackCard") facebook.com/KickbackCard
+.assets
+  iframe(name='promptPasswordDummy')
+  .login
+    !=partial('login')

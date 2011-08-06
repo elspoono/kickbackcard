@@ -9,6 +9,10 @@ very-light = #eee
 light = #BBF
 very-dark-alt = #669
 semi-dark = #999
+red = #FCC
+green = #CFC
+yellow = #FFC
+darkShift = 60
 
 attention = #00B7FF
 
@@ -43,20 +47,43 @@ body
         height 114px
         width 114px
         float left
+        cursor pointer
       .navigation
         float right
         overflow hidden
         li
           float left
           margin 0 0 0 15px
+        .users .users,.vendors .vendors
+          color #333
+          text-decoration none
   .body
     h1
-      font-size 2em
+      font-size 3em
+      line-height 2.5em
+    h2
+      font-size 3em
       line-height 2.5em
     i
       font-style italic
     p
       margin 15px 0
+    .user-row
+      input,select
+        width 300px
+        border 0
+        color light
+      input[disabled],select[disabled]
+        background none
+      overflow hidden
+      li
+        float left
+        padding-right 30px
+      margin 30px 0
+    .add-row
+      margin 60px 0
+      text-align center
+
   .container
     max-width 900px
     margin 0 auto
@@ -64,19 +91,28 @@ body
   .footer
     text-align center
     font-size .8em
-
+  .tooltip
+    border 1px solid darken(yellow,darkShift)
+    border-radius(3px)
+    height 20px
+    line-height 20px
+    padding 2px 8px
+    background yellow
+    color dark
+    font-size .7em
+    margin-top -29px
+    absolute()
   .modal
     background dark
     opacity(.7)
     height 100%
     width 100%
     absolute()
-
   .window
     background #fff
     color very-dark
     border-radius(15px)
-    height 150px
+    height 235px
     width 500px
     padding 30px
     absolute()
@@ -98,6 +134,15 @@ body
           border-radius(4px)
           padding 4px 8px
           margin 0
+        .error
+          border 1px solid darken(red,darkShift)
+          background red
+        .valid
+          border 1px solid darken(green,darkShift)
+          background green
+        .loading
+          border 1px solid darken(very-light,darkShift)
+          background very-light
     .buttons
       overflow hidden
       position absolute
@@ -117,3 +162,10 @@ body
         cursor pointer
       .cancel
         float left
+  
+  .container .window
+    display block
+    position relative
+    margin 0 auto
+  .assets
+    display none
