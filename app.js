@@ -226,11 +226,20 @@ app.post('/checkEmail', checkEmail, function(req, res, next){
     email: req.email
   })
 })
-app.post('/saveUser', securedArea, saveUser, function(req, res, next){
-  res.send({
-    err: req.err,
-    data: req.data
-  })
+app.post('/saveUser', saveUser, function(req, res, next){
+  if(req.err)
+    res.send({
+      err: req.err
+    })
+  else if (req.session.role != 'admin')
+    res.send({
+      err: 'no permissions'
+    })
+  else
+    res.render('_row_user', {
+      layout: 'layout_partial.jade',
+      user: req.data
+    })
 })
 
 

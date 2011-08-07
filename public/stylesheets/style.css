@@ -87,12 +87,16 @@ body .body .container {
   box-shadow: 0px 0px 4px #aaa;
 }
 body .body .user-row {
-  background: rgba(190,190,190,0.1);
-  -moz-box-shadow: 0px 0px 4px #aaa;
-  -webkit-box-shadow: 0px 0px 4px #aaa;
-  box-shadow: 0px 0px 4px #aaa;
+  background: rgba(255,255,255,0.6);
+  color: #000;
+  -moz-box-shadow: 0px 0px 4px #fff;
+  -webkit-box-shadow: 0px 0px 4px #fff;
+  box-shadow: 0px 0px 4px #fff;
   overflow: hidden;
   margin: 30px 0;
+}
+body .body .user-row a {
+  color: #000;
 }
 body .body .user-row li {
   width: 250px;
@@ -145,7 +149,7 @@ body .window {
   -webkit-border-radius: 15px;
   -moz-border-radius: 15px;
   border-radius: 15px;
-  height: 235px;
+  min-height: 235px;
   max-width: 500px;
   padding: 30px;
   display: none;
@@ -190,23 +194,26 @@ body .window fieldset .fields .loading {
 }
 body .window .buttons {
   overflow: hidden;
-  bottom: 0;
-  left: 0;
   width: 100%;
-  position: absolute;
 }
 body .window .buttons .submit,
 body .window .buttons .cancel {
-  font-size: 1em;
-  margin: 30px;
-  background: #fff;
-  color: #000;
+  margin: 30px 0 0 0;
+  font-size: 1.2em;
   border: 1px solid #6f6f6e;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
+  padding: 0 30px;
+}
+body .window .buttons .cancel {
+  background: #aaa;
+  color: #6f6f6e;
 }
 body .window .buttons .submit {
+  background: #6f6f6e;
+  border-color: #000;
+  color: #00b7ff;
   float: right;
   font-weight: bold;
   cursor: pointer;

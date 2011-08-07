@@ -5,7 +5,7 @@ $(function(){
    * 
    * Modal Handling Functions
    * 
-   * Basic load + loading load
+   * Basic load
    * 
    * 
    **********************************/
@@ -23,7 +23,7 @@ $(function(){
     if(settings.content)
       win.html(settings.content)
     if(settings.height)
-      win.height(settings.height)
+      win.css({'min-height':settings.height})
     if(settings.width)
       win.width(settings.width)
     $('body').append(modal,win)
@@ -47,6 +47,14 @@ $(function(){
     win.fadeIn()
     next(false,win,modal)
   }
+  /**********************************
+   * 
+   * Modal Handling Functions
+   * 
+   * Load Loading (Subclass of loadmodal)
+   * 
+   * 
+   **********************************/
   var loadLoading = function(options, next){
     options = options || {}
     var modifiedOptions = {
@@ -59,6 +67,14 @@ $(function(){
     }
     loadModal(modifiedOptions, next);
   }
+  /**********************************
+   * 
+   * Modal Handling Functions
+   * 
+   * show tooltip, can be used on any element with jquery
+   * 
+   * 
+   **********************************/
   $.fn.showTooltip = function( options ) {  
     var settings = {}
     return this.each(function() {
@@ -255,9 +271,16 @@ $(function(){
                   url: '/saveUser',
                   type: 'POST',
                   data: data,
-                  success: function(data){
+                  success: function(data,t,xhr){
                     modal.click();
-                    console.log(data)
+                    if(typeof(data)=='object'&&data.err)
+                      alert(data.err)
+                    else{
+                      var $newRow = $(data)
+                      $newRow.hide()
+                      $('.user .add-row').after($newRow)
+                      $newRow.fadeIn()
+                    }
                   },
                   error: function(){
                     modal.click();
