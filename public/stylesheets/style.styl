@@ -98,7 +98,7 @@ body
       background boxbg
       box-shadow(4px)
     .user-row
-      background rgba(255,255,255,.6)
+      background semi-light
       a
         color dark
       color dark
@@ -106,12 +106,21 @@ body
       overflow hidden
       li
         width 250px
+        overflow hidden
         float left
         padding 10px
       margin 30px 0
+    .user-row:nth-child(even)
+      color semi-dark
+      a
+        color semi-dark
+      background light
     .add-row
       margin 60px 0
       text-align center
+    .modified
+      background green
+      box-shadow(12px, green)
 
   .container
     max-width 900px
@@ -145,6 +154,10 @@ body
     max-width 500px
     padding 30px
     absolute()
+    .error-message
+      padding 4px 8px
+      border 1px solid darken(red,darkShift)
+      background red
     h2
       font-size 1.2em
     fieldset

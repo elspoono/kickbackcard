@@ -136,38 +136,61 @@ User.count({},function(err,data){
  **********************************/
 /* Returns all users for now */
 var get10Users = function(req, res, next){
-  var params = req.body ? req.body : {}
-  var skip = params.skip ? params.skip : 0
+  var params = req.body || {}
+  var skip = params.skip || 0
 
-  User.find({},{},{skip:skip,limit:10},function(err, data){
+  User.find({},{},{skip:skip,limit:10,sort:{email:1}},function(err, data){
     req.data = data;
     next();
   });
 }
 var checkEmail = function(req, res, next){
-  var params = req.body
+  var params = req.body || {}
   req.email = params.email
-  User.count({email:params.email},function(err, data){
+  var handleReturn = function(err, data){
     if(err)
       error(err)
     req.err = err
     req.data = data
     next()
-  })
+  };
+  if(params.id)
+    User.count({email:params.email,_id:{$ne:params.id}},handleReturn)
+  else
+    User.count({email:params.email},handleReturn)
 }
 var saveUser = function(req, res, next){
-  var params = req.body
+  var params = req.body || {}
   if(
     !params.email.match(/\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i)
-    || !params.password.match(/\b.{6,1500}\b/i)
+    || (!params.password.match(/\b.{6,1500}\b/i) && !params.id)           /* password is optional only when id is passed */
     || !params.role.match(/\b(user|admin)\b/i)
   ){
     req.err = 'parameter validation failed'
+    next()
+  }else if(params.id){
+    User.findById(params.id,function(err,data){
+      if(req.err){
+        req.data = data
+        req.err = err
+        next()
+      }else{
+        data.email = params.email
+        if(params.password && params.password != '')
+          data.password_encrypted = encrypted(params.password)
+        data.roles = [{key:params.role}]
+        data.save(function(err,data){
+          req.data = data
+          req.err = err
+          next()
+        })
+      }
+    })
   }else{
     var user = new User()
     user.email = params.email
-    user.password_encrypted = encrypted(params.password);
-    user.roles = [{key:params.role}];
+    user.password_encrypted = encrypted(params.password)
+    user.roles = [{key:params.role}]
     user.save(function(err,data){
       req.data = data
       req.err = err
@@ -177,7 +200,7 @@ var saveUser = function(req, res, next){
 }
 /* Ensures a valid login, and sets session variables */
 var validateLogin = function(req, res, next){
-  var params = req.body
+  var params = req.body || {}
   User.authenticate(params.email,params.password,function(err, data){
     if(err)
       error(err)
@@ -205,6 +228,14 @@ var securedArea = function(req, res, next){
     res.redirect('/login') 
   }
 }
+var securedFunction = function(req, res, next){
+  if (req.session.role != 'admin')
+    res.send({
+      err: 'no permissions'
+    })
+  else
+    next()
+}
 
 
 
@@ -219,6 +250,17 @@ var securedArea = function(req, res, next){
  * 
  * 
  **********************************/
+app.post('/get10Users', securedFunction, get10Users, function(req, res, next){
+  if(req.err)
+    res.send({
+      err: req.err
+    })
+  else
+    res.render('_list_users', {
+      layout: 'layout_partial.jade',
+      users: req.data
+    })
+})
 app.post('/checkEmail', checkEmail, function(req, res, next){
   res.send({
     err: req.err,
@@ -226,14 +268,10 @@ app.post('/checkEmail', checkEmail, function(req, res, next){
     email: req.email
   })
 })
-app.post('/saveUser', saveUser, function(req, res, next){
+app.post('/saveUser', securedFunction, saveUser, function(req, res, next){
   if(req.err)
     res.send({
       err: req.err
-    })
-  else if (req.session.role != 'admin')
-    res.send({
-      err: 'no permissions'
     })
   else
     res.render('_row_user', {

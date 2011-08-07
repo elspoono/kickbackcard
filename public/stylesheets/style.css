@@ -87,7 +87,7 @@ body .body .container {
   box-shadow: 0px 0px 4px #aaa;
 }
 body .body .user-row {
-  background: rgba(255,255,255,0.6);
+  background: #aaa;
   color: #000;
   -moz-box-shadow: 0px 0px 4px #fff;
   -webkit-box-shadow: 0px 0px 4px #fff;
@@ -100,12 +100,26 @@ body .body .user-row a {
 }
 body .body .user-row li {
   width: 250px;
+  overflow: hidden;
   float: left;
   padding: 10px;
+}
+body .body .user-row:nth-child(even) {
+  color: #6f6f6e;
+  background: #fff;
+}
+body .body .user-row:nth-child(even) a {
+  color: #6f6f6e;
 }
 body .body .add-row {
   margin: 60px 0;
   text-align: center;
+}
+body .body .modified {
+  background: #cfc;
+  -moz-box-shadow: 0px 0px 12px #cfc;
+  -webkit-box-shadow: 0px 0px 12px #cfc;
+  box-shadow: 0px 0px 12px #cfc;
 }
 body .container {
   max-width: 900px;
@@ -156,6 +170,11 @@ body .window {
   position: absolute;
   top: 0;
   left: 0;
+}
+body .window .error-message {
+  padding: 4px 8px;
+  border: 1px solid #900;
+  background: #fcc;
 }
 body .window h2 {
   font-size: 1.2em;
