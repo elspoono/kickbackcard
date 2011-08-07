@@ -13,15 +13,33 @@ $(function(){
     var modal = $('<div class="modal" />')
     var win = $('<div class="window" />')
 
-    if(options.content)
-      win.html(options.content)
-    if(options.height)
-      win.height(options.height)
-    if(options.width)
-      win.width(options.width)
+    var settings = {
+      width: 500,
+      height: 235
+    }
+    if(options)
+      $.extend(settings, options)
+
+    if(settings.content)
+      win.html(settings.content)
+    if(settings.height)
+      win.height(settings.height)
+    if(settings.width)
+      win.width(settings.width)
     $('body').append(modal,win)
-    win.position({of:window,at:'center center'});
+
+
+    var $window = $(window)
+    var resizeEvent = function(){
+      var width = $window.width()-60
+      if(width < settings.width)
+        win.width(width)
+      win.position({of:$window, at:'center center'})
+    }
+    resizeEvent()
+    $window.bind('resize',resizeEvent)
     modal.click(function(){
+      $window.unbind('resize',resizeEvent)
       modal.remove()
       win.remove()
     });
@@ -207,6 +225,7 @@ $(function(){
           modal.bind('click',function(){
             $('.tooltip').remove()
           })
+          /************************************************************/
 
 
           /******************
@@ -217,9 +236,30 @@ $(function(){
           win.find('form').submit(function(){
             win.find('.email,.password').trigger('customValidate')
             var err = win.find('.error')
+            console.log(win.find('input'),win.find('input').has('.error'),err)
             if(err.length){
 
             }else{
+              var data = {
+                email: win.find('.email').val(),
+                password: win.find('.password').val(),
+                role: win.find('.role').val()
+              };
+              loadLoading({},function(err,win,modal){
+                $.ajax({
+                  url: '/saveUser',
+                  type: 'POST',
+                  data: data,
+                  success: function(data){
+                    modal.click();
+                    console.log(data)
+                  },
+                  error: function(){
+                    modal.click();
+                    console.log('error')
+                  }
+                })
+              })
               modal.click(); 
             }
             return false;

@@ -152,6 +152,26 @@ var checkEmail = function(req, res, next){
     next()
   })
 }
+var saveUser = function(req, res, next){
+  var params = req.body
+  if(
+    !params.email.match(/\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i)
+    || !params.password.match(/\b.{6,1500}\b/i)
+    || !params.roles.match(/\b(user|admin)\b/i)
+  ){
+    req.err = 'parameter validation failed'
+  }else{
+    var user = new User()
+    user.email = params.email
+    user.password_encrypted = encrypted(params.password);
+    user.roles = [{key:params.role}];
+    user.save(function(err,data){
+      req.data = data
+      req.err = err
+      next()
+    })
+  }
+}
 /* Ensures a valid login, and sets session variables */
 var validateLogin = function(req, res, next){
   var params = req.body
@@ -201,6 +221,12 @@ app.post('/checkEmail', checkEmail, function(req, res, next){
     err: req.err,
     data: req.data,
     email: req.email
+  })
+})
+app.post('/saveUser', securedArea, saveUser, function(req, res, next){
+  res.send({
+    err: req.err,
+    data: req.data
   })
 })
 

@@ -1,8 +1,19 @@
+@import url('http://fonts.googleapis.com/css?family=Open+Sans');
+@import url('http://fonts.googleapis.com/css?family=Bangers');
 @import "reset.css";
 body {
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 16px "Open Sans", Helvetica, Arial, sans-serif;
   background: #333;
   color: #eee;
+}
+body h1,
+body h2,
+body h3 {
+  font-family: "Bangers";
+}
+body input,
+body select {
+  font: 16px "Open Sans", Helvetica, Arial, sans-serif;
 }
 body a {
   color: #bbf;
@@ -40,7 +51,7 @@ body .header .container .navigation .vendors .vendors {
 }
 body .body h1 {
   font-size: 3em;
-  line-height: 2.5em;
+  line-height: 2em;
 }
 body .body h2 {
   font-size: 3em;
@@ -58,7 +69,7 @@ body .body .user-row {
 }
 body .body .user-row input,
 body .body .user-row select {
-  width: 300px;
+  width: 240px;
   border: 0;
   color: #bbf;
 }
@@ -117,7 +128,7 @@ body .window {
   -moz-border-radius: 15px;
   border-radius: 15px;
   height: 235px;
-  width: 500px;
+  max-width: 500px;
   padding: 30px;
   display: none;
   position: absolute;
@@ -137,7 +148,7 @@ body .window fieldset .fields label {
   float: left;
 }
 body .window fieldset .fields .input {
-  width: 300px;
+  width: 240px;
   display: block;
   float: right;
   border: 1px solid #999;
@@ -161,10 +172,10 @@ body .window fieldset .fields .loading {
 }
 body .window .buttons {
   overflow: hidden;
-  position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
+  position: absolute;
 }
 body .window .buttons .submit,
 body .window .buttons .cancel {

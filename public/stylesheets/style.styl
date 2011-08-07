@@ -1,7 +1,10 @@
+@css {@import url('http://fonts.googleapis.com/css?family=Open+Sans');}
+@css {@import url('http://fonts.googleapis.com/css?family=Bangers');}
 @import "reset.css"
 
-font-size = 14px
-font = font-size "Lucida Grande", Helvetica, Arial, sans-serif
+font-size = 16px
+font = font-size "Open Sans", Helvetica, Arial, sans-serif
+font2 = 'Bangers'
 
 very-dark = #333
 dark = #000
@@ -32,6 +35,10 @@ body
   font font
   background very-dark
   color very-light
+  h1,h2,h3
+    font-family font2
+  input,select
+    font font
   a
     color light
   .header
@@ -60,7 +67,7 @@ body
   .body
     h1
       font-size 3em
-      line-height 2.5em
+      line-height 2em
     h2
       font-size 3em
       line-height 2.5em
@@ -70,7 +77,7 @@ body
       margin 15px 0
     .user-row
       input,select
-        width 300px
+        width 240px
         border 0
         color light
       input[disabled],select[disabled]
@@ -113,7 +120,7 @@ body
     color very-dark
     border-radius(15px)
     height 235px
-    width 500px
+    max-width 500px
     padding 30px
     absolute()
     h2
@@ -127,7 +134,7 @@ body
           display block
           float left
         .input
-          width 300px
+          width 240px
           display block
           float right
           border 1px solid semi-dark
@@ -145,10 +152,10 @@ body
           background very-light
     .buttons
       overflow hidden
-      position absolute
       bottom 0
       left 0
       width 100%
+      position absolute
       .submit,.cancel
         font-size 1em
         margin 30px
