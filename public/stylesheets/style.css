@@ -1,38 +1,52 @@
 @import url('http://fonts.googleapis.com/css?family=Open+Sans');
-@import url('http://fonts.googleapis.com/css?family=Bangers');
+@import url('http://fonts.googleapis.com/css?family=Luckiest+Guy');
 @import "reset.css";
 body {
   font: 16px "Open Sans", Helvetica, Arial, sans-serif;
-  background: #333;
-  color: #eee;
+  background: #3f3e3d;
+  color: #fff;
 }
 body h1,
 body h2,
 body h3 {
-  font-family: "Bangers";
+  font-family: "Luckiest Guy";
+  text-transform: uppercase;
+  font-weight: normal;
 }
 body input,
 body select {
   font: 16px "Open Sans", Helvetica, Arial, sans-serif;
 }
 body a {
-  color: #bbf;
+  color: #fff;
+}
+body .bg2 {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  margin-top: 108px;
+  height: 130px;
+  background: #6f6f6e;
+  display: block;
+  z-index: -1;
 }
 body .header {
   background: #fff;
-  color: #333;
+  color: #3f3e3d;
 }
 body .header a {
-  color: #669;
+  color: #4e7a3c;
 }
 body .header .container {
-  padding: 15px 0;
+  padding: 15px 30px;
   overflow: hidden;
 }
 body .header .container .logo {
-  background: url("/images/KBlogo114x114.png") no-repeat left top;
-  height: 114px;
-  width: 114px;
+  background: url("/images/KBHeader.png") no-repeat left top;
+  height: 78px;
+  width: 320px;
   float: left;
   cursor: pointer;
 }
@@ -55,7 +69,7 @@ body .body h1 {
 }
 body .body h2 {
   font-size: 3em;
-  line-height: 2.5em;
+  line-height: 2em;
 }
 body .body i {
   font-style: italic;
@@ -63,23 +77,27 @@ body .body i {
 body .body p {
   margin: 15px 0;
 }
+body .body a {
+  color: #00b7ff;
+}
+body .body .container {
+  background: rgba(190,190,190,0.1);
+  -moz-box-shadow: 0px 0px 4px #aaa;
+  -webkit-box-shadow: 0px 0px 4px #aaa;
+  box-shadow: 0px 0px 4px #aaa;
+}
 body .body .user-row {
+  background: rgba(190,190,190,0.1);
+  -moz-box-shadow: 0px 0px 4px #aaa;
+  -webkit-box-shadow: 0px 0px 4px #aaa;
+  box-shadow: 0px 0px 4px #aaa;
   overflow: hidden;
   margin: 30px 0;
 }
-body .body .user-row input,
-body .body .user-row select {
-  width: 240px;
-  border: 0;
-  color: #bbf;
-}
-body .body .user-row input[disabled],
-body .body .user-row select[disabled] {
-  background: none;
-}
 body .body .user-row li {
+  width: 250px;
   float: left;
-  padding-right: 30px;
+  padding: 10px;
 }
 body .body .add-row {
   margin: 60px 0;
@@ -88,7 +106,7 @@ body .body .add-row {
 body .container {
   max-width: 900px;
   margin: 0 auto;
-  padding: 30px 0;
+  padding: 30px;
 }
 body .footer {
   text-align: center;
@@ -123,7 +141,7 @@ body .modal {
 }
 body .window {
   background: #fff;
-  color: #333;
+  color: #3f3e3d;
   -webkit-border-radius: 15px;
   -moz-border-radius: 15px;
   border-radius: 15px;
@@ -151,7 +169,7 @@ body .window fieldset .fields .input {
   width: 240px;
   display: block;
   float: right;
-  border: 1px solid #999;
+  border: 1px solid #6f6f6e;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
@@ -167,8 +185,8 @@ body .window fieldset .fields .valid {
   background: #cfc;
 }
 body .window fieldset .fields .loading {
-  border: 1px solid #555;
-  background: #eee;
+  border: 1px solid #666;
+  background: #fff;
 }
 body .window .buttons {
   overflow: hidden;
@@ -181,9 +199,9 @@ body .window .buttons .submit,
 body .window .buttons .cancel {
   font-size: 1em;
   margin: 30px;
-  background: #eee;
+  background: #fff;
   color: #000;
-  border: 1px solid #999;
+  border: 1px solid #6f6f6e;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
@@ -195,6 +213,9 @@ body .window .buttons .submit {
 }
 body .window .buttons .cancel {
   float: left;
+}
+body .container .modal {
+  display: block;
 }
 body .container .window {
   display: block;

@@ -135,8 +135,11 @@ User.count({},function(err,data){
  * 
  **********************************/
 /* Returns all users for now */
-var getUser = function(req, res, next){
-  User.find({},function(err, data){
+var get10Users = function(req, res, next){
+  var params = req.body ? req.body : {}
+  var skip = params.skip ? params.skip : 0
+
+  User.find({},{},{skip:skip,limit:10},function(err, data){
     req.data = data;
     next();
   });
@@ -157,7 +160,7 @@ var saveUser = function(req, res, next){
   if(
     !params.email.match(/\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i)
     || !params.password.match(/\b.{6,1500}\b/i)
-    || !params.roles.match(/\b(user|admin)\b/i)
+    || !params.role.match(/\b(user|admin)\b/i)
   ){
     req.err = 'parameter validation failed'
   }else{
@@ -293,21 +296,21 @@ app.post('/login', validateLogin, function(req, res, next){
  * 
  * 
  **********************************/
-app.get('/admin', securedArea, getUser, function(req,res, next){
+app.get('/admin', securedArea, get10Users, function(req,res, next){
   res.render('admin', {
-    all: req.data,
+    users: req.data,
     view: 'users',
     title: 'KickbackCard.com: Admin'
   })
 })
-app.get('/users', securedArea, getUser, function(req,res, next){
+app.get('/users', securedArea, get10Users, function(req,res, next){
   res.render('admin', {
-    all: req.data,
+    users: req.data,
     view: 'users',
     title: 'KickbackCard.com: Admin: Users'
   })
 })
-app.get('/vendors', securedArea, getUser, function(req,res, next){
+app.get('/vendors', securedArea, get10Users, function(req,res, next){
   res.render('admin', {
     all: req.data,
     view: 'vendors',

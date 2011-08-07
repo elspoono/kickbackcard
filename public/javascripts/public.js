@@ -153,40 +153,46 @@ $(function(){
             var $t = $(this)
             /* It appears the email has changed, and we think they stopped typing */
             $t.removeClass('loading valid error')
-            $t.addClass('loading')
-            $.ajax({
-              url: '/checkEmail',
-              type: 'POST',
-              data: {
-                email: email
-              },
-              success: function(data){
-                /* Make sure they didn't change the email since we last checked */
-                if(email==data.email){
-                  $t.removeClass('loading valid error')
-                  if(data.err){
-                    $t.addClass('error')
-                    $t.showTooltip({message:'db error'})
-                  }else if(data.data==0){
-                    if(email.match(/\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i)){
-                      $t.addClass('valid')
-                      $t.showTooltip({message:email+' is good'})
+
+            if(email.match(/\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i)){
+              $t.addClass('loading')
+              $.ajax({
+                url: '/checkEmail',
+                type: 'POST',
+                data: {
+                  email: email
+                },
+                success: function(data){
+                  /* Make sure they didn't change the email since we last checked */
+                  if(email==data.email){
+                    $t.removeClass('loading valid error')
+                    if(data.err){
+                      $t.addClass('error')
+                      $t.showTooltip({message:'db error'})
+                    }else if(data.data==0){
+                      if(email.match(/\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i)){
+                        $t.addClass('valid')
+                        $t.showTooltip({message:email+' is good'})
+                      }else{
+                        $t.addClass('error')
+                        $t.showTooltip({message:email+' doesn\'t look like an email'})
+                      }
                     }else{
                       $t.addClass('error')
-                      $t.showTooltip({message:email+' doesn\'t look like an email'})
+                      $t.showTooltip({message:email+' is taken'})
                     }
-                  }else{
-                    $t.addClass('error')
-                    $t.showTooltip({message:email+' is taken'})
                   }
+                },
+                error: function(){
+                  $t.removeClass('loading,valid,error')
+                  $t.addClass('error')
+                  $t.showTooltip({message:'server error'})
                 }
-              },
-              error: function(){
-                $t.removeClass('loading,valid,error')
-                $t.addClass('error')
-                $t.showTooltip({message:'server error'})
-              }
-            })
+              })
+            }else{
+              $t.addClass('error')
+              $t.showTooltip({message:email+' doesn\'t look like an email'})
+            }
           })
           /******************
            *
@@ -236,7 +242,6 @@ $(function(){
           win.find('form').submit(function(){
             win.find('.email,.password').trigger('customValidate')
             var err = win.find('.error')
-            console.log(win.find('input'),win.find('input').has('.error'),err)
             if(err.length){
 
             }else{

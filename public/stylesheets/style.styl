@@ -1,23 +1,30 @@
 @css {@import url('http://fonts.googleapis.com/css?family=Open+Sans');}
-@css {@import url('http://fonts.googleapis.com/css?family=Bangers');}
+@css {@import url('http://fonts.googleapis.com/css?family=Luckiest+Guy');}
 @import "reset.css"
 
 font-size = 16px
 font = font-size "Open Sans", Helvetica, Arial, sans-serif
-font2 = 'Bangers'
+font2 = 'Luckiest Guy'
 
-very-dark = #333
+very-dark = #3f3e3d
 dark = #000
-very-light = #eee
-light = #BBF
-very-dark-alt = #669
-semi-dark = #999
+semi-light = #aaa
+very-light = #fff
+light = #FFF
+very-dark-alt = #4e7a3c
+semi-dark = #6f6f6e
 red = #FCC
 green = #CFC
 yellow = #FFC
 darkShift = 60
+boxbg = rgba(190,190,190,.1)
 
 attention = #00B7FF
+
+box-shadow(n)
+  -moz-box-shadow: 0px 0px n semi-light
+  -webkit-box-shadow: 0px 0px n semi-light
+  box-shadow: 0px 0px n semi-light
 
 border-radius(n)
   -webkit-border-radius n
@@ -37,22 +44,32 @@ body
   color very-light
   h1,h2,h3
     font-family font2
+    text-transform uppercase
+    font-weight normal
   input,select
     font font
   a
     color light
+  .bg2
+    absolute()
+    width 100%
+    margin-top 108px
+    height 130px
+    background semi-dark
+    display block
+    z-index -1
   .header
     background #FFF
     color very-dark
     a
       color very-dark-alt
     .container
-      padding 15px 0
+      padding 15px 30px
       overflow hidden
       .logo
-        background url('/images/KBlogo114x114.png') no-repeat left top
-        height 114px
-        width 114px
+        background url('/images/KBHeader.png') no-repeat left top
+        height 78px
+        width 320px
         float left
         cursor pointer
       .navigation
@@ -70,22 +87,24 @@ body
       line-height 2em
     h2
       font-size 3em
-      line-height 2.5em
+      line-height 2em
     i
       font-style italic
     p
       margin 15px 0
+    a
+      color attention
+    .container
+      background boxbg
+      box-shadow(4px)
     .user-row
-      input,select
-        width 240px
-        border 0
-        color light
-      input[disabled],select[disabled]
-        background none
+      background boxbg
+      box-shadow(4px)
       overflow hidden
       li
+        width 250px
         float left
-        padding-right 30px
+        padding 10px
       margin 30px 0
     .add-row
       margin 60px 0
@@ -94,7 +113,7 @@ body
   .container
     max-width 900px
     margin 0 auto
-    padding 30px 0
+    padding 30px
   .footer
     text-align center
     font-size .8em
@@ -169,7 +188,8 @@ body
         cursor pointer
       .cancel
         float left
-  
+  .container .modal
+    display block
   .container .window
     display block
     position relative
