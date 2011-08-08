@@ -46,10 +46,12 @@ app.configure('production', function(){
  * 
  * Generic Libraries Setup
  * 
- * bcrypt and mongoose
+ * geo, bcrypt and mongoose
  * 
  * 
  **********************************/
+var geo = require('geo');
+
 var bcrypt = require('bcrypt');
 var encrypted = function(inString){
   var salt = bcrypt.gen_salt_sync(10);
@@ -59,6 +61,7 @@ var encrypted = function(inString){
 var compareEncrypted= function(inString,hash){
   return bcrypt.compare_sync(inString, hash);
 }
+
 var mongoose = require('mongoose');
 mongoose.connect(process.env.MONGOHQ_URL || 'mongodb://localhost/db');
 var Schema = mongoose.Schema, ObjectId = Schema.ObjectId;
@@ -83,7 +86,7 @@ var RoleSchema = new Schema({
   key: String
 })
 var UserSchema = new Schema({
-  email: { type: String, validate: /\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i },
+  email: { type: String, validate: /\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i, unique: true },
   password_encrypted: String,
   roles: [RoleSchema],
   vendor_id: String
@@ -127,6 +130,156 @@ User.count({},function(err,data){
 
 
 
+
+
+/**********************************
+ * 
+ * Vendor Schema
+ * 
+ * Role / Vendor / Auth handling / Default Data
+ * 
+ * 
+ **********************************/
+/* Role / Vendor mongoose Schemas */
+var DealSchema = new Schema({
+  vendor_id: String,
+  buy_item: String,
+  buy_qty: Number,
+  get_type: String,
+  get_qty: Number,
+  get_item: String
+})
+var VendorSchema = new Schema({
+  name: { type: String, validate: /\b.{1,1500}\b/i, unique: true },
+  address: { type: String, validate: /\b.{1,1500}\b/i },
+  coordinates: Array,
+  description: { type: String, validate: /\b.{1,1500}\b/i },
+  hours: { type: String, validate: /\b.{1,1500}\b/i },
+  contact: { type: String, validate: /\b.{1,1500}\b/i },
+  deals: [DealSchema],
+  user_ids: Array
+})
+var Vendor = mongoose.model('Vendor',VendorSchema);
+var VendorBackup = mongoose.model('VendorBackup',VendorSchema);
+
+
+
+/**********************************
+ * 
+ * Route Middleware
+ * 
+ * Get Vendor Data
+ * 
+ * 
+ **********************************/
+var getVendor = function(req, res, next){
+  var params = req.body || {}
+  var id = params.id || ''
+  if(id=='')
+    next()
+  else
+    Vendor.findById(params.id,function(err, data){
+      req.err = err
+      req.data = data
+      next()
+    });
+}
+var get10Vendors = function(req, res, next){
+  var params = req.body || {}
+  var skip = params.skip || 0
+
+  Vendor.find({},{},{skip:skip,limit:10,sort:{name:1}},function(err, data){
+    req.err = err
+    req.data = data
+    next()
+  });
+}
+var checkName = function(req, res, next){
+  var params = req.body || {}
+  req.name = params.name || ''
+  req.name = req.name.replace(/(^\s{1,}|\s{1,}$)/g,'').replace(/\s{1,}/g,' ')
+  var handleReturn = function(err, data){
+    if(err)
+      error(err)
+    req.err = err
+    req.data = data
+    next()
+  };
+  if(params.id)
+    Vendor.count({name:req.name,_id:{$ne:params.id}},handleReturn)
+  else
+    Vendor.count({name:req.name},handleReturn)
+}
+var saveVendor = function(req, res, next){
+  var params = req.body || {}
+  if(
+    !params.name.match(/\b.{1,1500}\b/i)
+    || !params.address.match(/\b.{1,1500}\b/i)
+  ){
+    req.err = 'parameter validation failed'
+    next()
+  }else{
+    var sensor = false;
+    geo.geocoder(geo.google, params.address, false, function(formattedAddress, latitude, longitude) {
+      params.coordinates = [latitude, longitude, formattedAddress]
+      if(params.id){
+        Vendor.findById(params.id,function(err,data){
+          if(err){
+            req.data = data
+            req.err = err
+            next()
+          }else{
+            data.name = params.name
+            data.address = params.address
+            data.coordinates = params.coordinates
+            data.save(function(err,data){
+              req.data = data
+              req.err = err
+              next()
+            })
+          }
+        })
+      }else{
+        var vendor = new Vendor()
+        vendor.name = params.name
+        vendor.address = params.address
+        vendor.coordinates = params.coordinates
+        vendor.save(function(err,data){
+          req.data = data
+          req.err = err
+          next()
+        })
+      }
+    });
+  }
+}
+var deleteVendor = function(req, res, next){
+  var params = req.body || {}
+  if(params.id){
+    Vendor.findById(params.id,function(err,data){
+      if(err){
+        req.err = err
+        next()
+      }else{
+        var vendor = new VendorBackup()
+        vendor.name = data.name
+        vendor.address = data.address
+        vendor.save(function(err,data){
+          Vendor.remove({_id: params.id},function(err,data){
+            req.err = err
+            next()
+          })
+        })
+      }
+    })
+  }else{
+    req.err = 'bad parameters'
+    next()
+  }
+}
+
+
+
 /**********************************
  * 
  * Route Middleware
@@ -135,7 +288,6 @@ User.count({},function(err,data){
  * 
  * 
  **********************************/
-/* Returns all users for now */
 var get10Users = function(req, res, next){
   var params = req.body || {}
   var skip = params.skip || 0
@@ -212,15 +364,10 @@ var deleteUser = function(req, res, next){
         user.password_encrypted = data.password_encrypted
         user.roles = data.roles
         user.save(function(err,data){
-          if(err){
+          User.remove({_id: params.id},function(err,data){
             req.err = err
             next()
-          }else{
-            User.remove({_id: params.id},function(err,data){
-              req.err = err
-              next()
-            })
-          }
+          })
         })
       }
     })
@@ -277,7 +424,7 @@ var securedFunction = function(req, res, next){
  * 
  * User schema routes
  * 
- * checkEmail
+ * 
  * 
  * 
  **********************************/
@@ -311,6 +458,62 @@ app.post('/saveUser', securedFunction, saveUser, function(req, res, next){
     })
 })
 app.post('/deleteUser', securedFunction, deleteUser, function(req, res, next){
+  res.send({
+    err: req.err
+  })
+})
+
+
+
+/**********************************
+ * 
+ * User schema routes
+ * 
+ * 
+ * 
+ * 
+ **********************************/
+app.post('/get10Vendors', securedFunction, get10Vendors, function(req, res, next){
+  if(req.err)
+    res.send({
+      err: req.err
+    })
+  else
+    res.render('_list_vendors', {
+      layout: 'layout_partial.jade',
+      vendors: req.data
+    })
+})
+app.post('/getVendor', securedFunction, getVendor, function(req, res, next){
+  if(req.err)
+    res.send({
+      err: req.err
+    })
+  else
+    res.render('_form_vendor', {
+      layout: 'layout_partial.jade',
+      vendor: req.data || {}
+    })
+})
+app.post('/checkName', checkName, function(req, res, next){
+  res.send({
+    err: req.err,
+    data: req.data,
+    name: req.name
+  })
+})
+app.post('/saveVendor', securedFunction, saveVendor, function(req, res, next){
+  if(req.err)
+    res.send({
+      err: req.err
+    })
+  else
+    res.render('_row_vendor', {
+      layout: 'layout_partial.jade',
+      vendor: req.data
+    })
+})
+app.post('/deleteVendor', securedFunction, deleteVendor, function(req, res, next){
   res.send({
     err: req.err
   })
@@ -393,9 +596,9 @@ app.get('/users', securedArea, get10Users, function(req,res, next){
     title: 'KickbackCard.com: Admin: Users'
   })
 })
-app.get('/vendors', securedArea, get10Users, function(req,res, next){
+app.get('/vendors', securedArea, get10Vendors, function(req,res, next){
   res.render('admin', {
-    all: req.data,
+    vendors: req.data,
     view: 'vendors',
     title: 'KickbackCard.com: Admin: Vendors'
   })

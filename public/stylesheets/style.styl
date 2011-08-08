@@ -97,7 +97,7 @@ body
     .container
       background boxbg
       box-shadow(4px)
-    .user-row
+    .row
       background semi-light
       a
         color dark
@@ -110,7 +110,7 @@ body
         float left
         padding 10px
       margin 30px 0
-    .user-row:nth-child(even)
+    .row:nth-child(even)
       color semi-dark
       a
         color semi-dark
@@ -188,6 +188,15 @@ body
         .loading
           border 1px solid darken(very-light,darkShift)
           background very-light
+        .google-map
+          float right
+          height 100px
+          width 256px
+          background semi-light
+          display block
+          border 1px solid semi-dark
+          border-radius(4px)
+          overflow hidden
     .buttons
       overflow hidden
       width 100%

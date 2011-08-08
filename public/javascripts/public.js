@@ -14,6 +14,7 @@ $(function(){
     type: 'POST'
   })
   var usualDelay = 4000
+  var $window = $(window)
   $.fx.speeds._default = 300
 
   
@@ -70,18 +71,19 @@ $(function(){
     $('body').append(modal,win)
 
 
-    var $window = $(window)
     var $body = $('body')
     $body.css({overflow:'hidden','padding-right':scrollbarWidth})
     var resizeEvent = function(){
-      var offset = '0px '+$window.scrollTop()+'px'
-      var width = $window.width()-60
+      var offset = '0px 0px'
+      var width = $window.width()-120
+      var height = $window.height()-120
       if(width < settings.width)
         win.width(width)
+      if(height < win.height())
+        win.height(height).css('overflow','auto')
       win.position({of:$window, at:'center center', offset:offset})
       modal.position({of:$window, at:'center center', offset:offset})
     }
-    resizeEvent()
     $window.bind('resize',resizeEvent)
     modal.click(function(){
       $window.unbind('resize',resizeEvent)
@@ -96,6 +98,7 @@ $(function(){
     modal.fadeIn()
     win.fadeIn()
     next(false,win,modal)
+    resizeEvent()
   }
   /**********************************
    * 
@@ -234,11 +237,10 @@ $(function(){
    * 
    * 
    **********************************/
-
   $('.user .add,.user .edit').live('click',function(){
 
     var $t = $(this)
-    var $p = $t.closest('.user-row')
+    var $p = $t.closest('.row')
 
     /* Prompt for user add form */
     loadLoading({},function(err,win,modal){
@@ -383,7 +385,7 @@ $(function(){
                 };
                 loadLoading({},function(err,win,modal){
                   $.ajax({
-                    url: '/saveUser',
+                    url: '/saveVendor',
                     data: data,
                     success: function(data,t,xhr){
                       modal.click();
@@ -423,7 +425,7 @@ $(function(){
                   modal.click()
                   loadLoading({},function(err,win,modal){
                     $.ajax({
-                      url: '/deleteUser',
+                      url: '/deleteVendor',
                       data: {
                         id: $p.attr('id')
                       },
@@ -457,50 +459,59 @@ $(function(){
     return false
   })
 
-  var $window = $(window)
-  var alreadyFoundUsers = 10
-  var currentlyLoadingUsers = false
-  /* On window scroll event def */
-  var scrollEvent = function(){
-    /* If we see the bottom of the user list */
-    var userBox = $('.user')
-    if(userBox.length){
-      var userBoxHeight = userBox.height()
-      var windowScrollTop = $window.scrollTop()
-      var windowHeight = $window.height()
-      var userScrollTop = userBox.offset().top
-      var bottomOfWindow = windowScrollTop + windowHeight
-      var bottomOfUserBox = userBoxHeight + userScrollTop
-      if(bottomOfWindow > bottomOfUserBox && !currentlyLoadingUsers){
-        currentlyLoadingUsers = true
-        $.ajax({
-          url: '/get10Users',
-          data: {
-            skip: alreadyFoundUsers
-          },
-          success: function(data){
-            if(typeof(data)=='object'&&data.err){
-              
-            }else{
-              var $newRows = $(data)
-              alreadyFoundUsers = alreadyFoundUsers + $newRows.length;
-              $newRows.hide()
-              userBox.append($newRows)
-              $newRows.fadeIn()
+  /**********************************
+   * 
+   * Vendor List
+   * 
+   * load 10 more when the scroll hits the bottom
+   * 
+   * 
+   **********************************/
+  $('.user').each(function(){
+    var userBox = $(this)
+    var alreadyFoundVendors = 10
+    var currentlyLoadingVendors = false
+    /* On window scroll event def */
+    var scrollEvent = function(){
+      /* If we see the bottom of the user list */
+        var userBoxHeight = userBox.height()
+        var windowScrollTop = $window.scrollTop()
+        var windowHeight = $window.height()
+        var userScrollTop = userBox.offset().top
+        var bottomOfWindow = windowScrollTop + windowHeight
+        var bottomOfVendorBox = userBoxHeight + userScrollTop
+        if(bottomOfWindow > bottomOfVendorBox && !currentlyLoadingVendors){
+          currentlyLoadingVendors = true
+          $.ajax({
+            url: '/get10Vendors',
+            data: {
+              skip: alreadyFoundVendors
+            },
+            success: function(data){
+              if(typeof(data)=='object'&&data.err){
+                
+              }else{
+                var $newRows = $(data)
+                alreadyFoundVendors = alreadyFoundVendors + $newRows.length;
+                $newRows.hide()
+                userBox.append($newRows)
+                $newRows.fadeIn()
+              }
+              currentlyLoadingVendors = false
+            },
+            error: function(){
+              currentlyLoadingVendors = false
             }
-            currentlyLoadingUsers = false
-          },
-          error: function(){
-            currentlyLoadingUsers = false
-          }
-        })
-      }
-      /* Try to load the 'next 10' users */
-
+          })
+        }
+        /* Try to load the 'next 10' users */
     }
-  }
-  scrollEvent()
-  $window.bind('scroll',scrollEvent)
+    scrollEvent()
+    $window.bind('scroll',scrollEvent)
+  })
+
+
+
   /**********************************
    * 
    * Admin Controls
@@ -509,47 +520,306 @@ $(function(){
    * 
    * 
    **********************************/
-
-  $('.vendor .add').click(function(){
-
-
-    /* Prompt for user add form */
-  })
-
-  $('.vendor .edit').click(function(){
+  $('.vendor .add,.vendor .edit').live('click',function(){
 
     var $t = $(this)
-    var $p = $t.closest('.vendor-row')
+    var $p = $t.closest('.row')
 
+    /* Prompt for vendor add form */
+    loadLoading({},function(err,win,modal){
+      $.ajax({
+        url:'/getVendor',
+        data: {
+          id: $p.attr('id')
+        },
+        success: function(data){
+          modal.click();
+          loadModal({},function(err,win,modal){
+            win.append(data)
+            /******************
+             *
+             * Name Validation auto ajaxyness
+             *
+             ******************/
+            var name = $p.find('.name').text() || ''
+            var nameT = 0
+            win.find('.name').keyup(function(e){
+              var $t = $(this)
+              if(name!=this.value){
+                clearTimeout(nameT)
+                name = this.value
+                nameT = setTimeout(function(){
+                  $t.trigger('customValidate')
+                },500)
+              }
+            }).bind('customValidate',function(e,next){
+              var $t = $(this)
+              /* It appears the name has changed, and we think they stopped typing */
+              $t.removeClass('loading valid')
+
+              if(name.match(/\b.{1,1500}\b/i)){
+                $t.addClass('loading')
+                $.ajax({
+                  url: '/checkName',
+                  data: {
+                    name: name,
+                    id: $p.attr('id')
+                  },
+                  success: function(data){
+                    $t.removeClass('loading valid error')
+                    if(data.err){
+                      $t.addClass('error')
+                      $t.showTooltip({message:'db error'})
+                    }else if(data.data==0){
+                      if(name.match(/\b.{1,1500}\b/i)){
+                        $t.addClass('valid')
+                        $t.showTooltip({message:name+' is good'})
+                      }else{
+                        $t.addClass('error')
+                        $t.showTooltip({message:name+' doesn\'t look like a name'})
+                      }
+                    }else{
+                      $t.addClass('error')
+                      $t.showTooltip({message:name+' is taken'})
+                    }
+                    if(next) next()
+                  },
+                  error: function(){
+                    $t.removeClass('loading,valid,error')
+                    $t.addClass('error')
+                    $t.showTooltip({message:'server error'})
+                    if(next) next()
+                  }
+                })
+              }else{
+                $t.addClass('error')
+                $t.showTooltip({message:name+' doesn\'t look like a name'})
+                if(next) next()
+              }
+            })
+            /******************
+             *
+             * Address ajaxyness
+             *
+             ******************/
+            var address = $p.find('.address').text() || ''
+            var addressT = 0
+            win.find('.address').keyup(function(e){
+              var $t = $(this)
+              if(address!=this.value){
+                clearTimeout(addressT)
+                address = this.value
+                addressT = setTimeout(function(){
+                  $t.trigger('customValidate')
+                },500)
+              }
+            }).bind('customValidate',function(e,next){
+              var $t = $(this)
+              /* It appears the address has changed, and we think they stopped typing */
+              $t.removeClass('valid error')
+
+              if(address.match(/\b.{1,}\s{1,}.{1,}\b/i)){
+                $t.addClass('valid')
+                $t.showTooltip({message:address+' is good'})
+                var $img = $('<img class="google-map" src="http://maps.googleapis.com/maps/api/staticmap?center='+address+'&markers=color:red%7Clabel:V%7C'+address+'&zoom=13&size=256x100&sensor=false" />')
+                $img.load(function(){
+                  $window.resize()
+                })
+                win.find('.google-map').replaceWith($img)
+              }else{
+                $t.addClass('error')
+                $t.showTooltip({message:address+' doesn\'t look like a address'})
+                if(next) next()
+              }
+            })
+
+
+
+
+
+            /************************************************************/
+            /* Anytime we close the modal, clear out those tooltips too */
+            modal.bind('click',function(){
+              $('.tooltip').remove()
+            })
+            /************************************************************/
+
+
+            /******************
+             *
+             * The form's actually submitted ??? Oh noes!!
+             *
+             ******************/
+            win.find('form').submit(function(){
+
+              /* Always instantaneous, no next required */
+              win.find('.address').trigger('customValidate');
+
+              /**************************
+               *
+               * We rely on the name's customValidate function 
+               * to show it's own loading indicators as we wait
+               * for it here.
+               * 
+               **************************/
+              win.find('.name').trigger('customValidate',function(){
+                var err = win.find('.error')
+                if(err.length){
+
+                }else{
+                  var data = {
+                    /* id is null when it's new */
+                    id: $p.attr('id'),
+                    name: win.find('.name').val(),
+                    address: win.find('.address').val()
+                  };
+                  loadLoading({},function(err,win,modal){
+                    $.ajax({
+                      url: '/saveVendor',
+                      data: data,
+                      success: function(data,t,xhr){
+                        modal.click();
+                        if(typeof(data)=='object'&&data.err)
+                          loadAlert(data.err)
+                        else{
+                          var $newRow = $(data)
+                          $newRow.hide()
+                          /* If it's existing, replace that row */
+                          if($p.attr('id'))
+                            $p.replaceWith($newRow)
+                          /* Otherwise, put it right after the add button they just clicked */
+                          else
+                            $('.vendor .add-row').after($newRow)
+                          $newRow.addClass('modified').fadeIn().delay(usualDelay).queue(function(){
+                            $(this).removeClass('modified')
+                          })
+                        }
+                      },
+                      error: function(){
+                        modal.click();
+                        loadAlert('server error')
+                      }
+                    })
+                  })
+                  modal.click(); 
+                }
+              })
+              return false;
+            })
+            if($p.attr('id'))
+              win.find('.cancel').click(function(){
+                loadConfirm({
+                  content: '<p>Are you sure?</p><p>This cannot be undone.</p>',
+                  Confirm: function(err,win2,modal2){
+                    modal2.click()
+                    modal.click()
+                    loadLoading({},function(err,win,modal){
+                      $.ajax({
+                        url: '/deleteVendor',
+                        data: {
+                          id: $p.attr('id')
+                        },
+                        success: function(data){
+                          if(data.err)
+                            $p.addClass('modified').delay(usualDelay).removeClass('modified')
+                          else
+                            $p.addClass('deleted').delay(usualDelay).fadeOut(function(){
+                              $p.remove()
+                            })
+                          modal.click()
+                        },
+                        error: function(){
+                          $p.addClass('modified').delay(usualDelay).removeClass('modified')
+                          modal.click()
+                        }
+                      })
+                    })
+                  },
+                  Cancel: function(err,win2,modal2){
+                    modal2.click()
+                  }
+                },function(){})
+              })
+            else
+              win.find('.cancel').hide()
+          })
+        },
+        error: function(){
+          loadAlert('server error')
+        }
+      })
+    })
+
+    return false
   })
-
-
-
-
 
   /**********************************
    * 
-   * Admin Controls
+   * Vendor List
    * 
-   * deal add, deal edit
+   * load 10 more when the scroll hits the bottom
    * 
    * 
    **********************************/
-
-  $('.deal .add').click(function(){
-
-
-    /* Prompt for user add form */
-
-
+  $('.vendor').each(function(){
+    var vendorBox = $(this)
+    var alreadyFoundVendors = 10
+    var currentlyLoadingVendors = false
+    /* On window scroll event def */
+    var scrollEvent = function(){
+      /* If we see the bottom of the vendor list */
+        var vendorBoxHeight = vendorBox.height()
+        var windowScrollTop = $window.scrollTop()
+        var windowHeight = $window.height()
+        var vendorScrollTop = vendorBox.offset().top
+        var bottomOfWindow = windowScrollTop + windowHeight
+        var bottomOfVendorBox = vendorBoxHeight + vendorScrollTop
+        if(bottomOfWindow > bottomOfVendorBox && !currentlyLoadingVendors){
+          currentlyLoadingVendors = true
+          $.ajax({
+            url: '/get10Vendors',
+            data: {
+              skip: alreadyFoundVendors
+            },
+            success: function(data){
+              if(typeof(data)=='object'&&data.err){
+                
+              }else{
+                var $newRows = $(data)
+                alreadyFoundVendors = alreadyFoundVendors + $newRows.length;
+                $newRows.hide()
+                vendorBox.append($newRows)
+                $newRows.fadeIn()
+              }
+              currentlyLoadingVendors = false
+            },
+            error: function(){
+              currentlyLoadingVendors = false
+            }
+          })
+        }
+        /* Try to load the 'next 10' vendors */
+    }
+    scrollEvent()
+    $window.bind('scroll',scrollEvent)
   })
 
-  $('.deal .edit').click(function(){
 
-    var $t = $(this)
-    var $p = $t.closest('.deal-row')
 
-  })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 })
 
