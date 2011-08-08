@@ -385,7 +385,7 @@ $(function(){
                 };
                 loadLoading({},function(err,win,modal){
                   $.ajax({
-                    url: '/saveVendor',
+                    url: '/saveUser',
                     data: data,
                     success: function(data,t,xhr){
                       modal.click();
@@ -425,7 +425,7 @@ $(function(){
                   modal.click()
                   loadLoading({},function(err,win,modal){
                     $.ajax({
-                      url: '/deleteVendor',
+                      url: '/deleteUser',
                       data: {
                         id: $p.attr('id')
                       },
@@ -461,7 +461,7 @@ $(function(){
 
   /**********************************
    * 
-   * Vendor List
+   * Users List
    * 
    * load 10 more when the scroll hits the bottom
    * 
@@ -483,7 +483,7 @@ $(function(){
         if(bottomOfWindow > bottomOfVendorBox && !currentlyLoadingVendors){
           currentlyLoadingVendors = true
           $.ajax({
-            url: '/get10Vendors',
+            url: '/get10Users',
             data: {
               skip: alreadyFoundVendors
             },
