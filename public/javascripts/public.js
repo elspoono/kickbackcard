@@ -42,6 +42,31 @@ $(function(){
       win.css({'min-height':settings.height})
     if(settings.width)
       win.width(settings.width)
+    
+    var buttons = $('<div class="buttons" />')
+    if(settings.Ok){
+      var ok = $('<input type="button" value="Ok" class="submit">')
+      ok.click(function(){
+        settings.Ok(false,win,modal)
+      })
+      buttons.append(ok)
+    }
+    if(settings.Cancel){
+      var cancel = $('<input type="button" value="Cancel" class="cancel">')
+      cancel.click(function(){
+        settings.Cancel(false,win,modal)
+      })
+      buttons.append(cancel)
+    }
+    if(settings.Confirm){
+      var confirm = $('<input type="button" value="Confirm" class="submit">')
+      confirm.click(function(){
+        settings.Confirm(false,win,modal)
+      })
+      buttons.append(confirm)
+    }
+    win.append(buttons)
+
     $('body').append(modal,win)
 
 
@@ -61,8 +86,12 @@ $(function(){
     modal.click(function(){
       $window.unbind('resize',resizeEvent)
       $body.css({overflow:'inherit','padding-right':0})
-      modal.remove()
-      win.remove()
+      modal.fadeOut(function(){
+        modal.remove()
+      })
+      win.fadeOut(function(){
+        win.remove()
+      })
     });
     modal.fadeIn()
     win.fadeIn()
@@ -82,6 +111,51 @@ $(function(){
       content: 'Loading ... ',
       height: 100,
       width: 200
+    }
+    for (var k in options){
+      modifiedOptions[k] = options[k];
+    }
+    loadModal(modifiedOptions, next);
+  }
+  /**********************************
+   * 
+   * Modal Handling Functions
+   * 
+   * Load Confirm (Subclass of loadmodal)
+   * like javascript confirm()
+   * 
+   **********************************/
+  var loadConfirm = function(options, next){
+    options = options || {}
+    var modifiedOptions = {
+      content: 'Confirm',
+      height: 80,
+      width: 300
+    }
+    for (var k in options){
+      modifiedOptions[k] = options[k];
+    }
+    loadModal(modifiedOptions, next);
+  }
+  /**********************************
+   * 
+   * Modal Handling Functions
+   * 
+   * Load Alert (Subclass of loadmodal)
+   * like javascript alert()
+   * 
+   **********************************/
+  var loadAlert = function(options, next){
+    options = options || {}
+    next = next || function(){}
+    if(typeof(options)=='string') options = {content:options}
+    var modifiedOptions = {
+      content: 'Alert',
+      Ok: function(err,win,modal){
+        modal.click()
+      },
+      height: 80,
+      width: 300
     }
     for (var k in options){
       modifiedOptions[k] = options[k];
@@ -314,7 +388,7 @@ $(function(){
                     success: function(data,t,xhr){
                       modal.click();
                       if(typeof(data)=='object'&&data.err)
-                        alert(data.err)
+                        loadAlert(data.err)
                       else{
                         var $newRow = $(data)
                         $newRow.hide()
@@ -324,12 +398,14 @@ $(function(){
                         /* Otherwise, put it right after the add button they just clicked */
                         else
                           $('.user .add-row').after($newRow)
-                        $newRow.addClass('modified').fadeIn().delay(usualDelay).removeClass('modified','normal')
+                        $newRow.addClass('modified').fadeIn().delay(usualDelay).queue(function(){
+                          $(this).removeClass('modified')
+                        })
                       }
                     },
                     error: function(){
                       modal.click();
-                      alert('server error')
+                      loadAlert('server error')
                     }
                   })
                 })
@@ -338,6 +414,42 @@ $(function(){
             })
             return false;
           })
+          if($p.attr('id'))
+            win.find('.cancel').click(function(){
+              loadConfirm({
+                content: '<p>Are you sure?</p><p>This cannot be undone.</p>',
+                Confirm: function(err,win2,modal2){
+                  modal2.click()
+                  modal.click()
+                  loadLoading({},function(err,win,modal){
+                    $.ajax({
+                      url: '/deleteUser',
+                      data: {
+                        id: $p.attr('id')
+                      },
+                      success: function(data){
+                        if(data.err)
+                          $p.addClass('modified').delay(usualDelay).removeClass('modified')
+                        else
+                          $p.addClass('deleted').delay(usualDelay).fadeOut(function(){
+                            $p.remove()
+                          })
+                        modal.click()
+                      },
+                      error: function(){
+                        $p.addClass('modified').delay(usualDelay).removeClass('modified')
+                        modal.click()
+                      }
+                    })
+                  })
+                },
+                Cancel: function(err,win2,modal2){
+                  modal2.click()
+                }
+              },function(){})
+            })
+          else
+            win.find('.cancel').hide()
         })
       })
     })

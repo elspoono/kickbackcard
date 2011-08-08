@@ -115,11 +115,19 @@ body .body .add-row {
   margin: 60px 0;
   text-align: center;
 }
-body .body .modified {
+body .body .modified,
+body .body .modified:nth-child(even) {
   background: #cfc;
   -moz-box-shadow: 0px 0px 12px #cfc;
   -webkit-box-shadow: 0px 0px 12px #cfc;
   box-shadow: 0px 0px 12px #cfc;
+}
+body .body .deleted,
+body .body .deleted:nth-child(even) {
+  background: #fcc;
+  -moz-box-shadow: 0px 0px 12px #fcc;
+  -webkit-box-shadow: 0px 0px 12px #fcc;
+  box-shadow: 0px 0px 12px #fcc;
 }
 body .container {
   max-width: 900px;

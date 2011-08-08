@@ -106,6 +106,7 @@ UserSchema.static('authenticate', function(email, password, next){
   })
 });
 /* Default Data */
+var UserBackup = mongoose.model('UserBackup',UserSchema);
 var User = mongoose.model('User',UserSchema);
 User.count({},function(err,data){
   if(err)
@@ -170,7 +171,7 @@ var saveUser = function(req, res, next){
     next()
   }else if(params.id){
     User.findById(params.id,function(err,data){
-      if(req.err){
+      if(err){
         req.data = data
         req.err = err
         next()
@@ -196,6 +197,36 @@ var saveUser = function(req, res, next){
       req.err = err
       next()
     })
+  }
+}
+var deleteUser = function(req, res, next){
+  var params = req.body || {}
+  if(params.id){
+    User.findById(params.id,function(err,data){
+      if(err){
+        req.err = err
+        next()
+      }else{
+        var user = new UserBackup()
+        user.email = data.email
+        user.password_encrypted = data.password_encrypted
+        user.roles = data.roles
+        user.save(function(err,data){
+          if(err){
+            req.err = err
+            next()
+          }else{
+            User.remove({_id: params.id},function(err,data){
+              req.err = err
+              next()
+            })
+          }
+        })
+      }
+    })
+  }else{
+    req.err = 'bad parameters'
+    next()
   }
 }
 /* Ensures a valid login, and sets session variables */
@@ -278,6 +309,11 @@ app.post('/saveUser', securedFunction, saveUser, function(req, res, next){
       layout: 'layout_partial.jade',
       user: req.data
     })
+})
+app.post('/deleteUser', securedFunction, deleteUser, function(req, res, next){
+  res.send({
+    err: req.err
+  })
 })
 
 
