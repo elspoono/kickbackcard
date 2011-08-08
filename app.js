@@ -52,6 +52,17 @@ app.configure('production', function(){
  **********************************/
 var geo = require('geo');
 
+var nodemailer = require('nodemailer');
+
+nodemailer.SMTP = {
+  host: 'smtp.sendgrid.net',
+  port: 25,
+  use_authentication: true,
+  user: process.env.SENDGRID_USERNAME,
+  pass: process.env.SENDGRID_PASSWORD,
+  domain: process.env.SENDGRID_DOMAIN
+}
+
 var bcrypt = require('bcrypt');
 var encrypted = function(inString){
   var salt = bcrypt.gen_salt_sync(10);
@@ -86,7 +97,7 @@ var RoleSchema = new Schema({
   key: String
 })
 var UserSchema = new Schema({
-  email: { type: String, validate: /\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i, unique: true },
+  email: { type: String, validate: /\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i },
   password_encrypted: String,
   roles: [RoleSchema],
   vendor_id: String
@@ -142,7 +153,6 @@ User.count({},function(err,data){
  **********************************/
 /* Role / Vendor mongoose Schemas */
 var DealSchema = new Schema({
-  vendor_id: String,
   buy_item: String,
   buy_qty: Number,
   get_type: String,
@@ -150,14 +160,14 @@ var DealSchema = new Schema({
   get_item: String
 })
 var VendorSchema = new Schema({
-  name: { type: String, validate: /\b.{1,1500}\b/i, unique: true },
+  name: { type: String, validate: /\b.{1,1500}\b/i },
   address: { type: String, validate: /\b.{1,1500}\b/i },
   coordinates: Array,
-  description: { type: String, validate: /\b.{1,1500}\b/i },
-  hours: { type: String, validate: /\b.{1,1500}\b/i },
-  contact: { type: String, validate: /\b.{1,1500}\b/i },
+  description: { type: String },
+  hours: { type: String },
+  contact: { type: String },
   deals: [DealSchema],
-  user_ids: Array
+  user_ids: [String]
 })
 var Vendor = mongoose.model('Vendor',VendorSchema);
 var VendorBackup = mongoose.model('VendorBackup',VendorSchema);
@@ -178,10 +188,17 @@ var getVendor = function(req, res, next){
   if(id=='')
     next()
   else
-    Vendor.findById(params.id,function(err, data){
+    Vendor.findById(params.id,function(err, vendor){
       req.err = err
-      req.data = data
-      next()
+      if(err)
+        next()
+      else
+        User.find({vendor_id:vendor._id},function(err, data){
+          req.err = err
+          vendor.users = data
+          req.vendor = vendor
+          next()
+        })
     });
 }
 var get10Vendors = function(req, res, next){
@@ -215,6 +232,9 @@ var saveVendor = function(req, res, next){
   if(
     !params.name.match(/\b.{1,1500}\b/i)
     || !params.address.match(/\b.{1,1500}\b/i)
+    || params.description.length > 1500
+    || params.hours.length > 1500
+    || params.contact.length > 1500
   ){
     req.err = 'parameter validation failed'
     next()
@@ -232,6 +252,9 @@ var saveVendor = function(req, res, next){
             data.name = params.name
             data.address = params.address
             data.coordinates = params.coordinates
+            data.description = params.description
+            data.hours = params.hours
+            data.contact = params.contact
             data.save(function(err,data){
               req.data = data
               req.err = err
@@ -244,6 +267,9 @@ var saveVendor = function(req, res, next){
         vendor.name = params.name
         vendor.address = params.address
         vendor.coordinates = params.coordinates
+        vendor.description = params.description
+        vendor.hours = params.hours
+        vendor.contact = params.contact
         vendor.save(function(err,data){
           req.data = data
           req.err = err
@@ -288,6 +314,18 @@ var deleteVendor = function(req, res, next){
  * 
  * 
  **********************************/
+var getUser = function(req, res, next){
+  var params = req.body || {}
+  var id = params.id || ''
+  if(id=='')
+    next()
+  else
+    User.findById(params.id,function(err, data){
+      req.err = err
+      req.user = data
+      next()
+    });
+}
 var get10Users = function(req, res, next){
   var params = req.body || {}
   var skip = params.skip || 0
@@ -317,7 +355,7 @@ var saveUser = function(req, res, next){
   if(
     !params.email.match(/\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i)
     || (!params.password.match(/\b.{6,1500}\b/i) && !params.id)           /* password is optional only when id is passed */
-    || !params.role.match(/\b(user|admin)\b/i)
+    || !params.role.match(/\b(vendor|admin)\b/i)
   ){
     req.err = 'parameter validation failed'
     next()
@@ -336,6 +374,33 @@ var saveUser = function(req, res, next){
           req.data = data
           req.err = err
           next()
+        })
+      }
+    })
+  }else if(params.vendor_id){
+    Vendor.findById(params.vendor_id,function(err,vendor){
+      if(err){
+        req.data = vendor
+        req.err = err
+        next()
+      }else{
+        var user = new User()
+        user.email = params.email
+        user.password_encrypted = encrypted(params.password)
+        user.roles = [{key:params.role}]
+        user.vendor_id = vendor._id;
+        user.save(function(err,data){
+          req.data = data
+          if(err){
+            req.err = err
+            next() 
+          }else{
+            vendor.user_ids.push(user._id)
+            vendor.save(function(err,data){
+              req.err = err
+              next()
+            })
+          }
         })
       }
     })
@@ -439,6 +504,19 @@ app.post('/get10Users', securedFunction, get10Users, function(req, res, next){
       users: req.data
     })
 })
+app.post('/getUser', securedFunction, getUser, function(req, res, next){
+  var params  = req.body || {}
+  var role = params.role || 'admin'
+  if(req.err)
+    res.send({
+      err: req.err
+    })
+  else
+    res.render('_form_user', {
+      layout: 'layout_partial.jade',
+      user: req.user || {roles:[{key:role}]}
+    })
+})
 app.post('/checkEmail', checkEmail, function(req, res, next){
   res.send({
     err: req.err,
@@ -492,7 +570,7 @@ app.post('/getVendor', securedFunction, getVendor, function(req, res, next){
   else
     res.render('_form_vendor', {
       layout: 'layout_partial.jade',
-      vendor: req.data || {}
+      vendor: req.vendor || {}
     })
 })
 app.post('/checkName', checkName, function(req, res, next){
@@ -523,19 +601,64 @@ app.post('/deleteVendor', securedFunction, deleteVendor, function(req, res, next
 
 /**********************************
  * 
+ * Send Email Routes
+ * 
+ * 
+ * 
+ * 
+ **********************************/
+app.post('/sendWelcomeEmail', securedFunction, function(req, res, next){
+  var params = req.body || {}
+  var email = params.email || ''
+  if(!email.match(/\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i)){
+    req.err = 'invalid email'
+    next()
+  }else
+    // send an e-mail
+    nodemailer.send_mail({
+      sender: 'help@kickbackcard.com',
+      to:email,
+      subject:'KickbackCard: Welcome!',
+      html: '<p>Welcome to kickback card '+email+'</p>',
+      body:'Welcome to kickback card '+email+''
+    },function(err, data){
+      req.err = err
+      req.data = data
+      next()
+    });
+}, function(req, res, next){
+  res.send({
+    err: req.err,
+    data: req.data
+  })
+})
+
+
+
+/**********************************
+ * 
  * Static Pages
  * 
  * Home page.
  * 
  * 
  **********************************/
-app.get('/', function(req, res){
+app.get('/', get10Vendors, function(req, res){
   if(req.session.role == 'admin')
     res.redirect('/admin')
-  else
+  else{
+    var mystring = 'http://maps.googleapis.com/maps/api/staticmap?center=Phoenix%20AZ&'
+    for(var i in req.data){
+      var thisVendor = req.data[i]
+      if(typeof(thisVendor.coordinates)=='object' && thisVendor.coordinates.length == 3)
+        mystring += '&markers=color:red%7Clabel:V%7C'+thisVendor.coordinates[0]+','+thisVendor.coordinates[1]
+    }
+    mystring += '&zoom=10&size=250x331&sensor=false'
     res.render('index', {
-      title: 'KickbackCard.com'
+      title: 'KickbackCard.com',
+      mapUrl: mystring
     });
+  }
 });
 
 
@@ -582,10 +705,10 @@ app.post('/login', validateLogin, function(req, res, next){
  * 
  * 
  **********************************/
-app.get('/admin', securedArea, get10Users, function(req,res, next){
+app.get('/admin', securedArea, get10Vendors, function(req,res, next){
   res.render('admin', {
-    users: req.data,
-    view: 'users',
+    vendors: req.data,
+    view: 'vendors',
     title: 'KickbackCard.com: Admin'
   })
 })

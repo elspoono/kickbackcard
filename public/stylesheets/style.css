@@ -85,6 +85,25 @@ body .body .container {
   -moz-box-shadow: 0px 0px 4px #aaa;
   -webkit-box-shadow: 0px 0px 4px #aaa;
   box-shadow: 0px 0px 4px #aaa;
+  overflow: hidden;
+}
+body .body .container .content-area {
+  float: left;
+  max-width: 500px;
+}
+body .body .container .phone-area {
+  width: 300px;
+  float: right;
+}
+body .body .container .phone-area .screenshot {
+  background: url("/images/screenshot_03.png");
+  height: 584px;
+  width: 300px;
+  position: relative;
+}
+body .body .container .phone-area .screenshot img {
+  margin-left: 27px;
+  margin-top: 105px;
 }
 body .body .row {
   background: #aaa;
@@ -99,7 +118,8 @@ body .body .row a {
   color: #000;
 }
 body .body .row li {
-  width: 250px;
+  white-space: no-wrap;
+  width: 205px;
   overflow: hidden;
   float: left;
   padding: 10px;
@@ -179,13 +199,37 @@ body .window {
   top: 0;
   left: 0;
 }
+body .window a {
+  color: #3f3e3d;
+}
 body .window .error-message {
   padding: 4px 8px;
   border: 1px solid #900;
   background: #fcc;
 }
+body .window .tabs {
+  overflow: hidden;
+  margin: 0 0 30px 0;
+}
+body .window .tabs li {
+  display: block;
+  float: left;
+  padding: 1px 8px;
+  border: 1px solid #6f6f6e;
+  cursor: pointer;
+  color: #6f6f6e;
+  margin-top: 5px;
+}
+body .window .tabs li.active {
+  font-weight: bold;
+  margin-top: 0;
+  padding: 4px 8px;
+  border-bottom: none;
+  color: #000;
+  cursor: auto;
+}
 body .window h2 {
-  font-size: 1.2em;
+  font-size: 1.5em;
 }
 body .window fieldset .fields {
   margin: 15px 0;
@@ -223,13 +267,36 @@ body .window fieldset .fields .google-map {
   float: right;
   height: 100px;
   width: 256px;
-  background: #aaa;
   display: block;
   border: 1px solid #6f6f6e;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
   overflow: hidden;
+}
+body .window fieldset .fields .disabled {
+  opacity: 0.3;
+}
+body .window fieldset .required label,
+body .window fieldset .required .input {
+  font-weight: bold;
+}
+body .window fieldset .row {
+  margin: 15px 0;
+  overflow: hidden;
+}
+body .window fieldset .row li {
+  float: left;
+  display: block;
+  overflow: hidden;
+  padding-right: 10px;
+}
+body .window fieldset .row li .input {
+  width: 100px;
+}
+body .window fieldset .add-row {
+  margin: 15px 0;
+  text-align: center;
 }
 body .window .buttons {
   overflow: hidden;

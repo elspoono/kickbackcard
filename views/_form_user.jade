@@ -6,14 +6,15 @@ form(method='POST')
   fieldset
     .fields
       label email address
-      input.input.email(name='email',placeholder='(e.g. yourname@domain.com)')
+      input.input.email(name='email',placeholder='(e.g. yourname@domain.com)',value=user.email)
     .fields
       label password
       input.input.password(name='password',placeholder='(e.g. red123)')
     .fields
       label role
       select.input.role(name='role')
-        option(value='admin') admin
+        option(value=user.roles[0].key)=user.roles[0].key
   .buttons
     input.submit(type='submit',value='Save')
+    input.submit.send-welcome-email(type='submit',value='Send Welcome Email')
     input.cancel(type='button',value='Delete')

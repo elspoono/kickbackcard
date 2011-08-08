@@ -97,6 +97,21 @@ body
     .container
       background boxbg
       box-shadow(4px)
+      overflow hidden
+      .content-area
+        float left
+        max-width 500px
+      .phone-area
+        width 300px
+        float right
+        .screenshot
+          background url('/images/screenshot_03.png')
+          height 584px
+          width 300px
+          position relative
+          img
+            margin-left 27px
+            margin-top 105px
     .row
       background semi-light
       a
@@ -105,7 +120,8 @@ body
       box-shadow(4px, light)
       overflow hidden
       li
-        width 250px
+        white-space no-wrap
+        width 205px
         overflow hidden
         float left
         padding 10px
@@ -152,6 +168,8 @@ body
   .window
     background #fff
     color very-dark
+    a
+      color very-dark
     border-radius(15px)
     min-height 235px
     max-width 500px
@@ -161,8 +179,26 @@ body
       padding 4px 8px
       border 1px solid darken(red,darkShift)
       background red
+    .tabs
+      overflow hidden
+      margin 0 0 30px 0
+      li
+        display block
+        float left
+        padding 1px 8px
+        border 1px solid semi-dark
+        cursor pointer
+        color semi-dark
+        margin-top 5px
+      li.active
+        font-weight bold
+        margin-top 0
+        padding 4px 8px
+        border-bottom none
+        color dark
+        cursor auto
     h2
-      font-size 1.2em
+      font-size 1.5em
     fieldset
       .fields
         margin 15px 0
@@ -192,11 +228,28 @@ body
           float right
           height 100px
           width 256px
-          background semi-light
           display block
           border 1px solid semi-dark
           border-radius(4px)
           overflow hidden
+        .disabled
+          opacity(.3)
+      .required
+        label,.input
+          font-weight bold
+      .row
+        margin 15px 0
+        overflow hidden
+        li
+          float left
+          display block
+          overflow hidden
+          padding-right 10px
+          .input
+            width 100px
+      .add-row
+        margin 15px 0
+        text-align center
     .buttons
       overflow hidden
       width 100%

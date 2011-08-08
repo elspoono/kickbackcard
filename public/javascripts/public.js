@@ -237,222 +237,262 @@ $(function(){
    * 
    * 
    **********************************/
-  $('.user .add,.user .edit').live('click',function(){
+  $('.user .add,.user .edit,.vendor-user .edit,.vendor-user .add').live('click',function(){
 
     var $t = $(this)
     var $p = $t.closest('.row')
+    var $a = $t.closest('.add-row')
+    var $v = $t.closest('.vendor-user')
 
     /* Prompt for user add form */
     loadLoading({},function(err,win,modal){
-      $.get('/_form_user',function(data){
-        modal.click();
-        loadModal({},function(err,win,modal){
-          win.append(data)
-          /******************
-           *
-           * Email Validation auto ajaxyness
-           *
-           ******************/
-          var email = $p.find('.email').text() || ''
-          var emailT = 0
-          win.find('.email').val(email).keyup(function(e){
-            var $t = $(this)
-            if(email!=this.value){
-              clearTimeout(emailT)
-              email = this.value
-              emailT = setTimeout(function(){
-                $t.trigger('customValidate')
-              },500)
-            }
-          }).bind('customValidate',function(e,next){
-            var $t = $(this)
-            /* It appears the email has changed, and we think they stopped typing */
-            $t.removeClass('loading valid')
+      $.ajax({
+        url: '/getUser',
+        data: {
+          id: $p.attr('id'),
+          role: $a.attr('role'),
+          vendor_id: $v.attr('id')
+        },
+        success: function(data){
+          modal.click();
+          loadModal({},function(err,win,modal){
+            win.append(data)
+            /******************
+             *
+             * Email Validation auto ajaxyness
+             *
+             ******************/
+            var email = $p.find('.email').text() || ''
+            var emailT = 0
+            win.find('.email').keyup(function(e){
+              var $t = $(this)
+              if(email!=this.value){
+                clearTimeout(emailT)
+                email = this.value
+                emailT = setTimeout(function(){
+                  $t.trigger('customValidate')
+                },500)
+              }
+            }).bind('customValidate',function(e,next){
+              var $t = $(this)
+              /* It appears the email has changed, and we think they stopped typing */
+              $t.removeClass('loading valid')
 
-            if(email.match(/\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i)){
-              $t.addClass('loading')
-              $.ajax({
-                url: '/checkEmail',
-                data: {
-                  email: email,
-                  id: $p.attr('id')
-                },
-                success: function(data){
-                  /* Make sure they didn't change the email since we last checked */
-                  if(email==data.email){
-                    $t.removeClass('loading valid error')
-                    if(data.err){
-                      $t.addClass('error')
-                      $t.showTooltip({message:'db error'})
-                    }else if(data.data==0){
-                      if(email.match(/\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i)){
-                        $t.addClass('valid')
-                        $t.showTooltip({message:email+' is good'})
+              if(email.match(/\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i)){
+                $t.addClass('loading')
+                $.ajax({
+                  url: '/checkEmail',
+                  data: {
+                    email: email,
+                    id: $p.attr('id')
+                  },
+                  success: function(data){
+                    /* Make sure they didn't change the email since we last checked */
+                    if(email==data.email){
+                      $t.removeClass('loading valid error')
+                      if(data.err){
+                        $t.addClass('error')
+                        $t.showTooltip({message:'db error'})
+                      }else if(data.data==0){
+                        if(email.match(/\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i)){
+                          $t.addClass('valid')
+                          $t.showTooltip({message:email+' is good'})
+                        }else{
+                          $t.addClass('error')
+                          $t.showTooltip({message:email+' doesn\'t look like an email'})
+                        }
                       }else{
                         $t.addClass('error')
-                        $t.showTooltip({message:email+' doesn\'t look like an email'})
+                        $t.showTooltip({message:email+' is taken'})
                       }
-                    }else{
-                      $t.addClass('error')
-                      $t.showTooltip({message:email+' is taken'})
+                      if(next) next()
                     }
+                  },
+                  error: function(){
+                    $t.removeClass('loading,valid,error')
+                    $t.addClass('error')
+                    $t.showTooltip({message:'server error'})
                     if(next) next()
                   }
-                },
-                error: function(){
-                  $t.removeClass('loading,valid,error')
-                  $t.addClass('error')
-                  $t.showTooltip({message:'server error'})
-                  if(next) next()
-                }
-              })
-            }else{
-              $t.addClass('error')
-              $t.showTooltip({message:email+' doesn\'t look like an email'})
-              if(next) next()
-            }
-          })
-          /******************
-           *
-           * Password ajaxyness
-           *
-           ******************/
-          var password = ''
-          var passwordT = 0
-          win.find('.password').keyup(function(e){
-            var $t = $(this)
-            if(password!=this.value){
-              clearTimeout(passwordT)
-              passwordT = setTimeout(function(){
-                $t.trigger('customValidate')
-              },500)
-            }
-          }).bind('customValidate',function(){
-            var $t = $(this)
-            $t.removeClass('valid error')
-            password = this.value
-            var charactersLeft = 6-password.length;
-            if(password==''&&$p.attr('id')){
-              $t.addClass('valid')
-            }else if(charactersLeft>0){
-              $t.addClass('error')
-              $t.showTooltip({message:password+' is just '+charactersLeft+' character'+(charactersLeft>1?'s':'')+' too short'})
-            }else if(password.match(/\b.{6,1500}\b/i)){
-              $t.addClass('valid')
-              $t.showTooltip({message:password+' is good'})
-            }else{
-              $t.addClass('error')
-              $t.showTooltip({message:password+' is not quite right'})
-            }
-          })
-
-          /************************************************************/
-          /* Anytime we close the modal, clear out those tooltips too */
-          modal.bind('click',function(){
-            $('.tooltip').remove()
-          })
-          /************************************************************/
-
-
-          /******************
-           *
-           * The form's actually submitted ??? Oh noes!!
-           *
-           ******************/
-          win.find('form').submit(function(){
-
-            /* Always instantaneous, no next required */
-            win.find('.password').trigger('customValidate')
-
-            /**************************
-             *
-             * We rely on the email's customValidate function 
-             * to show it's own loading indicators as we wait
-             * for it here.
-             * 
-             **************************/
-            win.find('.email').trigger('customValidate',function(){
-              var err = win.find('.error')
-              if(err.length){
-
-              }else{
-                var data = {
-                  /* id is null when it's new */
-                  id: $p.attr('id'),
-                  email: win.find('.email').val(),
-                  password: win.find('.password').val(),
-                  role: win.find('.role').val()
-                };
-                loadLoading({},function(err,win,modal){
-                  $.ajax({
-                    url: '/saveUser',
-                    data: data,
-                    success: function(data,t,xhr){
-                      modal.click();
-                      if(typeof(data)=='object'&&data.err)
-                        loadAlert(data.err)
-                      else{
-                        var $newRow = $(data)
-                        $newRow.hide()
-                        /* If it's existing, replace that row */
-                        if($p.attr('id'))
-                          $p.replaceWith($newRow)
-                        /* Otherwise, put it right after the add button they just clicked */
-                        else
-                          $('.user .add-row').after($newRow)
-                        $newRow.addClass('modified').fadeIn().delay(usualDelay).queue(function(){
-                          $(this).removeClass('modified')
-                        })
-                      }
-                    },
-                    error: function(){
-                      modal.click();
-                      loadAlert('server error')
-                    }
-                  })
                 })
-                modal.click(); 
+              }else{
+                $t.addClass('error')
+                $t.showTooltip({message:email+' doesn\'t look like an email'})
+                if(next) next()
               }
             })
-            return false;
-          })
-          if($p.attr('id'))
-            win.find('.cancel').click(function(){
-              loadConfirm({
-                content: '<p>Are you sure?</p><p>This cannot be undone.</p>',
-                Confirm: function(err,win2,modal2){
-                  modal2.click()
-                  modal.click()
+            /******************
+             *
+             * Password ajaxyness
+             *
+             ******************/
+            var password = ''
+            var passwordT = 0
+            win.find('.password').keyup(function(e){
+              var $t = $(this)
+              if(password!=this.value){
+                clearTimeout(passwordT)
+                passwordT = setTimeout(function(){
+                  $t.trigger('customValidate')
+                },500)
+              }
+            }).bind('customValidate',function(){
+              var $t = $(this)
+              $t.removeClass('valid error')
+              password = this.value
+              var charactersLeft = 6-password.length;
+              if(password==''&&$p.attr('id')){
+                $t.addClass('valid')
+              }else if(charactersLeft>0){
+                $t.addClass('error')
+                $t.showTooltip({message:password+' is just '+charactersLeft+' character'+(charactersLeft>1?'s':'')+' too short'})
+              }else if(password.match(/\b.{6,1500}\b/i)){
+                $t.addClass('valid')
+                $t.showTooltip({message:password+' is good'})
+              }else{
+                $t.addClass('error')
+                $t.showTooltip({message:password+' is not quite right'})
+              }
+            })
+
+            /************************************************************/
+            /* Anytime we close the modal, clear out those tooltips too */
+            modal.bind('click',function(){
+              $('.tooltip').remove()
+            })
+            /************************************************************/
+
+
+            /******************
+             *
+             * The form's actually submitted ??? Oh noes!!
+             *
+             ******************/
+            var clickedWelcome = false
+            win.find('.send-welcome-email').click(function(){
+              clickedWelcome = true
+            })
+            win.find('form').submit(function(){
+              var sendWelcome = false
+              if(clickedWelcome)
+                sendWelcome = true
+              clickedWelcome = false
+              /* Always instantaneous, no next required */
+              win.find('.password').trigger('customValidate')
+
+              /**************************
+               *
+               * We rely on the email's customValidate function 
+               * to show it's own loading indicators as we wait
+               * for it here.
+               * 
+               **************************/
+              win.find('.email').trigger('customValidate',function(){
+                var err = win.find('.error')
+                if(err.length){
+
+                }else{
+                  var params = {
+                    /* id is null when it's new */
+                    id: $p.attr('id'),
+                    vendor_id: $v.attr('id'),
+                    email: win.find('.email').val(),
+                    password: win.find('.password').val(),
+                    role: win.find('.role').val()
+                  };
                   loadLoading({},function(err,win,modal){
                     $.ajax({
-                      url: '/deleteUser',
-                      data: {
-                        id: $p.attr('id')
-                      },
-                      success: function(data){
-                        if(data.err)
-                          $p.addClass('modified').delay(usualDelay).removeClass('modified')
-                        else
-                          $p.addClass('deleted').delay(usualDelay).fadeOut(function(){
-                            $p.remove()
+                      url: '/saveUser',
+                      data: params,
+                      success: function(data,t,xhr){
+                        modal.click();
+                        if(typeof(data)=='object'&&data.err)
+                          loadAlert(data.err)
+                        else{
+                          var $newRow = $(data)
+                          $newRow.hide()
+                          /* If it's existing, replace that row */
+                          if($p.attr('id'))
+                            $p.replaceWith($newRow)
+                          /* Otherwise, put it right after the add button they just clicked */
+                          else
+                            $a.after($newRow)
+                          $newRow.addClass('modified').fadeIn(function(){
+                            if(sendWelcome){
+                              loadLoading({},function(err,win,modal){
+                                $.ajax({
+                                  url: 'sendWelcomeEmail',
+                                  data: {
+                                    email: params.email
+                                  },
+                                  success:function(){
+                                    modal.click()
+                                    loadAlert('message sent to '+params.email)
+                                  },
+                                  error:function(){
+                                    modal.click()
+                                    loadAlert('server error')
+                                  }
+                                })
+                              })
+                            }
+                          }).delay(usualDelay).queue(function(){
+                            $(this).removeClass('modified')
                           })
-                        modal.click()
+                        }
                       },
                       error: function(){
-                        $p.addClass('modified').delay(usualDelay).removeClass('modified')
-                        modal.click()
+                        modal.click();
+                        loadAlert('server error')
                       }
                     })
                   })
-                },
-                Cancel: function(err,win2,modal2){
-                  modal2.click()
+                  modal.click(); 
                 }
-              },function(){})
+              })
+              return false;
             })
-          else
-            win.find('.cancel').hide()
-        })
+            if($p.attr('id'))
+              win.find('.cancel').click(function(){
+                loadConfirm({
+                  content: '<p>Are you sure?</p><p>This cannot be undone.</p>',
+                  Confirm: function(err,win2,modal2){
+                    modal2.click()
+                    modal.click()
+                    loadLoading({},function(err,win,modal){
+                      $.ajax({
+                        url: '/deleteUser',
+                        data: {
+                          id: $p.attr('id')
+                        },
+                        success: function(data){
+                          if(data.err)
+                            $p.addClass('modified').delay(usualDelay).removeClass('modified')
+                          else
+                            $p.addClass('deleted').delay(usualDelay).fadeOut(function(){
+                              $p.remove()
+                            })
+                          modal.click()
+                        },
+                        error: function(){
+                          $p.addClass('modified').delay(usualDelay).removeClass('modified')
+                          modal.click()
+                        }
+                      })
+                    })
+                  },
+                  Cancel: function(err,win2,modal2){
+                    modal2.click()
+                  }
+                },function(){})
+              })
+            else
+              win.find('.cancel').hide()
+          })
+        },
+        error: function(){
+          loadAlert('server error')
+        }
       })
     })
 
@@ -536,6 +576,43 @@ $(function(){
           modal.click();
           loadModal({},function(err,win,modal){
             win.append(data)
+
+            
+
+            /******************
+             *
+             * Tabify This Shizzit
+             *
+             ******************/
+            var tabs = $('<ul class="tabs" />')
+            var allContents = []
+            win.find('.tab').each(function(){
+              var $t = $(this)
+              var h2 = $t.find('h2')
+              var text = h2.text()
+              var contents = $t
+              contents.hide()
+              var li = $('<li>')
+              li.html(text)
+              li.click(function(){
+                for(var i in allContents){
+                  allContents[i].hide()
+                }
+                contents.show()
+                tabs.find('li').removeClass('active')
+                li.addClass('active')
+                $window.resize()
+              })
+              tabs.append(li)
+              allContents.push(contents)
+            })
+            win.prepend(tabs)
+            tabs.find('li:first').click()
+            if(!$p.attr('id'))
+              tabs.hide()
+
+            
+
             /******************
              *
              * Name Validation auto ajaxyness
@@ -624,6 +701,8 @@ $(function(){
                 var $img = $('<img class="google-map" src="//maps.googleapis.com/maps/api/staticmap?center='+address+'&markers=color:red%7Clabel:V%7C'+address+'&zoom=13&size=256x100&sensor=false" />')
                 $img.load(function(){
                   $window.resize()
+                }).click(function(){
+                  window.open('//maps.google.com/?q='+address)
                 })
                 win.find('.google-map').replaceWith($img)
               }else{
@@ -631,6 +710,9 @@ $(function(){
                 $t.showTooltip({message:address+' doesn\'t look like a address'})
                 if(next) next()
               }
+            })
+            win.find('.google-map').click(function(){
+              window.open('//maps.google.com/?q='+win.find('.address').val())
             })
 
 
@@ -663,6 +745,14 @@ $(function(){
                * 
                **************************/
               win.find('.name').trigger('customValidate',function(){
+                if(
+                  win.find('.description').val().length > 1500
+                  || win.find('.hours').val().length > 1500
+                  || win.find('.contact').val().length > 1500
+                ){
+                  loadAlert('Apologies, that text is too long')
+                  return;
+                }
                 var err = win.find('.error')
                 if(err.length){
 
@@ -671,7 +761,10 @@ $(function(){
                     /* id is null when it's new */
                     id: $p.attr('id'),
                     name: win.find('.name').val(),
-                    address: win.find('.address').val()
+                    address: win.find('.address').val(),
+                    description: win.find('.description').val(),
+                    hours: win.find('.hours').val(),
+                    contact: win.find('.contact').val()
                   };
                   loadLoading({},function(err,win,modal){
                     $.ajax({
