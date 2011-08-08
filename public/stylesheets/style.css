@@ -1,5 +1,5 @@
-@import url('http://fonts.googleapis.com/css?family=Open+Sans');
-@import url('http://fonts.googleapis.com/css?family=Luckiest+Guy');
+@import url('//fonts.googleapis.com/css?family=Open+Sans');
+@import url('//fonts.googleapis.com/css?family=Luckiest+Guy');
 @import "reset.css";
 body {
   font: 16px "Open Sans", Helvetica, Arial, sans-serif;

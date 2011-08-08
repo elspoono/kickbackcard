@@ -621,7 +621,7 @@ $(function(){
               if(address.match(/\b.{1,}\s{1,}.{1,}\b/i)){
                 $t.addClass('valid')
                 $t.showTooltip({message:address+' is good'})
-                var $img = $('<img class="google-map" src="http://maps.googleapis.com/maps/api/staticmap?center='+address+'&markers=color:red%7Clabel:V%7C'+address+'&zoom=13&size=256x100&sensor=false" />')
+                var $img = $('<img class="google-map" src="//maps.googleapis.com/maps/api/staticmap?center='+address+'&markers=color:red%7Clabel:V%7C'+address+'&zoom=13&size=256x100&sensor=false" />')
                 $img.load(function(){
                   $window.resize()
                 })
