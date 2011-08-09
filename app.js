@@ -157,8 +157,12 @@ var DealSchema = new Schema({
   buy_qty: Number,
   get_type: String,
   get_qty: Number,
-  get_item: String
+  get_item: String,
+  vendor_id: String
 })
+var Deal = mongoose.model('Deal',DealSchema);
+var DealBackup = mongoose.model('DealBackup',DealSchema);
+
 var VendorSchema = new Schema({
   name: { type: String, validate: /\b.{1,1500}\b/i },
   address: { type: String, validate: /\b.{1,1500}\b/i },
@@ -166,7 +170,7 @@ var VendorSchema = new Schema({
   description: { type: String },
   hours: { type: String },
   contact: { type: String },
-  deals: [DealSchema],
+  deal_ids: [String],
   user_ids: [String]
 })
 var Vendor = mongoose.model('Vendor',VendorSchema);
@@ -616,11 +620,11 @@ app.post('/sendWelcomeEmail', securedFunction, function(req, res, next){
   }else
     // send an e-mail
     nodemailer.send_mail({
-      sender: 'help@kickbackcard.com',
+      sender: 'help@foozeballcard.com',
       to:email,
-      subject:'KickbackCard: Welcome!',
-      html: '<p>Welcome to kickback card '+email+'</p>',
-      body:'Welcome to kickback card '+email+''
+      subject:'FoozeballCard: Welcome!',
+      html: '<p>Welcome to fooozeball card '+email+'</p>',
+      body:'Welcome to foozeball card '+email+''
     },function(err, data){
       req.err = err
       req.data = data

@@ -1,7 +1,19 @@
 @css {@import url('//fonts.googleapis.com/css?family=Open+Sans');}
 @css {@import url('//fonts.googleapis.com/css?family=Luckiest+Guy');}
 @import "reset.css"
+/**************************************
+ *
+ * ^^^^^
+ * Get the Basics out of the way, import fonts and reset css
+ * 
+ **************************************/
 
+
+/**********************************
+ *
+ * Font and Color global defintions
+ *
+ **********************************/
 font-size = 16px
 font = font-size "Open Sans", Helvetica, Arial, sans-serif
 font2 = 'Luckiest Guy'
@@ -21,6 +33,11 @@ boxbg = rgba(190,190,190,.1)
 
 attention = #00B7FF
 
+/********************************
+ *
+ * Generic Functions for css3/etc
+ *
+ ********************************/
 box-shadow(n = 4px, color = semi-light)
   -moz-box-shadow: 0px 0px n color
   -webkit-box-shadow: 0px 0px n color
@@ -37,7 +54,22 @@ absolute()
   position absolute
   top 0
   left 0
+submit()
+  background semi-dark
+  border-color dark
+  color attention
+  font-weight bold
+  cursor pointer
+  text-decoration none
+  padding 4px 8px
+  border 1px solid semi-dark
+  border-radius(4px)
 
+/**************************************
+ *
+ * Top level "tag" definitions, e.g. h1
+ *
+ **************************************/
 body
   font font
   background very-dark
@@ -50,6 +82,12 @@ body
     font font
   a
     color light
+
+  /**************************************
+   *
+   * The grey fade stripe below the header 
+   *
+   **************************************/
   .bg2
     absolute()
     width 100%
@@ -58,6 +96,12 @@ body
     background semi-dark
     display block
     z-index -1
+
+  /**************************************
+   *
+   * The header at the top of every page
+   *
+   **************************************/
   .header
     background #FFF
     color very-dark
@@ -81,6 +125,12 @@ body
         .users .users,.vendors .vendors
           color #333
           text-decoration none
+
+  /************************************************
+   *
+   * Body top level tag definitions, e.g. p margins
+   *
+   ************************************************/
   .body
     h1
       font-size 3em
@@ -92,8 +142,12 @@ body
       font-style italic
     p
       margin 15px 0
-    a
-      color attention
+
+    /**************************************
+     *
+     * Home Page specific containers and structure
+     *
+     **************************************/
     .container
       background boxbg
       box-shadow(4px)
@@ -112,6 +166,14 @@ body
           img
             margin-left 27px
             margin-top 105px
+
+    /**************************************
+     *
+     * Generic row and row alt styling used
+     * in vendors and users long scrolling
+     * pages.
+     *
+     **************************************/
     .row
       background semi-light
       a
@@ -134,6 +196,8 @@ body
     .add-row
       margin 60px 0
       text-align center
+      a
+        submit()
     .modified,.modified:nth-child(even)
       background green
       box-shadow(12px, green)
@@ -141,6 +205,12 @@ body
       background red
       box-shadow(12px, red)
 
+  /**************************************
+   *
+   * Containers are for width boundaries
+   * only
+   *
+   **************************************/
   .container
     max-width 900px
     margin 0 auto
@@ -148,6 +218,13 @@ body
   .footer
     text-align center
     font-size .8em
+
+  /**************************************
+   *
+   * These are the little popups above
+   * fields that say 'valid' or 'error'
+   *
+   **************************************/
   .tooltip
     border 1px solid darken(yellow,darkShift)
     border-radius(3px)
@@ -159,6 +236,13 @@ body
     font-size .7em
     margin-top -29px
     absolute()
+  
+  /**************************************
+   *
+   * The modal background and window
+   * used everywhere.
+   *
+   **************************************/
   .modal
     background dark
     opacity(.7)
@@ -170,6 +254,8 @@ body
     color very-dark
     a
       color very-dark
+    h2
+      font-size 1.5em
     border-radius(15px)
     min-height 235px
     max-width 500px
@@ -179,6 +265,11 @@ body
       padding 4px 8px
       border 1px solid darken(red,darkShift)
       background red
+    /**************************************
+     *
+     * Tabs for vendors multiple forms
+     *
+     **************************************/
     .tabs
       overflow hidden
       margin 0 0 30px 0
@@ -197,9 +288,12 @@ body
         border-bottom none
         color dark
         cursor auto
-    h2
-      font-size 1.5em
     fieldset
+      /**************************************
+       *
+       * Form labels and inputs structure
+       *
+       **************************************/
       .fields
         margin 15px 0
         overflow hidden
@@ -237,19 +331,45 @@ body
       .required
         label,.input
           font-weight bold
+      /**************************************
+       *
+       * Rows, like for users in vendors screen
+       *
+       **************************************/
       .row
         margin 15px 0
+        background semi-light
+        box-shadow(4px, semi-light)
+        padding 15px
         overflow hidden
         li
+          height 2em
+          line-height 2em
           float left
           display block
           overflow hidden
           padding-right 10px
           .input
-            width 100px
+            width 90px
+          .buy_qty
+            width 40px
+        .buttons
+          padding 15px 0 0 0
+          text-align center
+          float inherit
+          .print
+            submit()
       .add-row
-        margin 15px 0
+        margin 30px 0
         text-align center
+        a
+          submit()
+
+    /**************************************
+     *
+     * Buttons at the bottom of most windows
+     *
+     **************************************/
     .buttons
       overflow hidden
       width 100%
@@ -263,19 +383,29 @@ body
         background semi-light
         color semi-dark
       .submit
-        background semi-dark
-        border-color dark
-        color attention
         float right
-        font-weight bold
-        cursor pointer
+        margin-left 15px
+        submit()
       .cancel
         float left
+  /**************************************
+   *
+   * For the login screen, the modal and
+   * window within a container.
+   *
+   **************************************/
   .container .modal
     display block
   .container .window
     display block
     position relative
     margin 0 auto
+
+  /**************************************
+   *
+   * For loading html to be cloned or 
+   * shown by javascript later.
+   *
+   **************************************/
   .assets
     display none

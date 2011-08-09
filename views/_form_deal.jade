@@ -1,0 +1,13 @@
+
+form(method='POST')
+  h2 Deal
+    - if (typeof(err) != 'undefined')
+      .error= err
+  fieldset
+    .fields
+      label Buy
+      input.input.buy-item(name='buy-item',placeholder='(e.g. subs)')
+  .buttons
+    input.submit(type='submit',value='Save')
+    input.submit.send-welcome-email(type='submit',value='Send Welcome Email')
+    input.cancel(type='button',value='Delete')

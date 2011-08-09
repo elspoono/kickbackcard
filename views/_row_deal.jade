@@ -1,0 +1,18 @@
+ul.row(id=deal._id)
+  li Buy
+  li
+    input.input.buy_qty(value=deal.buy_qty,placeholder='10')
+  li
+    input.input.buy_item(value=deal.buy_item,placeholder='lunches')
+  li Get
+  li
+    select.get_type
+      option(value='1 FREE',selected=(deal.get_type=='1 FREE')?'selected':false) 1 FREE
+      option(value='Dollar(s) Off',selected=(deal.get_type=='Dollar(s) Off')?'selected':false) Dollar(s) Off
+      option(value='Percent Off',selected=(deal.get_type=='Percent Off')?'selected':false) Percent Off
+  li
+    input.input.get_item(value=deal.get_item,placeholder='lunch')
+  li.buttons
+    a.archive(href='#') archive
+    |  &nbsp; or &nbsp; 
+    a.print(href='#') print

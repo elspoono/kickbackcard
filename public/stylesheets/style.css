@@ -77,9 +77,6 @@ body .body i {
 body .body p {
   margin: 15px 0;
 }
-body .body a {
-  color: #00b7ff;
-}
 body .body .container {
   background: rgba(190,190,190,0.1);
   -moz-box-shadow: 0px 0px 4px #aaa;
@@ -134,6 +131,19 @@ body .body .row:nth-child(even) a {
 body .body .add-row {
   margin: 60px 0;
   text-align: center;
+}
+body .body .add-row a {
+  background: #6f6f6e;
+  border-color: #000;
+  color: #00b7ff;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  padding: 4px 8px;
+  border: 1px solid #6f6f6e;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
 }
 body .body .modified,
 body .body .modified:nth-child(even) {
@@ -202,6 +212,9 @@ body .window {
 body .window a {
   color: #3f3e3d;
 }
+body .window h2 {
+  font-size: 1.5em;
+}
 body .window .error-message {
   padding: 4px 8px;
   border: 1px solid #900;
@@ -227,9 +240,6 @@ body .window .tabs li.active {
   border-bottom: none;
   color: #000;
   cursor: auto;
-}
-body .window h2 {
-  font-size: 1.5em;
 }
 body .window fieldset .fields {
   margin: 15px 0;
@@ -283,20 +293,61 @@ body .window fieldset .required .input {
 }
 body .window fieldset .row {
   margin: 15px 0;
+  background: #aaa;
+  -moz-box-shadow: 0px 0px 4px #aaa;
+  -webkit-box-shadow: 0px 0px 4px #aaa;
+  box-shadow: 0px 0px 4px #aaa;
+  padding: 15px;
   overflow: hidden;
 }
 body .window fieldset .row li {
+  height: 2em;
+  line-height: 2em;
   float: left;
   display: block;
   overflow: hidden;
   padding-right: 10px;
 }
 body .window fieldset .row li .input {
-  width: 100px;
+  width: 90px;
+}
+body .window fieldset .row li .buy_qty {
+  width: 40px;
+}
+body .window fieldset .row .buttons {
+  padding: 15px 0 0 0;
+  text-align: center;
+  float: inherit;
+}
+body .window fieldset .row .buttons .print {
+  background: #6f6f6e;
+  border-color: #000;
+  color: #00b7ff;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  padding: 4px 8px;
+  border: 1px solid #6f6f6e;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
 }
 body .window fieldset .add-row {
-  margin: 15px 0;
+  margin: 30px 0;
   text-align: center;
+}
+body .window fieldset .add-row a {
+  background: #6f6f6e;
+  border-color: #000;
+  color: #00b7ff;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  padding: 4px 8px;
+  border: 1px solid #6f6f6e;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
 }
 body .window .buttons {
   overflow: hidden;
@@ -317,12 +368,19 @@ body .window .buttons .cancel {
   color: #6f6f6e;
 }
 body .window .buttons .submit {
+  float: right;
+  margin-left: 15px;
   background: #6f6f6e;
   border-color: #000;
   color: #00b7ff;
-  float: right;
   font-weight: bold;
   cursor: pointer;
+  text-decoration: none;
+  padding: 4px 8px;
+  border: 1px solid #6f6f6e;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
 }
 body .window .buttons .cancel {
   float: left;

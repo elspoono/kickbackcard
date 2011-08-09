@@ -233,6 +233,44 @@ $(function(){
    * 
    * Admin Controls
    * 
+   * deal add
+   * 
+   * 
+   **********************************/
+  $('.vendor-deal .add').live('click',function(){
+    var $row = $('.vendor-deal .assets .row').clone()
+    var $t = $(this)
+    var $a = $t.closest('.add-row')
+    $row.find('.archive').click(function(){
+      if(
+        $row.find('.buy_qty').val()==''
+        && $row.find('.buy_item').val()==''
+        && $row.find('.get_item').val()==''
+      ){
+        $row.remove()
+        $window.resize()
+      }else{
+        loadConfirm({
+          content: '<p>Are you sure?</p><p>This cannot be undone.</p>',
+          Confirm: function(err,win,modal){
+            modal.click()
+            $row.remove()
+            $window.resize()
+          },
+          Cancel: function(err,win,modal){
+            modal.click()
+          }
+        },function(){})
+      }
+    })
+    $a.after($row)
+    $window.resize()
+  });
+
+  /**********************************
+   * 
+   * Admin Controls
+   * 
    * user add, user edit
    * 
    * 

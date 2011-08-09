@@ -1,0 +1,10 @@
+ul.row(id=user._id)
+  li.email
+    input.input(value=user.email)
+  li.password
+    input.input(placeholder='******')
+  li.role
+    select.input
+      option(value=user.roles[0].key)=user.roles[0].key
+  li.action
+    a.send-welcome(href='#') send welcome email

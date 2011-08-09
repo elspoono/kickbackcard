@@ -35,6 +35,12 @@ form(method='POST')
         a.add(href='#') add user
       - if (typeof(vendor.users) == 'object')
         != partial('row_user',{collection:vendor.users,as:'user'})
-  .tab
+  .tab.vendor-deal(id=vendor._id)
     h2 Deals
     fieldset
+      .assets
+        != partial('row_deal',{deal:{}})
+      .add-row(role='vendor')
+        a.add(href='#') add deal
+      - if (typeof(vendor.deals) == 'object')
+        != partial('row_deal',{collection:vendor.deals,as:'deal'})
