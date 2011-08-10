@@ -329,7 +329,13 @@ $(function(){
               loadModal({
                 content: data
               },function(err,win,modal){
-                
+                win.find('.kicker').change(function(){
+                  var $t = $(this)
+                  if ($t.is(':checked'))
+                    win.find('.warning').show()
+                  else
+                    win.find('.warning').hide()
+                })
               })
             }
           },

@@ -367,7 +367,12 @@ body .window .print .option .text input {
 }
 body .window .print .option .warning {
   display: none;
-  color: #fcc;
+}
+body .window .print .option .warning .alert {
+  width: 340px;
+  padding: 5px;
+  background: #fcc;
+  border: 1px solid #900;
 }
 body .window .buttons {
   overflow: hidden;
