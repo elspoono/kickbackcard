@@ -315,7 +315,30 @@ $(function(){
     validateAndSave('get_type',new RegExp(/\b.{1,1500}\b/i),'change')
     validateAndSave('get_item',new RegExp(/\b.{1,1500}\b/i))
     $row.find('.print').click(function(){
-      loadAlert('The print dialog goes here.')
+      loadLoading({},function(err,win,modal){
+        $.ajax({
+          url: '/printDeal',
+          data: {
+            id: $row.attr('id')
+          },
+          success: function(data){
+            modal.click()
+            if(typeof(data)=='object' && data.err)
+              loadAlert(data.err)
+            else{
+              loadModal({
+                content: data
+              },function(err,win,modal){
+                
+              })
+            }
+          },
+          error: function(){
+            modal.click()
+            loadAlert('server error')
+          }
+        })
+      })
     })
   }
   $('.vendor-deal .add').live('click',function(){

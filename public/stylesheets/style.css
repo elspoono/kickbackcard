@@ -20,6 +20,13 @@ body select {
 body a {
   color: #fff;
 }
+body ul {
+  overflow: hidden;
+}
+body ul li {
+  float: left;
+  display: block;
+}
 body .bg2 {
   display: none;
   position: absolute;
@@ -52,10 +59,8 @@ body .header .container .logo {
 }
 body .header .container .navigation {
   float: right;
-  overflow: hidden;
 }
 body .header .container .navigation li {
-  float: left;
   margin: 0 0 0 15px;
 }
 body .header .container .navigation .users .users,
@@ -108,7 +113,6 @@ body .body .row {
   -moz-box-shadow: 0px 0px 4px #fff;
   -webkit-box-shadow: 0px 0px 4px #fff;
   box-shadow: 0px 0px 4px #fff;
-  overflow: hidden;
   margin: 30px 0;
 }
 body .body .row a {
@@ -118,7 +122,6 @@ body .body .row li {
   white-space: no-wrap;
   width: 205px;
   overflow: hidden;
-  float: left;
   padding: 10px;
 }
 body .body .row:nth-child(even) {
@@ -222,12 +225,9 @@ body .window .error-message {
   background: #fcc;
 }
 body .window .tabs {
-  overflow: hidden;
   margin: 0 0 30px 0;
 }
 body .window .tabs li {
-  display: block;
-  float: left;
   padding: 1px 8px;
   border: 1px solid #6f6f6e;
   cursor: pointer;
@@ -300,13 +300,10 @@ body .window fieldset .row {
   -webkit-box-shadow: 0px 0px 4px #aaa;
   box-shadow: 0px 0px 4px #aaa;
   padding: 15px;
-  overflow: hidden;
 }
 body .window fieldset .row li {
   height: 2em;
   line-height: 2em;
-  float: left;
-  display: block;
   overflow: hidden;
   padding-right: 10px;
 }
@@ -350,6 +347,27 @@ body .window fieldset .add-row a {
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
+}
+body .window .print .option {
+  margin: 15px 0;
+  padding: 15px;
+  background: rgba(190,190,190,0.1);
+  -moz-box-shadow: 0px 0px 4px #aaa;
+  -webkit-box-shadow: 0px 0px 4px #aaa;
+  box-shadow: 0px 0px 4px #aaa;
+}
+body .window .print .option .row {
+  margin: 5px 0;
+}
+body .window .print .option .row .column-one {
+  width: 100px;
+}
+body .window .print .option .text input {
+  width: 350px;
+}
+body .window .print .option .warning {
+  display: none;
+  color: #fcc;
 }
 body .window .buttons {
   overflow: hidden;

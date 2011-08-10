@@ -367,6 +367,18 @@ var deleteVendor = function(req, res, next){
     next()
   }
 }
+var getDeal = function(req, res, next){
+  var params = req.body || {}
+  var id = params.id || ''
+  if(id=='')
+    next()
+  else
+    Deal.findById(params.id,function(err, data){
+      req.err = err
+      req.data = data
+      next()
+    });
+}
 
 
 
@@ -675,6 +687,17 @@ app.post('/addDeal', securedFunction, addDeal, function(req, res, next){
     })
   else
     res.render('_row_deal', {
+      layout: 'layout_partial.jade',
+      deal: req.data
+    })
+})
+app.post('/printDeal', securedFunction, getDeal, function(req, res, next){
+  if(req.err)
+    res.send({
+      err: req.err
+    })
+  else
+    res.render('_form_print', {
       layout: 'layout_partial.jade',
       deal: req.data
     })

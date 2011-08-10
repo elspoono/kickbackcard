@@ -1,0 +1,25 @@
+.print
+  p What would you like to print?
+  .option
+    ul.row
+      li.column-one
+        input(type='checkbox')
+      li Kicker
+    ul.row.warning
+      li.column-one
+      li Warning: As soon as you hit print, any previous kicker <u>will be deactivated.</u>
+  .option
+    ul.row
+      li.column-one
+        select
+          option(value='0') 0
+          option(value='500') 500
+      li
+        Paper Kicks
+    ul.row.text
+      li.column-one &nbsp;
+      li
+        input(placeholder='Buy 10 lunches and get one lunch FREE!')
+  .buttons
+    input.submit(type='submit',value='Print')
+    input.cancel(type='button',value='Cancel')
