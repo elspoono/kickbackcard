@@ -693,6 +693,7 @@ app.post('/addDeal', securedFunction, addDeal, function(req, res, next){
 app.post('/sendWelcomeEmail', securedFunction, function(req, res, next){
   var params = req.body || {}
   var email = params.email || ''
+  var continued = false
   if(!email.match(/\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i)){
     req.err = 'invalid email'
     next()
@@ -707,7 +708,9 @@ app.post('/sendWelcomeEmail', securedFunction, function(req, res, next){
     },function(err, data){
       req.err = err
       req.data = data
-      next()
+      if(!continued)
+        next()
+      continued = true
     });
 }, function(req, res, next){
   res.send({
