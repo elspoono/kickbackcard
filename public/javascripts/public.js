@@ -29,21 +29,25 @@ $(function(){
   var loadModal = function(options, next){
     var modal = $('<div class="modal" />')
     var win = $('<div class="window" />')
+    var close = $('<div class="close" />')
 
     var settings = {
       width: 500,
-      height: 235
+      height: 235,
+      closeText: 'close'
     }
     if(options)
       $.extend(settings, options)
 
+    if(settings.closeText)
+      close.html(settings.closeText)
     if(settings.content)
       win.html(settings.content)
     if(settings.height)
       win.css({'min-height':settings.height})
     if(settings.width)
       win.width(settings.width)
-    
+
     var buttons = $('<div class="buttons" />')
     if(settings.Ok){
       var ok = $('<input type="button" value="Ok" class="submit">')
@@ -68,7 +72,7 @@ $(function(){
     }
     win.append(buttons)
 
-    $('body').append(modal,win)
+    $('body').append(modal,close,win)
 
 
     var $body = $('body')
@@ -83,9 +87,10 @@ $(function(){
         win.height(height).css('overflow','auto')
       win.position({of:$window, at:'center center', offset:offset})
       modal.position({of:$window, at:'center center', offset:offset})
+      close.position({of:win, at:'right top', my:'right bottom', offset:'-15px 4px'})
     }
     $window.bind('resize',resizeEvent)
-    modal.click(function(){
+    var myNext = function(){
       $window.unbind('resize',resizeEvent)
       $body.css({overflow:'inherit','padding-right':0})
       modal.fadeOut(function(){
@@ -94,9 +99,15 @@ $(function(){
       win.fadeOut(function(){
         win.remove()
       })
-    });
+      close.fadeOut(function(){
+        close.remove()
+      })
+    }
+    modal.click(myNext)
+    close.click(myNext)
     modal.fadeIn()
     win.fadeIn()
+    close.fadeIn()
     next(false,win,modal)
     resizeEvent()
   }
@@ -592,9 +603,6 @@ $(function(){
               })
               return false;
             })
-            win.find('.cancel:not(.delete)').click(function(){
-              modal.click()
-            })
             if($p.attr('id'))
               win.find('.delete').click(function(){
                 loadConfirm({
@@ -947,9 +955,6 @@ $(function(){
                 }
               })
               return false;
-            })
-            win.find('.cancel:not(.delete)').click(function(){
-              modal.click()
             })
             if($p.attr('id'))
               win.find('.delete').click(function(){

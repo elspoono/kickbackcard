@@ -560,19 +560,6 @@ var securedFunction = function(req, res, next){
 }
 
 
-
-app.get('/lowerUsers',function(req,res,next){
-  User.find({},function(err,data){
-    for(var i in data){
-      data[i].email = data[i].email.toLowerCase()
-      data[i].save(function(err,updated){ 
-      })
-    }
-  })
-  res.send({})
-})
-
-
 /**********************************
  * 
  * User schema routes

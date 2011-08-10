@@ -199,6 +199,21 @@ body .modal {
   top: 0;
   left: 0;
 }
+body .close {
+  font-size: 1em;
+  border: 1px solid #6f6f6e;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  padding: 4px 30px;
+  background: #aaa;
+  color: #6f6f6e;
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+}
 body .window {
   background: #fff;
   color: #3f3e3d;
