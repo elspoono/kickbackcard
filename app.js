@@ -97,7 +97,7 @@ var RoleSchema = new Schema({
   key: String
 })
 var UserSchema = new Schema({
-  email: { type: String, validate: /\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i },
+  email: { type: String, validate: /\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i, set: function(v){ return v.toLowerCase() } },
   password_encrypted: String,
   roles: [RoleSchema],
   vendor_id: String
@@ -413,7 +413,8 @@ var get10Users = function(req, res, next){
 }
 var checkEmail = function(req, res, next){
   var params = req.body || {}
-  req.email = params.email
+  req.email = params.email || ''
+  req.email = req.email.toLowerCase()
   var handleReturn = function(err, data){
     if(err)
       error(err)
@@ -422,9 +423,9 @@ var checkEmail = function(req, res, next){
     next()
   };
   if(params.id)
-    User.count({email:params.email,_id:{$ne:params.id}},handleReturn)
+    User.count({email:req.email,_id:{$ne:params.id}},handleReturn)
   else
-    User.count({email:params.email},handleReturn)
+    User.count({email:req.email},handleReturn)
 }
 var saveUser = function(req, res, next){
   var params = req.body || {}
@@ -520,7 +521,9 @@ var deleteUser = function(req, res, next){
 /* Ensures a valid login, and sets session variables */
 var validateLogin = function(req, res, next){
   var params = req.body || {}
-  User.authenticate(params.email,params.password,function(err, data){
+  req.email = params.email || ''
+  req.email = req.email.toLowerCase()
+  User.authenticate(req.email,params.password,function(err, data){
     if(err)
       error(err)
     else{
@@ -558,7 +561,16 @@ var securedFunction = function(req, res, next){
 
 
 
-
+app.get('/lowerUsers',function(req,res,next){
+  User.find({},function(err,data){
+    for(var i in data){
+      data[i].email = data[i].email.toLowerCase()
+      data[i].save(function(err,updated){ 
+      })
+    }
+  })
+  res.send({})
+})
 
 
 /**********************************

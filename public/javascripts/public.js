@@ -428,7 +428,7 @@ $(function(){
                   },
                   success: function(data){
                     /* Make sure they didn't change the email since we last checked */
-                    if(email==data.email){
+                    if(email.toLowerCase()==data.email){
                       $t.removeClass('loading valid error')
                       if(data.err){
                         $t.addClass('error')
