@@ -563,8 +563,11 @@ $(function(){
               })
               return false;
             })
+            win.find('.cancel:not(.delete)').click(function(){
+              modal.click()
+            })
             if($p.attr('id'))
-              win.find('.cancel').click(function(){
+              win.find('.delete').click(function(){
                 loadConfirm({
                   content: '<p>Are you sure?</p><p>This cannot be undone.</p>',
                   Confirm: function(err,win2,modal2){
@@ -598,7 +601,7 @@ $(function(){
                 },function(){})
               })
             else
-              win.find('.cancel').hide()
+              win.find('.delete').hide()
           })
         },
         error: function(){
@@ -916,8 +919,11 @@ $(function(){
               })
               return false;
             })
+            win.find('.cancel:not(.delete)').click(function(){
+              modal.click()
+            })
             if($p.attr('id'))
-              win.find('.cancel').click(function(){
+              win.find('.delete').click(function(){
                 loadConfirm({
                   content: '<p>Are you sure?</p><p>This cannot be undone.</p>',
                   Confirm: function(err,win2,modal2){
@@ -951,7 +957,7 @@ $(function(){
                 },function(){})
               })
             else
-              win.find('.cancel').hide()
+              win.find('.delete').hide()
           })
         },
         error: function(){
