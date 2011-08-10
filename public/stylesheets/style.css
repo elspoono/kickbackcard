@@ -227,6 +227,7 @@ body .window {
   position: absolute;
   top: 0;
   left: 0;
+  overflow: hidden;
 }
 body .window a {
   color: #3f3e3d;

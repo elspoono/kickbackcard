@@ -76,18 +76,23 @@ $(function(){
 
 
     var $body = $('body')
-    $body.css({overflow:'hidden','padding-right':scrollbarWidth})
     var resizeEvent = function(){
       var offset = '0px 0px'
-      var width = $window.width()-120
-      var height = $window.height()-120
-      if(width < settings.width)
-        win.width(width)
-      if(height < win.height())
-        win.height(height).css('overflow','auto')
-      win.position({of:$window, at:'center center', offset:offset})
-      modal.position({of:$window, at:'center center', offset:offset})
-      close.position({of:win, at:'right top', my:'right bottom', offset:'-15px 4px'})
+      var width = $window.width()
+      var height = $window.height()
+      if(width < settings.width || height < win.height()){
+        close.css({position:'relative'})
+        win.width(width-60).css({position:'relative'})
+        var top = close.offset().top
+        modal.css({top:0,left:0,width:width,height:top})
+        window.scrollTo(0,top)
+        $('.body').hide()
+      }else{
+        $body.css({overflow:'hidden','padding-right':scrollbarWidth})
+        win.position({of:$window, at:'center center', offset:offset})
+        modal.position({of:$window, at:'center center', offset:offset})
+        close.position({of:win, at:'right top', my:'right bottom', offset:'-15px 4px'})
+      }
     }
     $window.bind('resize',resizeEvent)
     var myNext = function(){
@@ -96,11 +101,13 @@ $(function(){
       modal.fadeOut(function(){
         modal.remove()
       })
-      win.fadeOut(function(){
-        win.remove()
-      })
       close.fadeOut(function(){
         close.remove()
+      })
+      win.fadeOut(function(){
+        win.remove()
+        if($('.window').length==0)
+          $('.body').show()
       })
     }
     modal.click(myNext)
