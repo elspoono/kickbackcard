@@ -158,7 +158,8 @@ var DealSchema = new Schema({
   get_type: String,
   get_qty: Number,
   get_item: String,
-  vendor_id: String
+  vendor_id: String,
+  archived: {type: Boolean, default: false}
 })
 var Deal = mongoose.model('Deal',DealSchema);
 var DealBackup = mongoose.model('DealBackup',DealSchema);
@@ -199,9 +200,15 @@ var getVendor = function(req, res, next){
       else
         User.find({vendor_id:vendor._id},function(err, data){
           req.err = err
-          vendor.users = data
-          req.vendor = vendor
-          next()
+          if(err)
+            next()
+          else
+            Deal.find({vendor_id:vendor._id,archived:false},function(err, data){
+              req.err = err
+              vendor.deals = data
+              req.vendor = vendor
+              next()
+            })
         })
     });
 }
@@ -230,6 +237,59 @@ var checkName = function(req, res, next){
     Vendor.count({name:req.name,_id:{$ne:params.id}},handleReturn)
   else
     Vendor.count({name:req.name},handleReturn)
+}
+var addDeal = function(req, res, next){
+  var params = req.body || {}
+  Vendor.findById(params.vendor_id,function(err,vendor){
+    if(err||!vendor){
+      req.err = err
+      next()
+    }else{
+      var deal = new Deal()
+      deal.buy_qty = 10
+      deal.buy_item = 'lunches'
+      deal.get_type = '1 FREE'
+      deal.get_item = 'lunch'
+      deal.vendor_id = vendor._id
+      deal.save(function(err,data){
+        req.data = data
+        if(err){
+          req.err = err
+          next() 
+        }else{
+          vendor.deal_ids.push(data._id)
+          vendor.save(function(err,data){
+            req.err = err
+            next()
+          })
+        }
+      })
+    }
+  })
+}
+var saveDeal = function(req, res, next){
+  var params = req.body || {}
+  Deal.findById(params.id,function(err,data){
+    if(err){
+      req.err = err
+      next()
+    }else{
+      if(params.buy_qty && params.buy_qty.match(/\b\d{1,1500}\b/))
+        data.buy_qty = params.buy_qty
+      if(params.buy_item && params.buy_item.match(/\b.{1,1500}\b/))
+        data.buy_item = params.buy_item
+      if(params.get_type && params.get_type.match(/\b.{1,1500}\b/))
+        data.get_type = params.get_type
+      if(params.get_item && params.get_item.match(/\b.{1,1500}\b/))
+        data.get_item = params.get_item
+      if(params.archive)
+        data.archived = true
+      data.save(function(err,data){
+        req.err = err
+        next()
+      })
+    }
+  })
 }
 var saveVendor = function(req, res, next){
   var params = req.body || {}
@@ -595,10 +655,29 @@ app.post('/saveVendor', securedFunction, saveVendor, function(req, res, next){
       vendor: req.data
     })
 })
+app.post('/saveDeal', securedFunction, saveDeal, function(req, res, next){
+  if(req.err)
+    res.send({
+      err: req.err
+    })
+  else
+    res.send({})
+})
 app.post('/deleteVendor', securedFunction, deleteVendor, function(req, res, next){
   res.send({
     err: req.err
   })
+})
+app.post('/addDeal', securedFunction, addDeal, function(req, res, next){
+  if(req.err)
+    res.send({
+      err: req.err
+    })
+  else
+    res.render('_row_deal', {
+      layout: 'layout_partial.jade',
+      deal: req.data
+    })
 })
 
 

@@ -237,34 +237,107 @@ $(function(){
    * 
    * 
    **********************************/
+  var attachDealEvents = function($row){
+    $row.find('.archive').click(function(){
+      loadConfirm({
+        content: '<p>Are you sure?</p><p>This cannot be undone.</p>',
+        Confirm: function(err,win,modal){
+          modal.click()
+          $row.remove()
+          $window.resize()
+          $.ajax({
+            url: 'saveDeal',
+            data: {
+              id: $row.attr('id'),
+              archive: true
+            },
+            success: function(data){
+              if(data.err)
+                loadAlert(data.err)
+            },
+            error: function(){
+              loadAlert('server error')
+            }
+          })
+        },
+        Cancel: function(err,win,modal){
+          modal.click()
+        }
+      },function(){})
+    })
+    var validateAndSave = function(field,expression,e){
+      var eventType = e || 'keyup'
+      var buy_qty = ''
+      var buy_qtyT = 0
+      $row.find('.'+field).bind(eventType,function(e){
+        var $t = $(this)
+        if(buy_qty!=this.value){
+          clearTimeout(buy_qtyT)
+          buy_qtyT = setTimeout(function(){
+            $t.trigger('customValidate')
+          },500)
+        }
+      }).bind('customValidate',function(){
+        var $t = $(this)
+        $t.removeClass('valid error')
+        buy_qty = this.value
+        if(buy_qty==''){
+          $t.addClass('error')
+          $t.showTooltip({message:'please fill in'})
+        }else if(buy_qty.match(expression)){
+          $t.addClass('valid')
+          $t.showTooltip({message:buy_qty+' is good'})
+          var data = {
+            id: $row.attr('id')
+          }
+          data[field] = $t.val()
+          $.ajax({
+            url: 'saveDeal',
+            data: data,
+            success: function(data){
+              if(data.err)
+                $t.showTooltip({message:data.err})
+              else
+                $t.showTooltip({message:buy_qty+' saved'})
+            },
+            error: function(){
+              $t.showTooltip({message:'server error'})
+            }
+          })
+        }else{
+          $t.addClass('error')
+          $t.showTooltip({message:buy_qty+' is not quite right'})
+        }
+      })
+    }
+    validateAndSave('buy_qty',new RegExp(/\b\d{1,1500}\b/i))
+    validateAndSave('buy_item',new RegExp(/\b.{1,1500}\b/i))
+    validateAndSave('get_type',new RegExp(/\b.{1,1500}\b/i),'change')
+    validateAndSave('get_item',new RegExp(/\b.{1,1500}\b/i))
+    $row.find('.print').click(function(){
+      loadAlert('The print dialog goes here.')
+    })
+  }
   $('.vendor-deal .add').live('click',function(){
-    var $row = $('.vendor-deal .assets .row').clone()
     var $t = $(this)
     var $a = $t.closest('.add-row')
-    $row.find('.archive').click(function(){
-      if(
-        $row.find('.buy_qty').val()==''
-        && $row.find('.buy_item').val()==''
-        && $row.find('.get_item').val()==''
-      ){
-        $row.remove()
+    var $v = $t.closest('.vendor-deal')
+
+    $.ajax({
+      url: '/addDeal',
+      data: {
+        vendor_id: $v.attr('id')
+      },
+      success: function(data){
+        var $row = $(data)
+        attachDealEvents($row)
+        $a.after($row)
         $window.resize()
-      }else{
-        loadConfirm({
-          content: '<p>Are you sure?</p><p>This cannot be undone.</p>',
-          Confirm: function(err,win,modal){
-            modal.click()
-            $row.remove()
-            $window.resize()
-          },
-          Cancel: function(err,win,modal){
-            modal.click()
-          }
-        },function(){})
+      },
+      error: function(){
+        loadAlert('server error')
       }
     })
-    $a.after($row)
-    $window.resize()
   });
 
   /**********************************
@@ -616,6 +689,12 @@ $(function(){
             win.append(data)
 
             
+
+            $('.vendor-deal .row').each(function(){
+              attachDealEvents($(this))
+            })
+
+
 
             /******************
              *

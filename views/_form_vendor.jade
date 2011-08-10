@@ -38,8 +38,6 @@ form(method='POST')
   .tab.vendor-deal(id=vendor._id)
     h2 Deals
     fieldset
-      .assets
-        != partial('row_deal',{deal:{}})
       .add-row(role='vendor')
         a.add(href='#') add deal
       - if (typeof(vendor.deals) == 'object')
