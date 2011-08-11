@@ -375,7 +375,15 @@ var getDeal = function(req, res, next){
   else
     Deal.findById(params.id,function(err, data){
       req.err = err
-      req.data = data
+      if(typeof(data)=='object'){
+        if(data.get_type == '1 FREE')
+          data.tag_line = 'Buy '+data.buy_qty+' '+data.buy_item+' and get one '+data.get_item+' FREE!';
+        if(data.get_type == 'Dollar(s) Off')
+          data.tag_line = 'Buy '+data.buy_qty+' '+data.buy_item+' and get '+data.get_item+' dollars off!';
+        if(data.get_type == 'Percent Off')
+          data.tag_line = 'Buy '+data.buy_qty+' '+data.buy_item+' and get '+data.get_item+' percent off!';
+        req.data = data
+      }
       next()
     });
 }

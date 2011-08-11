@@ -77,7 +77,6 @@ $(function(){
 
     var $body = $('body')
     var resizeEvent = function(){
-      var offset = '0px 0px'
       var width = $window.width()
       var height = $window.height()
       if(width < settings.width || height < win.height()){
@@ -89,8 +88,8 @@ $(function(){
         window.scroll(0,top)
       }else{
         $body.css({overflow:'hidden','padding-right':scrollbarWidth})
-        win.position({of:$window, at:'center center', offset:offset})
-        modal.position({of:$window, at:'center center', offset:offset})
+        win.position({of:$window, at:'center center'})
+        modal.position({of:$window, at:'center center'})
         close.position({of:win, at:'right top', my:'right bottom', offset:'-15px 4px'})
       }
     }
@@ -112,9 +111,17 @@ $(function(){
     }
     modal.click(myNext)
     close.click(myNext)
-    modal.fadeIn()
-    win.fadeIn()
-    close.fadeIn()
+    var width = $window.width()
+    var height = $window.height()
+    if(width < settings.width || height < win.height()){
+      modal.show()
+      win.show()
+      close.show()
+    }else{
+      modal.fadeIn()
+      win.fadeIn()
+      close.fadeIn()
+    }
     next(false,win,modal)
     resizeEvent()
   }
