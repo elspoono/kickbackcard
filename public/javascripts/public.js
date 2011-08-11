@@ -83,10 +83,10 @@ $(function(){
       if(width < settings.width || height < win.height()){
         close.css({position:'relative'})
         win.width(width-60).css({position:'relative'})
+        $('.body').hide()
         var top = close.offset().top
         modal.css({top:0,left:0,width:width,height:top})
-        window.scrollTo(0,top)
-        $('.body').hide()
+        window.scroll(0,top)
       }else{
         $body.css({overflow:'hidden','padding-right':scrollbarWidth})
         win.position({of:$window, at:'center center', offset:offset})
