@@ -413,8 +413,7 @@ $(function(){
         },
         success: function(data){
           modal.click();
-          loadModal({},function(err,win,modal){
-            win.append(data)
+          loadModal({content:data},function(err,win,modal){
             /******************
              *
              * Email Validation auto ajaxyness
