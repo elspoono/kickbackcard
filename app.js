@@ -52,6 +52,9 @@ app.configure('production', function(){
  **********************************/
 var geo = require('geo');
 
+require('coffee-script');
+var PDFDocument = require('pdfkit');
+
 var nodemailer = require('nodemailer');
 
 nodemailer.SMTP = {
@@ -708,6 +711,17 @@ app.post('/printDeal', securedFunction, getDeal, function(req, res, next){
       layout: 'layout_partial.jade',
       deal: req.data
     })
+})
+app.get('/print.pdf', function(req, res, next){
+  
+  var doc = new PDFDocument()
+  doc.text('some text')
+  var output  = doc.output()
+  res.send(new Buffer(output,'binary'),{
+    'Content-Type' : 'application/pdf'
+  })
+
+
 })
 
 
