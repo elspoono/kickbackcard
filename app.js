@@ -863,7 +863,7 @@ app.get('/print.pdf', function(req, res, next){
 
   var length = 500;
 
-  var originalStartPoint = [54+252,54-144]
+  var originalStartPoint = [54+252,36-144]
   var startPoint = originalStartPoint
 
   for(var card = 0; card<length; card++){
