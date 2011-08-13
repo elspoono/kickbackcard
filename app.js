@@ -858,36 +858,66 @@ app.get('/print.pdf', function(req, res, next){
   var doc = new PDFDocument()
   doc.image = myImage;
 
-  doc.text('some text')
-  doc.image(__dirname + '/public/images/app-store.png',100,100,{fit:[100,100]})
+  var length = 19;
 
+  var originalStartPoint = [54+252,54-144]
+  var startPoint = originalStartPoint
 
+  for(var card = 0; card<length; card++){
+      
+    if(card==10){
+      doc.addPage()
+      startPoint = originalStartPoint
+    }
 
-
-
-  var offset = [200,50]
-
-  var ecclevel = 4;
-  var wd = 125;
-  var ht = 125;
-
-  var qrCode = qrcode.genframe('http://kckb.ac/test');
-  var qf = qrCode.qf
-  var width = qrCode.width
+    if(card%2)
+      startPoint = [startPoint[0]+252,startPoint[1]]
+    else
+      startPoint = [startPoint[0]-252,startPoint[1]+144]
   
-  var i,j;
-  var px = wd;
-  if( ht < wd )
-      px = ht;
-  px /= width+10;
-  px=Math.round(px - 0.5);
 
-  doc.fillColor('black')
-  for( i = 0; i < width; i++ )
-      for( j = 0; j < width; j++ )
-          if( qf[j*width+i] )
-              doc.rect(px*(4+i)+offset[0],px*(4+j)+offset[1],px,px).fill()
 
+    var offset = startPoint;
+    var setDoc = function(){
+      doc.x = offset[0]
+      doc.y = offset[1]
+    }
+
+    setDoc()
+    doc.image(__dirname + '/public/images/bizbg.png',0,0,{fit:[252,144]})
+
+    offset = [offset[0]+18,offset[1]+36]
+    setDoc()
+    doc.text('Jimmy John\'s')
+    doc.moveDown().fontSize(9)
+    doc.text('Buy 10 subs get 1 FREE sub!')
+
+
+
+
+    offset = [offset[0]+135,offset[1]-18]
+    var ecclevel = 4;
+    var wd = 125;
+    var ht = 125;
+
+    var qrCode = qrcode.genframe('http://kckb.ac/test'+card);
+    var qf = qrCode.qf
+    var width = qrCode.width
+
+    var i,j;
+    var px = wd;
+    if( ht < wd )
+        px = ht;
+    px /= width+10;
+    px=Math.round(px - 0.5);
+
+    doc.fillColor('black')
+    for( i = 0; i < width; i++ )
+        for( j = 0; j < width; j++ )
+            if( qf[j*width+i] )
+                doc.rect(px*(4+i)+offset[0],px*(4+j)+offset[1],px,px).fill()      
+  }
+  var offset = [54,54]
   var output = doc.output()
   res.send(new Buffer(output,'binary'),{
     'Content-Type' : 'application/pdf'
