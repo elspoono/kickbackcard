@@ -906,7 +906,9 @@ app.get('/print.pdf', function(req, res, next){
     var wd = 125;
     var ht = 125;
 
-    var qrCode = qrcode.genframe('http://kckb.ac/test'+card);
+    var string = 'http://kckb.ac/test'+Math.random()/card;
+    string = string.substr(0,30)
+    var qrCode = qrcode.genframe(string);
     var qf = qrCode.qf
     var width = qrCode.width
 
