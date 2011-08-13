@@ -856,16 +856,19 @@ var qrcode = require(__dirname + '/qrcode.js')
 app.get('/print.pdf', function(req, res, next){
   
   var doc = new PDFDocument()
+
+  doc.registerFont('Heading Font',__dirname+'/LuckiestGuy.ttf','Luckiest-Guy')
+  doc.registerFont('Body Font',__dirname+'/OpenSans-Regular.ttf','Open-Sans-Regular')
   doc.image = myImage;
 
-  var length = 19;
+  var length = 500;
 
   var originalStartPoint = [54+252,54-144]
   var startPoint = originalStartPoint
 
   for(var card = 0; card<length; card++){
       
-    if(card==10){
+    if((card/10)==Math.floor(card/10)&&card!=0){
       doc.addPage()
       startPoint = originalStartPoint
     }
@@ -888,7 +891,10 @@ app.get('/print.pdf', function(req, res, next){
 
     offset = [offset[0]+18,offset[1]+36]
     setDoc()
+    doc.fontSize(16)
+    doc.font('Body Font')
     doc.text('Jimmy John\'s')
+    doc.font('Heading Font')
     doc.moveDown().fontSize(9)
     doc.text('Buy 10 subs get 1 FREE sub!')
 
