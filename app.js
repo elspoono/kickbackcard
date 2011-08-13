@@ -46,7 +46,7 @@ app.configure('production', function(){
  * 
  * Generic Libraries Setup
  * 
- * geo, bcrypt and mongoose
+ * geo, pdfkit, nodemailer, bcrypt and mongoose
  * 
  * 
  **********************************/
@@ -712,15 +712,135 @@ app.post('/printDeal', securedFunction, getDeal, function(req, res, next){
       deal: req.data
     })
 })
+
+/*
+PDFImage - embeds images in PDF documents
+By Devon Govett
+*/
+var Data, JPEG, PDFImage, PNG, fs;
+fs = require('fs');
+Data = require('pdfkit/lib/data');
+JPEG = require('pdfkit/lib/image/jpeg');
+PNG = require('pdfkit/lib/image/png');
+PDFImage = (function() {
+function PDFImage() {}
+PDFImage.open = function(filename) {
+  var data, firstByte;
+  if (typeof filename === 'string') {
+    this.contents = fs.readFileSync(filename);
+    if (!this.contents) {
+      return;
+    }
+    this.data = new Data(this.contents);
+  } else if (typeof filename === 'object') {
+    this.data = new Data(filename);
+  } else {
+    return;
+  }
+  this.filter = null;
+  data = this.data;
+  firstByte = data.byteAt(0);
+  if (firstByte === 0xFF && data.byteAt(1) === 0xD8) {
+    return new JPEG(data);
+  } else if (firstByte === 0x89 && data.stringAt(1, 3) === "PNG") {
+    return new PNG(data);
+  } else {
+    throw new Error('Unknown image format.');
+  }
+};
+return PDFImage;
+})();
+var myImage = function(src, x, y, options) {
+  var bh, bp, bw, h, hp, image, ip, label, obj, w, wp, _base, _ref, _ref2, _ref3;
+  if (typeof x === 'object') {
+    options = x;
+    x = null;
+  }
+  x = x || (options != null ? options.x : void 0) || this.x;
+  y = y || (options != null ? options.y : void 0) || this.y;
+  if (this._imageRegistry[src]) {
+    _ref = this._imageRegistry[src], image = _ref[0], obj = _ref[1], label = _ref[2];
+  } else {
+    image = PDFImage.open(src);
+    obj = image.object(this);
+    label = "I" + (++this._imageCount);
+    this._imageRegistry[src] = [image, obj, label];
+  }
+  w = (options != null ? options.width : void 0) || image.width;
+  h = (options != null ? options.height : void 0) || image.height;
+  if (options) {
+    if (options.width && !options.height) {
+      wp = w / image.width;
+      w = image.width * wp;
+      h = image.height * wp;
+    } else if (options.height && !options.width) {
+      hp = h / image.height;
+      w = image.width * hp;
+      h = image.height * hp;
+    } else if (options.scale) {
+      w = image.width * options.scale;
+      h = image.height * options.scale;
+    } else if (options.fit) {
+      _ref2 = options.fit, bw = _ref2[0], bh = _ref2[1];
+      bp = bw / bh;
+      ip = image.width / image.height;
+      if (ip > bp) {
+        w = bw;
+        h = bw / ip;
+      } else {
+        h = bh;
+        w = bh * ip;
+      }
+    }
+  }
+  if (this.y === y) {
+    this.y += h;
+  }
+  y = this.page.height - y - h;
+  if ((_ref3 = (_base = this.page.xobjects)[label]) == null) {
+    _base[label] = obj;
+  }
+  this.save();
+  this.addContent("" + w + " 0 0 " + h + " " + x + " " + y + " cm");
+  this.addContent("/" + label + " Do");
+  this.restore();
+  return this;
+}
+
+
 app.get('/print.pdf', function(req, res, next){
   
   var doc = new PDFDocument()
+  doc.image = myImage;
+
   doc.text('some text')
+  doc.image(__dirname + '/public/images/app-store.png',100,100,{fit:[100,100]})
+
+
+  var QRCode = require('qrcode')
+  QRCode.toDataURL('http://kckb.ac/123',function(err,url){
+
+    url = url.replace(/^[^,]*,/,'')
+    doc.image(new Buffer(url, 'base64'),500,100,{fit:[50,50]})
+
+    var output = doc.output()
+    res.send(new Buffer(output,'binary'),{
+      'Content-Type' : 'application/pdf'
+    })
+/*
+    res.send(new Buffer(url.replace(/^[^,]*,/,'');,'base64'),{
+      'Content-Type' : 'image/png'
+    })
+*/
+
+  })
+
+/*
   var output  = doc.output()
   res.send(new Buffer(output,'binary'),{
     'Content-Type' : 'application/pdf'
   })
-
+*/
 
 })
 
