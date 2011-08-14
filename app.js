@@ -219,7 +219,7 @@ var get10Vendors = function(req, res, next){
   var params = req.body || {}
   var skip = params.skip || 0
 
-  Vendor.find({},{},{skip:skip,limit:10,sort:{name:1}},function(err, data){
+  Vendor.find({},['coordinates','name','address','contact'],{skip:skip,limit:10,sort:{name:1}},function(err, data){
     req.err = err
     req.data = data
     next()
@@ -1022,6 +1022,12 @@ app.get('/', get10Vendors, function(req, res){
     });
   }
 });
+
+app.get('/vendors.json', get10Vendors, function(req, res){
+  res.send({
+    vendors: req.data
+  })
+})
 
 
 
