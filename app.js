@@ -1024,9 +1024,7 @@ app.get('/', get10Vendors, function(req, res){
 });
 
 app.get('/vendors.json', get10Vendors, function(req, res){
-  res.send({
-    vendors: req.data
-  })
+  res.send(req.data)
 })
 
 
