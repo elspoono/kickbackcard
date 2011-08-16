@@ -82,6 +82,12 @@ body .body i {
 body .body p {
   margin: 15px 0;
 }
+body .body .step-copy {
+  color: #000;
+}
+body .body .step-copy ol li {
+  margin: 30px 0;
+}
 body .body .container {
   background: rgba(190,190,190,0.1);
   -moz-box-shadow: 0px 0px 4px #aaa;
