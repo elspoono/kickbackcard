@@ -1080,7 +1080,7 @@ app.get('/', get10Vendors, function(req, res){
   if(req.session.role == 'admin')
     res.redirect('/admin')
   else{
-    var mystring = 'http://maps.googleapis.com/maps/api/staticmap?center=Phoenix%20AZ&'
+    var mystring = '//maps.googleapis.com/maps/api/staticmap?center=Phoenix%20AZ&'
     for(var i in req.data){
       var thisVendor = req.data[i]
       if(typeof(thisVendor.coordinates)=='object' && thisVendor.coordinates.length == 3)
