@@ -50,6 +50,9 @@ app.configure('production', function(){
  * 
  * 
  **********************************/
+
+var validURLCharacters = '$-_.+!*\'(),0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
 var geo = require('geo');
 
 require('coffee-script');
@@ -155,14 +158,55 @@ User.count({},function(err,data){
  * 
  **********************************/
 /* Role / Vendor mongoose Schemas */
+var ClientSchema = new Schema({
+  client_secret: String,
+  dateAdded: Date
+})
+var KickerSchema = new Schema({
+  urlString: String,
+  deal_id: String,
+  reusable: Boolean,
+  kick_ids: [String],
+  dateAdded: Date
+})
+var KickSchema = new Schema({
+  kicker_id: String,
+  redeem_id: String,
+  client_id: String,
+  redeemed: Boolean,
+  dateAdded: Date
+})
+var RedeemSchema = new Schema({
+  client_id: String,
+  kicker_id: String,
+  dateAdded: Date,
+  kick_ids: [String]
+})
+var Client = mongoose.model('Client',ClientSchema);
+var Kicker = mongoose.model('Kicker',KickerSchema);
+var Kick = mongoose.model('Kick',KickSchema);
+var Redeem = mongoose.model('Redeem',RedeemSchema);
+
+
 var DealSchema = new Schema({
   buy_item: String,
   buy_qty: Number,
   get_type: String,
   get_qty: Number,
   get_item: String,
+  tag_line: String,
   vendor_id: String,
   archived: {type: Boolean, default: false}
+})
+DealSchema.virtual('default_tag_line').get(function(){
+  var tag_line = '';
+  if(this.get_type == '1 FREE')
+    tag_line = 'Buy '+this.buy_qty+' '+this.buy_item+' and get one '+this.get_item+' FREE!';
+  if(this.get_type == 'Dollar(s) Off')
+    tag_line = 'Buy '+this.buy_qty+' '+this.buy_item+' and get '+this.get_item+' dollars off!';
+  if(this.get_type == 'Percent Off')
+    tag_line = 'Buy '+this.buy_qty+' '+this.buy_item+' and get '+this.get_item+' percent off!';
+  return tag_line;
 })
 var Deal = mongoose.model('Deal',DealSchema);
 var DealBackup = mongoose.model('DealBackup',DealSchema);
@@ -181,6 +225,32 @@ var Vendor = mongoose.model('Vendor',VendorSchema);
 var VendorBackup = mongoose.model('VendorBackup',VendorSchema);
 
 
+
+/**********************************
+ *
+ * Route MiddleWare
+ * 
+ * Kick and Clienting
+ *
+ **********************************/
+var mrg = require(__dirname + '/mrg')
+var createClient = function(req, res, next){
+  var client = new Client();
+  client.client_secret = encrypted(mrg.generate()+'');
+  client.save(function(err,data){
+    req.err = err;
+    req.data = data;
+    next()
+  })
+}
+app.get('/generateKicker',function(req,res,next){
+  var psuedo = '';
+  for(var i = 0; i<100; i++){
+    psuedo += mrg.generate(); 
+  }
+
+  res.send(psuedo)
+})
 
 /**********************************
  * 
@@ -285,6 +355,10 @@ var saveDeal = function(req, res, next){
         data.get_type = params.get_type
       if(params.get_item && params.get_item.match(/\b.{1,1500}\b/))
         data.get_item = params.get_item
+      if(params.tag_line && params.tag_line.match(/\b.{1,1500}\b/))
+        data.tag_line = params.tag_line;
+      else if(params.tag_line == '')
+        data.tag_line = '';
       if(params.archive)
         data.archived = true
       data.save(function(err,data){
@@ -378,19 +452,10 @@ var getDeal = function(req, res, next){
   else
     Deal.findById(params.id,function(err, data){
       req.err = err
-      if(typeof(data)=='object'){
-        if(data.get_type == '1 FREE')
-          data.tag_line = 'Buy '+data.buy_qty+' '+data.buy_item+' and get one '+data.get_item+' FREE!';
-        if(data.get_type == 'Dollar(s) Off')
-          data.tag_line = 'Buy '+data.buy_qty+' '+data.buy_item+' and get '+data.get_item+' dollars off!';
-        if(data.get_type == 'Percent Off')
-          data.tag_line = 'Buy '+data.buy_qty+' '+data.buy_item+' and get '+data.get_item+' percent off!';
-        req.data = data
-      }
+      req.data = data
       next()
     });
 }
-
 
 
 /**********************************
@@ -637,6 +702,12 @@ app.post('/deleteUser', securedFunction, deleteUser, function(req, res, next){
  * 
  * 
  **********************************/
+app.get('/createClient', createClient, function(req, res, next){
+  res.send({
+    err: req.err,
+    data: req.data
+  })
+})
 app.post('/get10Vendors', securedFunction, get10Vendors, function(req, res, next){
   if(req.err)
     res.send({
@@ -1119,6 +1190,9 @@ app.get('/_:partial', function(req, res, next){
 })
 
 
+app.get('/robots.txt', function(req, res, next){
+  res.send('User-agent: *\nDisallow: /',{'Content-Type':'text/plain'})
+});
 
 
 app.listen(process.env.PORT || 3000);

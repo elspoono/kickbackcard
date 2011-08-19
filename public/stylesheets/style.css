@@ -335,6 +335,13 @@ body .window fieldset .row li .input {
 body .window fieldset .row li .buy_qty {
   width: 40px;
 }
+body .window fieldset .row .text {
+  float: inherit;
+}
+body .window fieldset .row .text .tag_line {
+  width: 100%;
+  text-align: center;
+}
 body .window fieldset .row .buttons {
   padding: 15px 0 0 0;
   text-align: center;

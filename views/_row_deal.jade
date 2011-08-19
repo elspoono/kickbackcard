@@ -12,6 +12,8 @@ ul.row(id=deal._id)
       option(value='Percent Off',selected=(deal.get_type=='Percent Off')?'selected':false) Percent Off
   li
     input.input.get_item(value=deal.get_item,placeholder='lunch')
+  li.text
+    input.input.tag_line(value=deal.tag_line,placeholder=deal.default_tag_line)
   li.buttons
     a.archive(href='#') archive
     |  &nbsp; or &nbsp; 

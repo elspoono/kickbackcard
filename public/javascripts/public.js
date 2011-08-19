@@ -199,7 +199,9 @@ $(function(){
    * 
    **********************************/
   $.fn.showTooltip = function( options ) {  
-    var settings = {}
+    var settings = {
+      position: 'above' /* Can also be below */
+    }
     return this.each(function() {
       if(options)
         $.extend( settings, options )
@@ -214,7 +216,7 @@ $(function(){
         tooltip.html(settings.message)
         tooltip.css({
           left: offset.left,
-          top: offset.top
+          top: offset.top + (settings.position=='below'?($t.height()+40):0)
         })
         $('body').append(tooltip)
         for(var i in data){
@@ -290,28 +292,36 @@ $(function(){
         }
       },function(){})
     })
+
+    /***********************************
+     *
+     * ReUsable ValidateAndSave that ties 
+     * a simple validation and autosaver 
+     * to an input.
+     *
+     ***********************************/
     var validateAndSave = function(field,expression,e){
       var eventType = e || 'keyup'
-      var buy_qty = ''
-      var buy_qtyT = 0
+      var val = 0
+      var valT = 0
       $row.find('.'+field).bind(eventType,function(e){
         var $t = $(this)
-        if(buy_qty!=this.value){
-          clearTimeout(buy_qtyT)
-          buy_qtyT = setTimeout(function(){
+        if(val!==this.value){
+          clearTimeout(valT)
+          valT = setTimeout(function(){
             $t.trigger('customValidate')
           },500)
         }
       }).bind('customValidate',function(){
         var $t = $(this)
         $t.removeClass('valid error')
-        buy_qty = this.value
-        if(buy_qty==''){
+        val = this.value
+        if(val=='' && field != 'tag_line'){
           $t.addClass('error')
           $t.showTooltip({message:'please fill in'})
-        }else if(buy_qty.match(expression)){
+        }else if(val.match(expression)){
           $t.addClass('valid')
-          $t.showTooltip({message:buy_qty+' is good'})
+          $t.showTooltip({message:val+' is good'})
           var data = {
             id: $row.attr('id')
           }
@@ -322,8 +332,23 @@ $(function(){
             success: function(data){
               if(data.err)
                 $t.showTooltip({message:data.err})
-              else
-                $t.showTooltip({message:buy_qty+' saved'})
+              else{
+                $t.showTooltip({message:val+' saved'})
+                /* Update the placeholder for the tag line */
+                if(field!='tag_line'){
+                  var tag_line = '';
+                  if($row.find('.get_type').val() == '1 FREE')
+                    tag_line = 'Buy '+$row.find('.buy_qty').val()+' '+$row.find('.buy_item').val()+' and get one '+$row.find('.get_item').val()+' FREE!';
+                  if($row.find('.get_type').val() == 'Dollar(s) Off')
+                    tag_line = 'Buy '+$row.find('.buy_qty').val()+' '+$row.find('.buy_item').val()+' and get '+$row.find('.get_item').val()+' dollars off!';
+                  if($row.find('.get_type').val() == 'Percent Off')
+                    tag_line = 'Buy '+$row.find('.buy_qty').val()+' '+$row.find('.buy_item').val()+' and get '+$row.find('.get_item').val()+' percent off!';
+                  $row.find('.tag_line').each(function(){
+                    if(this.value=='')
+                      $(this).showTooltip({message:'default text saved',position:'below'});
+                  }).attr('placeholder',tag_line).blur()
+                }
+              }
             },
             error: function(){
               $t.showTooltip({message:'server error'})
@@ -331,7 +356,7 @@ $(function(){
           })
         }else{
           $t.addClass('error')
-          $t.showTooltip({message:buy_qty+' is not quite right'})
+          $t.showTooltip({message:val+' is not quite right'})
         }
       })
     }
@@ -339,6 +364,9 @@ $(function(){
     validateAndSave('buy_item',new RegExp(/\b.{1,1500}\b/i))
     validateAndSave('get_type',new RegExp(/\b.{1,1500}\b/i),'change')
     validateAndSave('get_item',new RegExp(/\b.{1,1500}\b/i))
+    validateAndSave('tag_line',new RegExp(/^.{0,1500}$/i))
+
+
     $row.find('.print').click(function(){
       loadLoading({},function(err,win,modal){
         $.ajax({

@@ -24,8 +24,7 @@
       li [image of paper kick]
     ul.row.text
       li.column-one &nbsp;
-      li
-        input(placeholder='Buy 10 lunches and get one lunch FREE!',value=deal.tag_line)
+      li= deal.tag_line?deal.tag_line:deal.default_tag_line
   .buttons
     input.submit(type='submit',value='Print')
     input.cancel(type='button',value='Cancel')
