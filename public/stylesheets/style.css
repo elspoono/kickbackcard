@@ -264,6 +264,11 @@ body .window .tabs li.active {
   color: #000;
   cursor: auto;
 }
+body .window .previews iframe {
+  width: 100%;
+  height: 200px;
+  margin-bottom: 30px;
+}
 body .window fieldset .fields {
   margin: 15px 0;
   overflow: hidden;

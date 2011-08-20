@@ -382,12 +382,57 @@ $(function(){
               loadModal({
                 content: data
               },function(err,win,modal){
+                
+                /* Well, might as well leave the code around for a bit
+
                 win.find('.kicker').change(function(){
                   var $t = $(this)
                   if ($t.is(':checked'))
                     win.find('.warning').show()
                   else
                     win.find('.warning').hide()
+                })
+                */
+
+                win.find('.print-form').submit(function(){
+                  var kicker = win.find('.kicker').is(':checked');
+                  var kicks = win.find('.kicks').val()*1;
+                  if(kicker || kicks){
+                    
+                    var previews = $('<div class="previews" />')
+
+                    if(kicks){
+                      var url = '/deal/'+$row.attr('id')+'/kicks-'+kicks+'.pdf';
+                      previews.append('<a href="'+url+'" target="_blank">Download</a><iframe src="'+url+'" />');
+                    }
+                    if(kicker){
+                      var url = '/deal/'+$row.attr('id')+'/kicker.pdf';
+                      previews.append('<a href="'+url+'" target="_blank">Download</a><iframe src="'+url+'" />');
+                    }
+
+                    var content = $('<div class="content" />');
+                    content.append(previews);
+                    
+                    content.find('iframe').each(function(){
+                      var $l = $('<p>loading preview...</p>');
+                      $(this).before($l).load(function(){
+                        $l.remove();
+                        $window.resize();
+                      });
+                    });
+
+                    modal.click();
+                    loadModal({
+                      content: content
+                    },function(win,modal){
+                      
+                    })
+
+
+                  }else{
+                    loadAlert('Please select either a kicker or some kicks.')
+                  }
+                  return false;
                 })
               })
             }

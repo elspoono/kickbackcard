@@ -1,30 +1,32 @@
 .print
   p What would you like to print?
-  .option
-    ul.row
-      li.column-one
-        input.kicker(type='checkbox')
-      li Kicker
-    ul.row
-      li.column-one &nbsp;
-      li [image of kicker]
-    ul.row.warning
-      li.column-one &nbsp;
-      li.alert Warning: As soon as you hit print, any previous kicker <u>will be deactivated.</u>
-  .option
-    ul.row
-      li.column-one
-        select
-          option(value='0') 0
-          option(value='500') 500
-      li
-        Paper Kicks
-    ul.row
-      li.column-one &nbsp;
-      li [image of paper kick]
-    ul.row.text
-      li.column-one &nbsp;
-      li= deal.tag_line?deal.tag_line:deal.default_tag_line
-  .buttons
-    input.submit(type='submit',value='Print')
-    input.cancel(type='button',value='Cancel')
+  form.print-form
+    .option
+      ul.row
+        li.column-one
+          input.kicker(type='checkbox')
+        li Kicker
+      ul.row
+        li.column-one &nbsp;
+        li [image of kicker]
+      ul.row.warning
+        li.column-one &nbsp;
+        li.alert Warning: As soon as you hit print, any previous kicker <u>will be deactivated.</u>
+    .option
+      ul.row
+        li.column-one
+          select.kicks
+            option(value='0') 0
+            option(value='10') 10
+            option(value='500') 500
+        li
+          Paper Kicks
+      ul.row
+        li.column-one &nbsp;
+        li [image of paper kick]
+      ul.row.text
+        li.column-one &nbsp;
+        li= deal.tag_line?deal.tag_line:deal.default_tag_line
+    .buttons
+      input.submit(type='submit',value='Print')
+      input.cancel(type='button',value='Cancel')

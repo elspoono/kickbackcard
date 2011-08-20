@@ -924,7 +924,9 @@ var myImage = function(src, x, y, options) {
 var qrcode = require(__dirname + '/qrcode.js')
 
 
-app.get('/print.pdf', function(req, res, next){
+app.get('/deal/:id/kicks-:qty.pdf', securedArea, function(req, res, next){
+  
+  var params = req.params || {}
   
   var doc = new PDFDocument()
 
@@ -932,7 +934,7 @@ app.get('/print.pdf', function(req, res, next){
   doc.registerFont('Body Font',__dirname+'/OpenSans-Regular.ttf','Open-Sans-Regular')
   doc.image = myImage;
 
-  var length = 500;
+  var length = params.qty || 500;
 
   var originalStartPoint = [54+252,36-144]
   var startPoint = originalStartPoint
@@ -996,11 +998,13 @@ app.get('/print.pdf', function(req, res, next){
             if( qf[j*width+i] )
                 doc.rect(px*(4+i)+offset[0],px*(4+j)+offset[1],px,px).fill()      
   }
-  var offset = [54,54]
+
+
   var output = doc.output()
   res.send(new Buffer(output,'binary'),{
     'Content-Type' : 'application/pdf'
   })
+
     /*
 
 /*
@@ -1024,6 +1028,36 @@ app.get('/print.pdf', function(req, res, next){
     'Content-Type' : 'application/pdf'
   })
 */
+
+})
+
+app.get('/deal/:id/kicker.pdf', securedArea, function(req, res, next){
+  
+  var params = req.params || {}
+  
+  var doc = new PDFDocument()
+
+  doc.registerFont('Heading Font',__dirname+'/LuckiestGuy.ttf','Luckiest-Guy')
+  doc.registerFont('Body Font',__dirname+'/OpenSans-Regular.ttf','Open-Sans-Regular')
+  doc.image = myImage;
+
+
+  var offset = [0,0];
+
+  var setDoc = function(){
+    doc.x = offset[0]
+    doc.y = offset[1]
+  }
+
+  setDoc()
+  doc.image(__dirname + '/public/images/kicker-bg.png',0,0,{fit:[500,1000]})
+
+
+
+  var output = doc.output()
+  res.send(new Buffer(output,'binary'),{
+    'Content-Type' : 'application/pdf'
+  })
 
 })
 
