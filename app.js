@@ -50,6 +50,7 @@ app.configure('production', function(){
  * 
  * 
  **********************************/
+var im = require('imagemagick');
 
 var validURLCharacters = '$-_.+!*\'(),0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
@@ -192,7 +193,6 @@ var DealSchema = new Schema({
   buy_item: String,
   buy_qty: Number,
   get_type: String,
-  get_qty: Number,
   get_item: String,
   tag_line: String,
   vendor_id: String,
@@ -445,16 +445,27 @@ var deleteVendor = function(req, res, next){
   }
 }
 var getDeal = function(req, res, next){
-  var params = req.body || {}
+  var params = req.body || req.params || {}
   var id = params.id || ''
   if(id=='')
     next()
   else
     Deal.findById(params.id,function(err, data){
       req.err = err
-      req.data = data
+      req.deal = data
       next()
     });
+}
+
+var getVendorFromDeal = function(req, res, next){
+  if(req.deal)
+    Vendor.find({deal_ids:req.deal._id},function(err, data){
+      req.err = err
+      req.vendor = data.length>=1 ? data[0] : {}
+      next()
+    });
+  else
+    next()
 }
 
 
@@ -780,7 +791,7 @@ app.post('/printDeal', securedFunction, getDeal, function(req, res, next){
   else
     res.render('_form_print', {
       layout: 'layout_partial.jade',
-      deal: req.data
+      deal: req.deal
     })
 })
 
@@ -1031,8 +1042,8 @@ app.get('/deal/:id/kicks-:qty.pdf', securedArea, function(req, res, next){
 
 })
 
-app.get('/deal/:id/kicker.pdf', securedArea, function(req, res, next){
-  
+app.get('/deal/:id/kicker.pdf', getDeal, getVendorFromDeal, function(req, res, next){
+
   var params = req.params || {}
   
   var doc = new PDFDocument()
@@ -1050,8 +1061,44 @@ app.get('/deal/:id/kicker.pdf', securedArea, function(req, res, next){
   }
 
   setDoc()
-  doc.image(__dirname + '/public/images/kicker-bg.png',0,0,{fit:[500,1000]})
+  doc.image(__dirname + '/public/images/kicker-bg.png',0,0,{fit:[612,792]})
+  offset = [340,64]
+  setDoc()
+  doc.fontSize(36)
+  doc.font('Body Font')
+  doc.text(req.vendor.name)
+  doc.fontSize(36)
 
+  offset = [340,132];
+  setDoc();
+  doc.fontSize(20);
+  doc.text((!req.deal.tag_line||req.deal.tag_line.length==0)?req.deal.default_tag_line:req.deal.tag_line);
+
+
+  offset = [280,340]
+  var ecclevel = 4;
+  var wd = 250;
+  var ht = 250;
+
+  var string = 'http://kckb.ac/test'+Math.random();
+  
+  string = string.substr(0,30)
+  var qrCode = qrcode.genframe(string);
+  var qf = qrCode.qf
+  var width = qrCode.width
+
+  var i,j;
+  var px = wd;
+  if( ht < wd )
+      px = ht;
+  px /= width+10;
+  px=Math.round(px - 0.5);
+
+  doc.fillColor('black')
+  for( i = 0; i < width; i++ )
+      for( j = 0; j < width; j++ )
+          if( qf[j*width+i] )
+              doc.rect(px*(4+i)+offset[0],px*(4+j)+offset[1],px,px).fill()   
 
 
   var output = doc.output()
