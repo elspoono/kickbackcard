@@ -855,8 +855,6 @@ PDFImage.open = function(filename) {
   } else if (firstByte === 0x89 && data.stringAt(1, 3) === "PNG") {
     return new PNG(data);
   } else {
-    console.log(data);
-    console.log(firstByte)
     throw new Error('Unknown image format.');
   }
 };
@@ -1092,8 +1090,8 @@ app.get('/deal/:id/kicker.pdf', getDeal, getVendorFromDeal, function(req, res, n
     var parts = stdout.split('B`');
     var vendorImage = parts[parts.length-2]+'B`';
     vendorImage = vendorImage.substr(1,vendorImage.length-1);
-
-
+res.send(vendorImage);
+return;
     doc.image(new Buffer(vendorImage,'binary'),0,0,{fit:[200,80]})
 
 /*
