@@ -1090,7 +1090,7 @@ app.get('/deal/:id/kicker.pdf', getDeal, getVendorFromDeal, function(req, res, n
     var parts = stdout.split('B`');
     var vendorImage = parts[parts.length-2]+'B`';
     vendorImage = vendorImage.substr(1,vendorImage.length-1);
-res.send(vendorImage);
+res.send(stdout);
 return;
     doc.image(new Buffer(vendorImage,'binary'),0,0,{fit:[200,80]})
 
