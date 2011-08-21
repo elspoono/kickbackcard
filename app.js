@@ -1076,7 +1076,7 @@ app.get('/deal/:id/kicker.pdf', getDeal, getVendorFromDeal, function(req, res, n
     }
 
     setDoc()
-    doc.image(__dirname + '/public/images/kicker-bg.png',0,0,{fit:[612,792]})
+    //doc.image(__dirname + '/public/images/kicker-bg.png',0,0,{fit:[612,792]})
     offset = [340,64]
     setDoc()
 
