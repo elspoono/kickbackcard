@@ -855,6 +855,7 @@ PDFImage.open = function(filename) {
   } else if (firstByte === 0x89 && data.stringAt(1, 3) === "PNG") {
     return new PNG(data);
   } else {
+    console.log(filename,typeof filename);
     throw new Error('Unknown image format.');
   }
 };
