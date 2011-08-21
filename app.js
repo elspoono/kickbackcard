@@ -1042,69 +1042,115 @@ app.get('/deal/:id/kicks-:qty.pdf', securedArea, function(req, res, next){
 
 })
 
+
 app.get('/deal/:id/kicker.pdf', getDeal, getVendorFromDeal, function(req, res, next){
 
   var params = req.params || {}
   
-  var doc = new PDFDocument()
 
-  doc.registerFont('Heading Font',__dirname+'/LuckiestGuy.ttf','Luckiest-Guy')
-  doc.registerFont('Body Font',__dirname+'/OpenSans-Regular.ttf','Open-Sans-Regular')
-  doc.image = myImage;
-
-
-  var offset = [0,0];
-
-  var setDoc = function(){
-    doc.x = offset[0]
-    doc.y = offset[1]
-  }
-
-  setDoc()
-  doc.image(__dirname + '/public/images/kicker-bg.png',0,0,{fit:[612,792]})
-  offset = [340,64]
-  setDoc()
-  doc.fontSize(36)
-  doc.font('Body Font')
-  doc.text(req.vendor.name)
-  doc.fontSize(36)
-
-  offset = [340,132];
-  setDoc();
-  doc.fontSize(20);
-  doc.text((!req.deal.tag_line||req.deal.tag_line.length==0)?req.deal.default_tag_line:req.deal.tag_line);
+  im.convert([
+    'canvas:none', 
+    '-background','transparent',
+    '-fill','black',
+    '-font', __dirname+'/LuckiestGuy.ttf',
+    '-size','900x300',
+    'label:'+req.vendor.name,
+    'png:-'
+  ],
+  function(err, stdout, stderr){
 
 
-  offset = [280,340]
-  var ecclevel = 4;
-  var wd = 250;
-  var ht = 250;
 
-  var string = 'http://kckb.ac/test'+Math.random();
-  
-  string = string.substr(0,30)
-  var qrCode = qrcode.genframe(string);
-  var qf = qrCode.qf
-  var width = qrCode.width
+    var doc = new PDFDocument()
 
-  var i,j;
-  var px = wd;
-  if( ht < wd )
-      px = ht;
-  px /= width+10;
-  px=Math.round(px - 0.5);
-
-  doc.fillColor('black')
-  for( i = 0; i < width; i++ )
-      for( j = 0; j < width; j++ )
-          if( qf[j*width+i] )
-              doc.rect(px*(4+i)+offset[0],px*(4+j)+offset[1],px,px).fill()   
+    doc.registerFont('Heading Font',__dirname+'/LuckiestGuy.ttf','Luckiest-Guy')
+    doc.registerFont('Body Font',__dirname+'/OpenSans-Regular.ttf','Open-Sans-Regular')
+    doc.image = myImage;
 
 
-  var output = doc.output()
-  res.send(new Buffer(output,'binary'),{
-    'Content-Type' : 'application/pdf'
-  })
+    var offset = [0,0];
+
+    var setDoc = function(){
+      doc.x = offset[0]
+      doc.y = offset[1]
+    }
+
+    setDoc()
+    doc.image(__dirname + '/public/images/kicker-bg.png',0,0,{fit:[612,792]})
+    offset = [340,64]
+    setDoc()
+
+
+
+
+
+
+
+
+    var parts = stdout.split('B`');
+    var vendorImage = parts[parts.length-2]+'B`';
+    vendorImage = vendorImage.substr(1,vendorImage.length-1);
+
+
+    doc.image(new Buffer(vendorImage,'binary'),0,0,{fit:[200,80]})
+
+/*
+    doc.fontSize(36)
+    doc.font('Body Font')
+    doc.text(req.vendor.name)
+    doc.fontSize(36)
+
+*/
+
+
+
+
+
+    offset = [340,132];
+    setDoc();
+    doc.fontSize(20);
+    doc.text((!req.deal.tag_line||req.deal.tag_line.length==0)?req.deal.default_tag_line:req.deal.tag_line);
+
+
+
+
+
+
+
+
+
+    offset = [310,280]
+    var ecclevel = 4;
+    var wd = 250;
+    var ht = 250;
+
+    var string = 'http://kckb.ac/test'+Math.random();
+    
+    string = string.substr(0,30)
+    var qrCode = qrcode.genframe(string);
+    var qf = qrCode.qf
+    var width = qrCode.width
+
+    var i,j;
+    var px = wd;
+    if( ht < wd )
+        px = ht;
+    px /= width+10;
+    px=Math.round(px - 0.5);
+
+    doc.fillColor('black')
+    for( i = 0; i < width; i++ )
+        for( j = 0; j < width; j++ )
+            if( qf[j*width+i] )
+                doc.rect(px*(4+i)+offset[0],px*(4+j)+offset[1],px,px).fill()   
+
+
+    var output = doc.output()
+    res.send(new Buffer(output,'binary'),{
+      'Content-Type' : 'application/pdf'
+    })
+
+  });
 
 })
 
