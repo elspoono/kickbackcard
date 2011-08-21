@@ -1057,99 +1057,91 @@ app.get('/deal/:id/kicker.pdf', getDeal, getVendorFromDeal, function(req, res, n
     'label:'+req.vendor.name,
     'png:-'
   ],
-  function(err, stdout, stderr){
+  function(err, vendorImage, stderr){
 
-
-
-    var doc = new PDFDocument()
-
-    doc.registerFont('Heading Font',__dirname+'/LuckiestGuy.ttf','Luckiest-Guy')
-    doc.registerFont('Body Font',__dirname+'/OpenSans-Regular.ttf','Open-Sans-Regular')
-    doc.image = myImage;
-
-
-    var offset = [0,0];
-
-    var setDoc = function(){
-      doc.x = offset[0]
-      doc.y = offset[1]
-    }
-
-    setDoc()
-    //doc.image(__dirname + '/public/images/kicker-bg.png',0,0,{fit:[612,792]})
-    offset = [340,64]
-    setDoc()
-
-
-
-
-
-
-
-
-    var parts = stdout.split('B`');
+    var parts = vendorImage.split('B`');
     if(parts.length>2){
-      stdout = parts[parts.length-2]+'B`';
-      stdout = stdout.substr(1,stdout.length-1); 
+      vendorImage = parts[parts.length-2]+'B`';
+      vendorImage = vendorImage.substr(1,vendorImage.length-1); 
     }
-    doc.image(new Buffer(stdout,'binary'),0,0,{fit:[200,80]})
 
-/*
-    doc.fontSize(36)
-    doc.font('Body Font')
-    doc.text(req.vendor.name)
-    doc.fontSize(36)
+    im.convert([
+      'canvas:none', 
+      '-background','transparent',
+      '-fill','black',
+      '-font', __dirname+'/OpenSans.ttf',
+      '-size','900x300',
+      'label:'+((!req.deal.tag_line||req.deal.tag_line.length==0)?req.deal.default_tag_line:req.deal.tag_line),
+      'png:-'
+    ],
+    function(err, dealImage, stderr){
 
-*/
+      var parts = dealImage.split('B`');
+      if(parts.length>2){
+        dealImage = parts[parts.length-2]+'B`';
+        dealImage = dealImage.substr(1,dealImage.length-1); 
+      }
+      var doc = new PDFDocument()
 
-
-
-
-
-    offset = [340,132];
-    setDoc();
-    doc.fontSize(20);
-    doc.text((!req.deal.tag_line||req.deal.tag_line.length==0)?req.deal.default_tag_line:req.deal.tag_line);
-
-
-
-
-
-
+      doc.registerFont('Heading Font',__dirname+'/LuckiestGuy.ttf','Luckiest-Guy')
+      doc.registerFont('Body Font',__dirname+'/OpenSans-Regular.ttf','Open-Sans-Regular')
+      doc.image = myImage;
 
 
+      var offset = [0,0];
+      var setDoc = function(){
+        doc.x = offset[0]
+        doc.y = offset[1]
+      }
+      setDoc()
 
-    offset = [310,280]
-    var ecclevel = 4;
-    var wd = 250;
-    var ht = 250;
+      doc.image(__dirname + '/public/images/kicker-bg-opaque.png',0,0,{width:612,height:792})
 
-    var string = 'http://kckb.ac/test'+Math.random();
-    
-    string = string.substr(0,30)
-    var qrCode = qrcode.genframe(string);
-    var qf = qrCode.qf
-    var width = qrCode.width
+      offset = [340,64]
+      setDoc()
+      doc.image(new Buffer(vendorImage,'binary'),0,0,{fit:[205,80]})
 
-    var i,j;
-    var px = wd;
-    if( ht < wd )
-        px = ht;
-    px /= width+10;
-    px=Math.round(px - 0.5);
-
-    doc.fillColor('black')
-    for( i = 0; i < width; i++ )
-        for( j = 0; j < width; j++ )
-            if( qf[j*width+i] )
-                doc.rect(px*(4+i)+offset[0],px*(4+j)+offset[1],px,px).fill()   
+      offset = [340,162];
+      setDoc();
+      doc.image(new Buffer(dealImage,'binary'),0,0,{fit:[205,80]})
 
 
-    var output = doc.output()
-    res.send(new Buffer(output,'binary'),{
-      'Content-Type' : 'application/pdf'
-    })
 
+
+
+
+
+      offset = [335,230]
+      var ecclevel = 4;
+      var wd = 250;
+      var ht = 250;
+
+      var string = 'http://kckb.ac/test'+Math.random();
+      
+      string = string.substr(0,30)
+      var qrCode = qrcode.genframe(string);
+      var qf = qrCode.qf
+      var width = qrCode.width
+
+      var i,j;
+      var px = wd;
+      if( ht < wd )
+          px = ht;
+      px /= width+10;
+      px=Math.round(px - 0.5);
+
+      doc.fillColor('black')
+      for( i = 0; i < width; i++ )
+          for( j = 0; j < width; j++ )
+              if( qf[j*width+i] )
+                  doc.rect(px*(4+i)+offset[0],px*(4+j)+offset[1],px,px).fill()   
+
+
+      var output = doc.output()
+      res.send(new Buffer(output,'binary'),{
+        'Content-Type' : 'application/pdf'
+      })
+    });
   });
 
 })
