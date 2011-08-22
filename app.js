@@ -1083,7 +1083,7 @@ app.get('/deal/:id/kicker.pdf', getDeal, getVendorFromDeal, function(req, res, n
   ],
   function(err, vendorImage, stderr){
     if(err)
-    console.log(err)
+      console.log('vendor image convert:'+err)
 
     var parts = vendorImage.split('B`');
     if(parts.length>2){
@@ -1102,7 +1102,7 @@ app.get('/deal/:id/kicker.pdf', getDeal, getVendorFromDeal, function(req, res, n
     ],
     function(err, dealImage, stderr){
     if(err)
-    console.log(err)
+      console.log('deal text image convert:'+err)
 
       var parts = dealImage.split('B`');
       if(parts.length>2){
