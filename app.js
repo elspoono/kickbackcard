@@ -1081,9 +1081,7 @@ app.get('/deal/:id/kicker.pdf', getDeal, getVendorFromDeal, function(req, res, n
     'label:'+req.vendor.name,
     'png:-'
   ],
-  function(err, vendorImage, stderr){
-    if(err)
-      console.log('vendor image convert:'+err)
+  function(vendorImageErr, vendorImage, stderr){
 
     var parts = vendorImage.split('B`');
     if(parts.length>2){
@@ -1100,9 +1098,7 @@ app.get('/deal/:id/kicker.pdf', getDeal, getVendorFromDeal, function(req, res, n
       'label:'+deal_text,
       'png:-'
     ],
-    function(err, dealImage, stderr){
-    if(err)
-      console.log('deal text image convert:'+err)
+    function(dealImageErr, dealImage, stderr){
 
       var parts = dealImage.split('B`');
       if(parts.length>2){
@@ -1125,13 +1121,19 @@ app.get('/deal/:id/kicker.pdf', getDeal, getVendorFromDeal, function(req, res, n
 
       doc.image(__dirname + '/public/images/kicker-bg-opaque.png',0,0,{width:612,height:792})
 
-      offset = [340,64]
-      setDoc()
-      doc.image(new Buffer(vendorImage,'binary'),0,0,{fit:[205,80]})
+      if(!vendorImageErr){
+        offset = [340,64]
+        setDoc()
+        doc.image(new Buffer(vendorImage,'binary'),0,0,{fit:[205,80]})
+      }else
+        console.log(vendorImageErr)
 
-      offset = [340,132];
-      setDoc();
-      doc.image(new Buffer(dealImage,'binary'),0,0,{fit:[205,80]})
+      if(!dealImageErr){
+        offset = [340,132];
+        setDoc();
+        doc.image(new Buffer(dealImage,'binary'),0,0,{fit:[205,80]}) 
+      }else
+        console.log(dealImageErr)
 
 
 
