@@ -3,7 +3,7 @@
 @import "reset.css";
 body {
   font: 16px "Open Sans", Helvetica, Arial, sans-serif;
-  background: #3f3e3d;
+  background: #436037 url("/images/body-bg.png") repeat-x 0 178px;
   color: #fff;
 }
 body h1,
@@ -41,7 +41,7 @@ body .bg2 {
 }
 body .header {
   background: #dbdbdb;
-  color: #3f3e3d;
+  color: #436037;
 }
 body .header a {
   color: #4e7a3c;
@@ -173,6 +173,11 @@ body .container {
 body .footer {
   text-align: center;
   font-size: 0.8em;
+  background: #dbdbdb;
+  color: #000;
+}
+body .footer a {
+  color: #000;
 }
 body .tooltip {
   border: 1px solid #990;
@@ -219,7 +224,7 @@ body .close {
 }
 body .window {
   background: #fff;
-  color: #3f3e3d;
+  color: #436037;
   -webkit-border-radius: 15px;
   -moz-border-radius: 15px;
   border-radius: 15px;
@@ -233,7 +238,7 @@ body .window {
   overflow: hidden;
 }
 body .window a {
-  color: #3f3e3d;
+  color: #436037;
 }
 body .window h2 {
   font-size: 1.5em;

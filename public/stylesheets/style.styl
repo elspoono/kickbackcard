@@ -18,7 +18,7 @@ font-size = 16px
 font = font-size "Open Sans", Helvetica, Arial, sans-serif
 font2 = 'Luckiest Guy'
 
-very-dark = #3f3e3d
+very-dark = #436037
 dark = #000
 semi-light = #aaa
 very-light = #fff
@@ -30,6 +30,7 @@ green = #CFC
 yellow = #FFC
 darkShift = 60
 boxbg = rgba(190,190,190,.1)
+gray = #DBDBDB
 
 attention = #00B7FF
 
@@ -73,7 +74,7 @@ submit()
  **************************************/
 body
   font font
-  background very-dark
+  background very-dark url('/images/body-bg.png') repeat-x 0 178px
   color very-light
   h1,h2,h3
     font-family font2
@@ -109,7 +110,7 @@ body
    *
    **************************************/
   .header
-    background #DBDBDB
+    background gray
     color very-dark
     a
       color very-dark-alt
@@ -223,6 +224,10 @@ body
   .footer
     text-align center
     font-size .8em
+    background gray
+    color black
+    a
+      color black
 
   /**************************************
    *
