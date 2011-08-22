@@ -3,7 +3,7 @@
 @import "reset.css";
 body {
   font: 16px "Open Sans", Helvetica, Arial, sans-serif;
-  background: #436037 url("/images/body-bg.png") repeat-x 0 178px;
+  background: #2d6031 url("/images/body-bg.png") repeat-x 0 178px;
   color: #fff;
 }
 body h1,
@@ -41,7 +41,7 @@ body .bg2 {
 }
 body .header {
   background: #dbdbdb;
-  color: #436037;
+  color: #2d6031;
 }
 body .header a {
   color: #4e7a3c;
@@ -224,7 +224,7 @@ body .close {
 }
 body .window {
   background: #fff;
-  color: #436037;
+  color: #2d6031;
   -webkit-border-radius: 15px;
   -moz-border-radius: 15px;
   border-radius: 15px;
@@ -238,7 +238,7 @@ body .window {
   overflow: hidden;
 }
 body .window a {
-  color: #436037;
+  color: #2d6031;
 }
 body .window h2 {
   font-size: 1.5em;
