@@ -1054,7 +1054,7 @@ var addLineBreakInMiddle = function(s){
     var c = s.charAt(p)
 
     if(c==' '){
-      s = s.substr(0,p)+'\n'+s.substr(p+1,s.length)
+      s = s.substr(0,p)+' \n'+s.substr(p+1,s.length)
       return s;
     }
   }
