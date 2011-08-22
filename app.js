@@ -1082,6 +1082,8 @@ app.get('/deal/:id/kicker.pdf', getDeal, getVendorFromDeal, function(req, res, n
     'png:-'
   ],
   function(err, vendorImage, stderr){
+    if(err)
+    console.log(err)
 
     var parts = vendorImage.split('B`');
     if(parts.length>2){
@@ -1099,6 +1101,8 @@ app.get('/deal/:id/kicker.pdf', getDeal, getVendorFromDeal, function(req, res, n
       'png:-'
     ],
     function(err, dealImage, stderr){
+    if(err)
+    console.log(err)
 
       var parts = dealImage.split('B`');
       if(parts.length>2){
