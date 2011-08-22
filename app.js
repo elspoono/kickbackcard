@@ -1054,11 +1054,19 @@ var addLineBreakInMiddle = function(s){
     var c = s.charAt(p)
 
     if(c==' '){
-      s = s.substr(0,p)+' \n'+s.substr(p+1,s.length)
+      s = s.substr(0,p)+' \n'+s.substr(p+1,l)
       return s;
     }
   }
   return s;
+}
+
+var fixBrokenPNG = function(inPNG){
+  var p = inPNG.indexOf('B`')
+  if(p<500)
+    inPNG = inPNG.substr(p+3,inPNG.length)
+
+  return inPNG;
 }
 
 app.get('/deal/:id/kicker.pdf', getDeal, getVendorFromDeal, function(req, res, next){
@@ -1083,12 +1091,6 @@ app.get('/deal/:id/kicker.pdf', getDeal, getVendorFromDeal, function(req, res, n
   ],
   function(vendorImageErr, vendorImage, stderr){
 
-    var parts = vendorImage.split('B`');
-    if(parts.length>2){
-      vendorImage = parts[parts.length-2]+'B`';
-      vendorImage = vendorImage.substr(1,vendorImage.length-1); 
-    }
-
     im.convert([
       'canvas:none', 
       '-background','transparent',
@@ -1100,11 +1102,6 @@ app.get('/deal/:id/kicker.pdf', getDeal, getVendorFromDeal, function(req, res, n
     ],
     function(dealImageErr, dealImage, stderr){
 
-      var parts = dealImage.split('B`');
-      if(parts.length>2){
-        dealImage = parts[parts.length-2]+'B`';
-        dealImage = dealImage.substr(1,dealImage.length-1); 
-      }
       var doc = new PDFDocument()
 
       doc.registerFont('Heading Font',__dirname+'/LuckiestGuy.ttf','Luckiest-Guy')
@@ -1121,17 +1118,18 @@ app.get('/deal/:id/kicker.pdf', getDeal, getVendorFromDeal, function(req, res, n
 
       doc.image(__dirname + '/public/images/kicker-bg-opaque.png',0,0,{width:612,height:792})
 
+
       if(!vendorImageErr){
         offset = [340,64]
         setDoc()
-        doc.image(new Buffer(vendorImage,'binary'),0,0,{fit:[205,80]})
+        doc.image(new Buffer(fixBrokenPNG(vendorImage),'binary'),0,0,{fit:[205,80]})
       }else
         console.log(vendorImageErr)
 
       if(!dealImageErr){
         offset = [340,132];
         setDoc();
-        doc.image(new Buffer(dealImage,'binary'),0,0,{fit:[205,80]}) 
+        doc.image(new Buffer(fixBrokenPNG(dealImage),'binary'),0,0,{fit:[205,80]}) 
       }else
         console.log(dealImageErr)
 
