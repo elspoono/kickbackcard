@@ -1081,7 +1081,7 @@ app.get('/deal/:id/kicker.pdf', getDeal, getVendorFromDeal, function(req, res, n
 
 
   im.convert([
-    'canvas:none', 
+    __dirname+'/public/images/_.png',
     '-background','transparent',
     '-fill','black',
     '-font', __dirname+'/OpenSans.ttf',
@@ -1092,7 +1092,7 @@ app.get('/deal/:id/kicker.pdf', getDeal, getVendorFromDeal, function(req, res, n
   function(vendorImageErr, vendorImage, stderr){
 
     im.convert([
-      'canvas:none', 
+      __dirname+'/public/images/_.png',
       '-background','transparent',
       '-fill','black',
       '-font', __dirname+'/LuckiestGuy.ttf',
