@@ -1042,17 +1042,41 @@ app.get('/deal/:id/kicks-:qty.pdf', securedArea, function(req, res, next){
 
 })
 
+var addLineBreakInMiddle = function(s){
+  var l = s.length;
+  var m = Math.floor(l/2);
+  for(var i = 0; i < l; i++){
+    var p = (
+      i%2
+        ?(m+(i+1)/2)
+        :(m-(i)/2)
+    )
+    var c = s.charAt(p)
+
+    if(c==' '){
+      s = s.substr(0,p)+'\n'+s.substr(p+1,s.length)
+      return s;
+    }
+  }
+  return s;
+}
 
 app.get('/deal/:id/kicker.pdf', getDeal, getVendorFromDeal, function(req, res, next){
 
   var params = req.params || {}
   
+  var deal_text = addLineBreakInMiddle(
+    (!req.deal.tag_line || req.deal.tag_line.length==0)
+      ?req.deal.default_tag_line
+    :req.deal.tag_line
+  );
+
 
   im.convert([
     'canvas:none', 
     '-background','transparent',
     '-fill','black',
-    '-font', __dirname+'/LuckiestGuy.ttf',
+    '-font', __dirname+'/OpenSans.ttf',
     '-size','900x300',
     'label:'+req.vendor.name,
     'png:-'
@@ -1069,9 +1093,9 @@ app.get('/deal/:id/kicker.pdf', getDeal, getVendorFromDeal, function(req, res, n
       'canvas:none', 
       '-background','transparent',
       '-fill','black',
-      '-font', __dirname+'/OpenSans.ttf',
+      '-font', __dirname+'/LuckiestGuy.ttf',
       '-size','900x300',
-      'label:'+((!req.deal.tag_line||req.deal.tag_line.length==0)?req.deal.default_tag_line:req.deal.tag_line),
+      'label:'+deal_text,
       'png:-'
     ],
     function(err, dealImage, stderr){
@@ -1101,7 +1125,7 @@ app.get('/deal/:id/kicker.pdf', getDeal, getVendorFromDeal, function(req, res, n
       setDoc()
       doc.image(new Buffer(vendorImage,'binary'),0,0,{fit:[205,80]})
 
-      offset = [340,162];
+      offset = [340,132];
       setDoc();
       doc.image(new Buffer(dealImage,'binary'),0,0,{fit:[205,80]})
 
@@ -1136,6 +1160,14 @@ app.get('/deal/:id/kicker.pdf', getDeal, getVendorFromDeal, function(req, res, n
               if( qf[j*width+i] )
                   doc.rect(px*(4+i)+offset[0],px*(4+j)+offset[1],px,px).fill()   
 
+
+
+      /* Back Side */
+      doc.addPage();
+
+      offset = [0,0];
+      setDoc()
+      doc.image(__dirname + '/public/images/kicker-back.png',0,0,{width:612,height:792});
 
       var output = doc.output()
       res.send(new Buffer(output,'binary'),{
