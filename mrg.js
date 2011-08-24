@@ -176,3 +176,4 @@ function genrand_res53()
 /* These real versions are due to Isaku Wada, 2002/01/09 added */
 
 exports.generate = genrand_int32;
+exports.generate_real = genrand_real1;

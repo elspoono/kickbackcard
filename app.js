@@ -5,41 +5,6 @@
 
 var express = require('express');
 
-var app = module.exports = express.createServer();
-
-// Configuration
-
-app.configure(function(){
-  app.set('views', __dirname + '/views');
-  app.set('view engine', 'jade');
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
-  app.use(express.cookieParser());
-  app.use(express.session({ secret: 'fkd32aFD5Ssnfj$5#@$0k;' }));
-  app.use(require('stylus').middleware({ src: __dirname + '/public' }));
-  app.use(app.router);
-  app.use(express.static(__dirname + '/public'));
-});
-
-
-var error = function(err){
-  console.log(err);
-}
-
-
-app.configure('development', function(){
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
-});
-
-app.configure('production', function(){
-  app.use(express.errorHandler()); 
-  error = function(){};
-});
-
-
-
-
-
 
 
 /**********************************
@@ -52,7 +17,7 @@ app.configure('production', function(){
  **********************************/
 var im = require('imagemagick');
 
-var validURLCharacters = '$-_.+!*\'(),0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+var validURLCharacters = '$-_.+!*\'(),0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
 var geo = require('geo');
 
@@ -80,9 +45,54 @@ var compareEncrypted= function(inString,hash){
   return bcrypt.compare_sync(inString, hash);
 }
 
+var mongoStore = require('connect-mongodb');
 var mongoose = require('mongoose');
 mongoose.connect(process.env.MONGOHQ_URL || 'mongodb://localhost/db');
 var Schema = mongoose.Schema, ObjectId = Schema.ObjectId;
+
+function mongoStoreConnectionArgs() {
+  var db = mongoose.connections[0];
+  return { dbname: db.name,
+           host: db.host,
+           port: db.port,
+           username: db.user,
+           password: db.pass };
+}
+
+
+
+var app = module.exports = express.createServer();
+
+// Configuration
+
+app.configure(function(){
+  app.set('views', __dirname + '/views');
+  app.set('view engine', 'jade');
+  app.use(express.bodyParser());
+  app.use(express.methodOverride());
+  app.use(express.cookieParser());
+  app.use(express.session({ secret: 'fkd32aFD5Ssnfj$5#@$0k;' , store: mongoStore(mongoStoreConnectionArgs()) }));
+  app.use(require('stylus').middleware({ src: __dirname + '/public' }));
+  app.use(app.router);
+  app.use(express.static(__dirname + '/public'));
+});
+
+
+var error = function(err){
+  console.log(err);
+}
+
+
+app.configure('development', function(){
+  app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
+});
+
+app.configure('production', function(){
+  app.use(express.errorHandler()); 
+  error = function(){};
+});
+
+
 
 
 
@@ -245,11 +255,25 @@ var createClient = function(req, res, next){
 }
 app.get('/generateKicker',function(req,res,next){
   var psuedo = '';
-  for(var i = 0; i<100; i++){
-    psuedo += mrg.generate(); 
+  var l = validURLCharacters.length-1;
+  for(var i = 0; i<9; i++){
+    psuedo += validURLCharacters[Math.round(mrg.generate_real()*l)];
   }
 
   res.send(psuedo)
+})
+app.get('/:path',function(req,res,next){
+  
+  req.path = req.params.path;
+  next();
+})
+app.get('/k:id',function(req,res,next){
+  
+  res.send({
+    a:'Kicker Valid',
+    path: req.path
+  })
+
 })
 
 /**********************************
