@@ -64,7 +64,7 @@ mongoose.connect(db_uri);
 var Schema = mongoose.Schema, ObjectId = Schema.ObjectId;
 
 var app = module.exports = express.createServer();
-
+console.log(url)
 
 // Configuration
 
