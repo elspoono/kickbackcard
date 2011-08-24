@@ -1118,7 +1118,7 @@ app.get('/deal/:id/kicker.pdf', getDeal, getVendorFromDeal, function(req, res, n
     __dirname+'/public/images/_.png',
     '-background','transparent',
     '-fill','black',
-    '-font', __dirname+'/OpenSans.ttf',
+    '-font', __dirname+'/LuckiestGuy.ttf',
     '-size','900x300',
     'label:'+req.vendor.name,
     'png:-'
