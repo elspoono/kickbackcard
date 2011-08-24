@@ -61,7 +61,7 @@ var Db = mongodb.Db
   , Server = mongodb.Server
   , db = new Db(url.pathname.replace(/^\//, ''),
                               new Server(url.hostname,
-                                               url.port),{username: dbAuth.username, password: dbAuth.username})
+                                               url.port))
   , mongoStore = require('connect-mongodb');
 
 var mongoose = require('mongoose');
@@ -69,7 +69,6 @@ mongoose.connect(db_uri);
 var Schema = mongoose.Schema, ObjectId = Schema.ObjectId;
 
 var app = module.exports = express.createServer();
-console.log(dbAuth)
 
 // Configuration
 
@@ -81,7 +80,7 @@ app.configure(function(){
   app.use(express.cookieParser());
   app.use(express.session({
     secret: 'fkd32aFD5Ssnfj$5#@$0k;',
-    store: new mongoStore({db: db, username: dbAuth.username, password: dbAuth.username})
+    store: new mongoStore({db: db, username: dbAuth.username, password: dbAuth.password})
   }));
   app.use(require('stylus').middleware({ src: __dirname + '/public' }));
   app.use(app.router);
