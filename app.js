@@ -253,7 +253,9 @@ GLOBAL ROUTE STUFF
 
 ***/
 
-
+app.get('/images/body-bg.png',function(req,res,next){
+  console.log(req.headers)
+})
 
 
 /**********************************
