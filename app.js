@@ -246,6 +246,37 @@ var VendorBackup = mongoose.model('VendorBackup',VendorSchema);
 
 
 
+/***
+
+
+GLOBAL ROUTE STUFF
+
+***/
+
+var redirectToProper = function(req, res, next){
+  var h = req.headers.host;
+  console.log(req.params.path)
+  //console.log(req.connection.server);
+  //console.log(req.connection.server.settings);
+
+  if(h=='0.0.0.0:3000'){
+    next()
+  }else if(h=='kickbackcard.com'){
+    
+  }else{
+    next()
+  }
+}
+app.get('/:path',redirectToProper);
+app.get('/:path',redirectToProper);
+
+app.get('/:path',function(req,res,next){
+  req.path = req.params.path;
+  next();
+})
+
+
+
 /**********************************
  *
  * Route MiddleWare
@@ -271,11 +302,6 @@ app.get('/generateKicker',function(req,res,next){
   }
 
   res.send(psuedo)
-})
-app.get('/:path',function(req,res,next){
-  
-  req.path = req.params.path;
-  next();
 })
 app.get('/k:id',function(req,res,next){
   
