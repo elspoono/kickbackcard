@@ -51,7 +51,12 @@ var compareEncrypted= function(inString,hash){
 
 var url = require('url').parse(db_uri);
 var mongodb = require('mongodb');
-
+var dbAuth = {};
+if (url.auth) {
+  auth = url.auth.split(':', 2);
+  dbAuth.username = auth[0];
+  dbAuth.password = auth[1];
+}
 var Db = mongodb.Db
   , Server = mongodb.Server
   , db = new Db(url.pathname.replace(/^\//, ''),
@@ -64,7 +69,7 @@ mongoose.connect(db_uri);
 var Schema = mongoose.Schema, ObjectId = Schema.ObjectId;
 
 var app = module.exports = express.createServer();
-console.log(url)
+
 
 // Configuration
 
@@ -76,7 +81,7 @@ app.configure(function(){
   app.use(express.cookieParser());
   app.use(express.session({
     secret: 'fkd32aFD5Ssnfj$5#@$0k;',
-    store: new mongoStore({db: db})
+    store: new mongoStore({db: db, username: dbAuth.username, password: dbAuth.username})
   }));
   app.use(require('stylus').middleware({ src: __dirname + '/public' }));
   app.use(app.router);
