@@ -256,10 +256,14 @@ GLOBAL ROUTE STUFF
 var redirectToProper = function(req, res, next){
   var h = req.headers.host;
   var p = req.url;
+  console.log('h:'+h)
+  console.log('p:'+p)
+  /*
   console.log(req)
   console.log(req.connection)
   console.log(req.server)
   console.log(res)
+  */
 
   //console.log(req.connection.server);
   //console.log(req.connection.server.settings);
