@@ -253,36 +253,6 @@ GLOBAL ROUTE STUFF
 
 ***/
 
-var redirectToProper = function(req, res, next){
-  var h = req.headers.host;
-  var p = req.url;
-  console.log('h:'+h)
-  console.log('p:'+p)
-  /*
-  console.log(req)
-  console.log(req.connection)
-  console.log(req.server)
-  console.log(res)
-  */
-
-  //console.log(req.connection.server);
-  //console.log(req.connection.server.settings);
-
-  if(h=='0.0.0.0:3000'){
-    next()
-  }else if(h=='kickbackcard.com'){
-    
-  }else{
-    next()
-  }
-}
-app.get('*',redirectToProper);
-app.post('*',redirectToProper);
-
-app.get('*',function(req,res,next){
-  req.path = req.params.path;
-  next();
-})
 
 
 
@@ -313,10 +283,10 @@ app.get('/generateKicker',function(req,res,next){
   res.send(psuedo)
 })
 app.get('/k:id',function(req,res,next){
-  
+
   res.send({
     a:'Kicker Valid',
-    path: req.path
+    path: req.url
   })
 
 })
@@ -703,7 +673,9 @@ var securedArea = function(req, res, next){
     next()
   else{
     req.session.previousPath = req.route.path;
-    res.redirect('/login') 
+    res.send('',{
+        Location:'/login'
+    },302);
   }
 }
 var securedFunction = function(req, res, next){
@@ -1302,7 +1274,9 @@ app.post('/sendWelcomeEmail', securedFunction, function(req, res, next){
  **********************************/
 app.get('/', get10Vendors, function(req, res){
   if(req.session.role == 'admin')
-    res.redirect('/admin')
+    res.send('',{
+        Location:'/admin'
+    },302);
   else{
     var mystring = '//maps.googleapis.com/maps/api/staticmap?center=Phoenix%20AZ&'
     for(var i in req.data){
@@ -1348,9 +1322,13 @@ app.post('/login', validateLogin, function(req, res, next){
   else{
     if(typeof(req.session.previousPath)!='undefined'){
       var myPreviousPath = req.session.previousPath
-      res.redirect(myPreviousPath)
+      res.send('',{
+          Location:myPreviousPath
+      },302);
     }else
-      res.redirect('/admin')
+      res.send('',{
+          Location:'/admin'
+      },302);
   }
 })
 
@@ -1392,7 +1370,9 @@ app.get('/logout', function(req, res, next){
     next()
   })
 }, function(req, res, next){
-  res.redirect('home')
+  res.send('',{
+      Location:'/'
+  },302);
 })
 
 
