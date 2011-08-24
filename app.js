@@ -255,7 +255,9 @@ GLOBAL ROUTE STUFF
 
 var redirectToProper = function(req, res, next){
   var h = req.headers.host;
-  console.log(req.params.path)
+  
+  console.log(req.connection.server)
+
   //console.log(req.connection.server);
   //console.log(req.connection.server.settings);
 
@@ -267,10 +269,10 @@ var redirectToProper = function(req, res, next){
     next()
   }
 }
-app.get('/:path',redirectToProper);
-app.get('/:path',redirectToProper);
+app.get('*',redirectToProper);
+app.post('*',redirectToProper);
 
-app.get('/:path',function(req,res,next){
+app.get('*',function(req,res,next){
   req.path = req.params.path;
   next();
 })
