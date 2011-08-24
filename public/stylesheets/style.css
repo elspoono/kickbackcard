@@ -87,9 +87,6 @@ body .body p {
 body .body .step-copy {
   color: #000;
 }
-body .body .step-copy ol li {
-  margin: 30px 0;
-}
 body .body .container {
   overflow: hidden;
 }
