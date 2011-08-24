@@ -76,6 +76,7 @@ body .body h1 {
 body .body h2 {
   font-size: 2em;
   line-height: 2em;
+  margin-top: -20px;
 }
 body .body i {
   font-style: italic;
@@ -229,7 +230,7 @@ body .window {
   -moz-border-radius: 15px;
   border-radius: 15px;
   min-height: 235px;
-  max-width: 500px;
+  width: 500px;
   padding: 30px;
   display: none;
   position: absolute;
