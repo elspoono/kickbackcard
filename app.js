@@ -253,8 +253,15 @@ GLOBAL ROUTE STUFF
 
 ***/
 
-app.get('/images/body-bg.png',function(req,res,next){
-  console.log(req.headers)
+app.get('*',function(req,res,next){
+  var headers = req.headers;
+  if(
+    headers['x-real-ip']
+    && headers['x-forwarded-proto']!='https'
+  )
+    res.redirect('https://www.kickbackcard.com'+req.url)
+  else
+    next()
 })
 
 
