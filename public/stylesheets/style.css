@@ -3,7 +3,7 @@
 @import "reset.css";
 body {
   font: 16px "Open Sans", Helvetica, Arial, sans-serif;
-  background: #2d6031 url("/images/body-bg.png") repeat-x 0 178px;
+  background: #dbdbdb;
   color: #fff;
 }
 body h1,
@@ -68,6 +68,9 @@ body .header .container .navigation .vendors .vendors {
   color: #333;
   text-decoration: none;
 }
+body .body {
+  background: #2d6031 url("/images/body-bg.png") repeat-x 0 70px;
+}
 body .body h1 {
   font-size: 2em;
   line-height: 2em;
@@ -87,12 +90,40 @@ body .body p {
 body .body .step-copy {
   color: #000;
 }
+body .body .step-copy li {
+  font-family: "Luckiest Guy";
+  height: 200px;
+  width: 200px;
+  font-size: 36px;
+  line-height: 42px;
+}
+body .body .step-copy .scan {
+  background: url("/images/step1-scan.png") no-repeat 0 0;
+  width: 193px;
+}
+body .body .step-copy .scan div {
+  margin: 120px 0 0 0;
+}
+body .body .step-copy .earn {
+  background: url("/images/step2-earn.png") no-repeat 70px 40px;
+  width: 200px;
+}
+body .body .step-copy .earn div {
+  margin: 10px 0 0 50px;
+}
+body .body .step-copy .burger {
+  background: url("/images/step3-burger.png") no-repeat 20px 90px;
+  width: 140px;
+}
+body .body .step-copy .burger div {
+  margin: 20px 0 0 35px;
+}
 body .body .container {
   overflow: hidden;
 }
 body .body .container .content-area {
   float: left;
-  max-width: 500px;
+  max-width: 580px;
 }
 body .body .container .phone-area {
   width: 300px;
@@ -170,12 +201,18 @@ body .container {
 }
 body .footer {
   text-align: center;
-  font-size: 0.8em;
   background: #dbdbdb;
-  color: #000;
 }
-body .footer a {
-  color: #000;
+body .footer .container {
+  padding: 0;
+}
+body .footer ul {
+  text-align: center;
+}
+body .footer ul li {
+  display: inline-block;
+  float: inherit;
+  margin: 5px 10px;
 }
 body .tooltip {
   border: 1px solid #990;

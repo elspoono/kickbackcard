@@ -11,12 +11,12 @@
       p &nbsp;
       .step-copy
         ul
-          li
-            img(src='/images/step1-scan.png')
-          li
-            img(src='/images/step2-earn.png')
-          li
-            img(src='/images/step3-burger.png')
+          li.scan
+            div 1. Scan
+          li.earn
+            div 2. Earn
+          li.burger
+            div 3. Get Stuff
         p
           | Get kickbacks for being a loyal customer.
         p
@@ -35,10 +35,16 @@
         img(src=mapUrl)
 .footer
   .container
-    | Contact us 
-    a(href="http://twitter.com/#!/KickbackCard") twitter.com/#!/KickbackCard
-    |  or
-    a(href="http://facebook.com/KickbackCard") facebook.com/KickbackCard
+    ul
+      li
+        a(href="mailto:help@kickbackcard.com")
+          img(src='/images/email icon.png')
+      li
+        a(href="http://twitter.com/#!/KickbackCard")
+          img(src='/images/twitter icon.png')
+      li
+        a(href="http://facebook.com/KickbackCard")
+          img(src='/images/facebook icon.png')
 .assets
   iframe(name='promptPasswordDummy')
   .login

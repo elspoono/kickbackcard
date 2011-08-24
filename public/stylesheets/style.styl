@@ -74,7 +74,7 @@ submit()
  **************************************/
 body
   font font
-  background very-dark url('/images/body-bg.png') repeat-x 0 178px
+  background gray
   color very-light
   h1,h2,h3
     font-family font2
@@ -137,6 +137,7 @@ body
    *
    ************************************************/
   .body
+    background very-dark url('/images/body-bg.png') repeat-x 0 70px
     h1
       font-size 2em
       line-height 2em
@@ -151,6 +152,27 @@ body
       margin 15px 0
     .step-copy
       color dark
+      li
+        font-family 'Luckiest Guy'
+        height 200px
+        width 200px
+        font-size 36px
+        line-height 42px
+      .scan
+        background url('/images/step1-scan.png') no-repeat 0 0
+        width 193px
+        div
+          margin 120px 0 0 0
+      .earn
+        background url('/images/step2-earn.png') no-repeat 70px 40px
+        width 200px
+        div
+          margin 10px 0 0 50px
+      .burger
+        background url('/images/step3-burger.png') no-repeat 20px 90px
+        width 140px
+        div
+          margin 20px 0 0 35px
     /**************************************
      *
      * Home Page specific containers and structure
@@ -160,7 +182,7 @@ body
       overflow hidden
       .content-area
         float left
-        max-width 500px
+        max-width 580px
       .phone-area
         width 300px
         float right
@@ -221,12 +243,15 @@ body
     padding 30px
   .footer
     text-align center
-    font-size .8em
     background gray
-    color black
-    a
-      color black
-
+    .container
+      padding 0
+    ul
+      text-align center
+      li
+        display inline-block
+        float inherit
+        margin 5px 10px
   /**************************************
    *
    * These are the little popups above
