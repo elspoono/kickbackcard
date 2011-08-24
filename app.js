@@ -256,7 +256,7 @@ GLOBAL ROUTE STUFF
 var redirectToProper = function(req, res, next){
   var h = req.headers.host;
   
-  console.log(req.connection.server)
+  console.log(req)
 
   //console.log(req.connection.server);
   //console.log(req.connection.server.settings);
