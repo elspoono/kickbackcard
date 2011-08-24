@@ -19,6 +19,8 @@ var im = require('imagemagick');
 
 var validURLCharacters = '$-_.+!*\'(),0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
+var db_uri = process.env.MONGOHQ_URL || 'mongodb://localhost:27017/db';
+
 var geo = require('geo');
 
 require('coffee-script');
@@ -45,23 +47,24 @@ var compareEncrypted= function(inString,hash){
   return bcrypt.compare_sync(inString, hash);
 }
 
-var mongoStore = require('connect-mongodb');
+
+
+var url = require('url').parse(db_uri);
+var mongodb = require('mongodb');
+
+var Db = mongodb.Db
+  , Server = mongodb.Server
+  , db = new Db(url.pathname.replace(/^\//, ''),
+                              new Server(url.hostname,
+                                               url.port))
+  , mongoStore = require('connect-mongodb');
+
 var mongoose = require('mongoose');
-mongoose.connect(process.env.MONGOHQ_URL || 'mongodb://localhost/db');
+mongoose.connect(db_uri);
 var Schema = mongoose.Schema, ObjectId = Schema.ObjectId;
 
-function mongoStoreConnectionArgs() {
-  var db = mongoose.connections[0];
-  return { dbname: db.name,
-           host: db.host,
-           port: db.port,
-           username: db.user,
-           password: db.pass };
-}
-
-
-
 var app = module.exports = express.createServer();
+
 
 // Configuration
 
@@ -71,7 +74,10 @@ app.configure(function(){
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.cookieParser());
-  app.use(express.session({ secret: 'fkd32aFD5Ssnfj$5#@$0k;' , store: mongoStore(mongoStoreConnectionArgs()) }));
+  app.use(express.session({
+    secret: 'fkd32aFD5Ssnfj$5#@$0k;',
+    store: new mongoStore({db: db})
+  }));
   app.use(require('stylus').middleware({ src: __dirname + '/public' }));
   app.use(app.router);
   app.use(express.static(__dirname + '/public'));
