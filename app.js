@@ -309,15 +309,9 @@ app.post('/k:id',function(req,res,next){
 
 })
 app.get('/k:id',function(req,res,next){
-
-  console.log(req.body)
-  console.log(req.params)
-
-  res.send({
-    a:'Kicker Valid',
-    path: req.url
-  })
-
+  res.send('',{
+      Location:'/'
+  },302);
 })
 
 /**********************************
@@ -1106,21 +1100,37 @@ app.get('/deal/:id/kicks-:qty.pdf', securedArea, function(req, res, next){
 
 })
 
-var addLineBreakInMiddle = function(s){
-  var l = s.length;
-  var m = Math.floor(l/2);
-  for(var i = 0; i < l; i++){
+var findNearestSpaceInAt = function(s,m){
+  for(var i = 0; i < s.length; i++){
     var p = (
       i%2
         ?(m+(i+1)/2)
         :(m-(i)/2)
     )
-    var c = s.charAt(p)
+    if(s.charAt(p)==' ')
+      return p;
+  }
+  return false;
+}
 
-    if(c==' '){
+var addLineBreaks = function(s){
+  var l = s.length;
+
+  if(l<20){
+    
+  }else if(l>=20&&l<40){
+
+    var m = Math.floor(l/2);
+    var p = findNearestSpaceInAt(s,m);
+    if(p)
       s = s.substr(0,p)+' \n'+s.substr(p+1,l)
-      return s;
-    }
+  }else{
+    var m = Math.floor(l/3);
+    var p1 = findNearestSpaceInAt(s,m);
+    var p2 = findNearestSpaceInAt(s,m*2);
+    if(p1 && p2 && p1!=p2)
+      s = s.substr(0,p1)+' \n'+s.substr(p1+1,p2-p1)+' \n'+s.substr(p2+1,l)
+    
   }
   return s;
 }
@@ -1137,11 +1147,12 @@ app.get('/deal/:id/kicker.pdf', getDeal, getVendorFromDeal, function(req, res, n
 
   var params = req.params || {}
   
-  var deal_text = addLineBreakInMiddle(
+  var deal_text = addLineBreaks(
     (!req.deal.tag_line || req.deal.tag_line.length==0)
       ?req.deal.default_tag_line
-    :req.deal.tag_line
+      :req.deal.tag_line
   );
+  var vendor_name = addLineBreaks(req.vendor.name);
 
 
   im.convert([
@@ -1150,7 +1161,7 @@ app.get('/deal/:id/kicker.pdf', getDeal, getVendorFromDeal, function(req, res, n
     '-fill','black',
     '-font', __dirname+'/LuckiestGuy.ttf',
     '-size','900x300',
-    'label:'+req.vendor.name,
+    'label:'+vendor_name,
     'png:-'
   ],
   function(vendorImageErr, vendorImage, stderr){
@@ -1186,14 +1197,14 @@ app.get('/deal/:id/kicker.pdf', getDeal, getVendorFromDeal, function(req, res, n
       if(!vendorImageErr){
         offset = [340,64]
         setDoc()
-        doc.image(new Buffer(fixBrokenPNG(vendorImage),'binary'),0,0,{fit:[205,80]})
+        doc.image(new Buffer(fixBrokenPNG(vendorImage),'binary'),0,0,{fit:[210,80]})
       }else
         console.log(vendorImageErr)
 
       if(!dealImageErr){
         offset = [340,132];
         setDoc();
-        doc.image(new Buffer(fixBrokenPNG(dealImage),'binary'),0,0,{fit:[205,80]}) 
+        doc.image(new Buffer(fixBrokenPNG(dealImage),'binary'),0,0,{fit:[180,80]}) 
       }else
         console.log(dealImageErr)
 
