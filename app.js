@@ -297,11 +297,22 @@ app.get('/generateKicker',function(req,res,next){
 
   res.send(psuedo)
 })
+app.post('/k:id',function(req,res,next){
+
+  console.log(req.body)
+  console.log(req.params)
+
+  res.send({
+    a:'Kicker Valid',
+    path: req.url
+  })
+
+})
 app.get('/k:id',function(req,res,next){
 
   console.log(req.body)
   console.log(req.params)
-  
+
   res.send({
     a:'Kicker Valid',
     path: req.url
