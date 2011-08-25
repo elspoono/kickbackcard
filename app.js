@@ -278,10 +278,16 @@ var createClient = function(req, res, next){
   client.client_secret = encrypted(mrg.generate()+'');
   client.save(function(err,data){
     req.err = err;
-    req.data = data;
+    req.client = data;
     next()
   })
 }
+app.get('/createClient', createClient, function(req, res, next){
+  res.send({
+    err: req.err,
+    client: req.client
+  })
+})
 app.get('/generateKicker',function(req,res,next){
   var psuedo = '';
   var l = validURLCharacters.length-1;
@@ -293,6 +299,9 @@ app.get('/generateKicker',function(req,res,next){
 })
 app.get('/k:id',function(req,res,next){
 
+  console.log(req.body)
+  console.log(req.params)
+  
   res.send({
     a:'Kicker Valid',
     path: req.url
@@ -763,12 +772,6 @@ app.post('/deleteUser', securedFunction, deleteUser, function(req, res, next){
  * 
  * 
  **********************************/
-app.get('/createClient', createClient, function(req, res, next){
-  res.send({
-    err: req.err,
-    data: req.data
-  })
-})
 app.post('/get10Vendors', securedFunction, get10Vendors, function(req, res, next){
   if(req.err)
     res.send({
