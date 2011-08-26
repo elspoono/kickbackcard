@@ -299,12 +299,19 @@ app.get('/generateKicker',function(req,res,next){
 })
 app.post('/k:id',function(req,res,next){
 
-  console.log(req.body)
-  console.log(req.params)
-
-  res.send({
-    a:'Kicker Valid',
-    path: req.url
+  user.find({_id:req.body.client_id},[],function(err,data){
+    if(err)
+      res.send({err:err})
+    else{
+      console.log(data.client_secret)
+      console.log(req.params.id)
+      console.log(req.body.client_id)
+      console.log(req.body.client_shared)
+      res.send({
+        a:'Kicker Valid',
+        path: req.url
+      })
+    }
   })
 
 })
