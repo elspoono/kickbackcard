@@ -307,14 +307,15 @@ app.post('/k:id',function(req,res,next){
         Validate the shared token against the secret/client_id/kick_id
       */
 
-      console.log(bcrypt.compare_sync(data.client_secret+data._id+req.params.id, req.body.client_shared));
-      console.log(data.client_secret+data._id+req.params.id);
-      console.log(req.body.client_shared);
-
-      res.send({
-        a:'Kicker Valid',
-        path: req.url
-      })
+      var isValid = bcrypt.compare_sync(data.client_secret+data._id+req.params.id, req.body.client_shared);
+      if(!isValid)
+        res.send({err:'Invalid Token'})
+      else{
+        res.send({
+          a:'Kicker Valid',
+          path: req.url
+        })
+      }
     }
   })
 })
