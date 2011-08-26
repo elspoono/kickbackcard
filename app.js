@@ -318,11 +318,11 @@ app.post('/k:id',function(req,res,next){
             })
           else
             Deal.findById({_id:kicker[0].deal_id},function(err,deal){
-              res.send{
+              res.send({
                 err: err,
                 deal: deal,
                 kicker: kicker
-              }
+              });
             })
         })
       }
