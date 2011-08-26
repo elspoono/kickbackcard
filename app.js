@@ -298,7 +298,7 @@ app.get('/generateKicker',function(req,res,next){
   res.send(psuedo)
 })
 app.post('/k:id',function(req,res,next){
-  client.find({_id:req.body.client_id},[],function(err,data){
+  Client.find({_id:req.body.client_id},[],function(err,data){
     if(err)
       res.send({err:err})
     else{
