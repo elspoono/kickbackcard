@@ -302,7 +302,7 @@ app.post('/k:id',function(req,res,next){
     if(err)
       res.send({err:err})
     else{
-      console.log(data.client_secret)
+      console.log(data)
       console.log(req.params.id)
       console.log(req.body.client_id)
       console.log(req.body.client_shared)
