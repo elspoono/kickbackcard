@@ -181,26 +181,26 @@ User.count({},function(err,data){
 /* Role / Vendor mongoose Schemas */
 var ClientSchema = new Schema({
   client_secret: String,
-  dateAdded: Date
+  date_added: Date
 })
 var KickerSchema = new Schema({
-  urlString: String,
+  url_string: String,
   deal_id: String,
   reusable: Boolean,
   kick_ids: [String],
-  dateAdded: Date
+  date_added: Date
 })
 var KickSchema = new Schema({
   kicker_id: String,
   redeem_id: String,
   client_id: String,
   redeemed: Boolean,
-  dateAdded: Date
+  date_added: Date
 })
 var RedeemSchema = new Schema({
   client_id: String,
   kicker_id: String,
-  dateAdded: Date,
+  date_added: Date,
   kick_ids: [String]
 })
 var Client = mongoose.model('Client',ClientSchema);
@@ -311,9 +311,19 @@ app.post('/k:id',function(req,res,next){
       if(!isValid)
         res.send({err:'Invalid Token'})
       else{
-        res.send({
-          a:'Kicker Valid',
-          path: req.url
+        Kicker.find({url_string:req.params.id}, [], function(err,kicker){
+          if(err || kicker.length==0)
+            res.send({
+              err: err || 'Kicker not found'
+            })
+          else
+            Deal.findById({_id:kicker[0].deal_id},function(err,deal){
+              res.send{
+                err: err,
+                deal: deal,
+                kicker: kicker
+              }
+            })
         })
       }
     }
