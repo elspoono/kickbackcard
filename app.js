@@ -298,7 +298,7 @@ app.get('/generateKicker',function(req,res,next){
   res.send(psuedo)
 })
 app.post('/k:id',function(req,res,next){
-  Client.find({_id:req.body.client_id},[],function(err,data){
+  Client.findById(req.body.client_id,function(err,data){
     if(err)
       res.send({err:err})
     else{
@@ -306,6 +306,7 @@ app.post('/k:id',function(req,res,next){
       console.log(req.params.id)
       console.log(req.body.client_id)
       console.log(req.body.client_shared)
+
       res.send({
         a:'Kicker Valid',
         path: req.url
