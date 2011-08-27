@@ -1020,7 +1020,7 @@ var generateKickers = function(req, res, next){
   for(var i = 0; i<qty; i++){
     strings.push(url_string())
   }
-  Kicker.find({urlString:strings},[],function(err,data){
+  Kicker.find({url_string:{$in:strings}},[],function(err,data){
     if(err)
       res.send({err:err})
     else if(data.length!=0)
@@ -1032,6 +1032,7 @@ var generateKickers = function(req, res, next){
         kicker.deal_id = req.deal._id;
         kicker.reusable = (req.params.qty?false:true);
         kicker.save()
+        console.log(kicker);
       }
       req.strings = strings;
       next() 

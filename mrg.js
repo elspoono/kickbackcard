@@ -70,7 +70,7 @@ function init_genrand(s)
         /* for >32 bit machines */
     }
 }
- 
+init_genrand(new Date())
 /* initialize by an array with array-length */
 /* init_key is the array for initializing keys */
 /* key_length is its length */
