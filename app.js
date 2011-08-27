@@ -1194,7 +1194,7 @@ app.get('/deal/:id/kicks-:qty.pdf', /*securedArea,*/ getDeal, getVendorFromDeal,
 
 
 
-    offset = [offset[0]+135,offset[1]-36]
+    offset = [offset[0]+135,offset[1]-44]
     var ecclevel = 4;
     var wd = 125;
     var ht = 125;
