@@ -194,6 +194,7 @@ var KickSchema = new Schema({
   kicker_id: String,
   redeem_id: String,
   client_id: String,
+  scan_id: String,
   redeemed: Boolean,
   date_added: Date
 })
@@ -221,7 +222,7 @@ var DealSchema = new Schema({
 DealSchema.virtual('default_tag_line').get(function(){
   var tag_line = '';
   if(this.get_type == '1 FREE')
-    tag_line = 'Buy '+this.buy_qty+' '+this.buy_item+' and get one '+this.get_item+' FREE!';
+    tag_line = 'Buy '+this.buy_qty+' '+this.buy_item+' and get 1 '+this.get_item+' FREE!';
   if(this.get_type == 'Dollar(s) Off')
     tag_line = 'Buy '+this.buy_qty+' '+this.buy_item+' and get '+this.get_item+' dollars off!';
   if(this.get_type == 'Percent Off')
@@ -314,6 +315,7 @@ app.post('/k:id',function(req,res,next){
               /*
                * Okay, we found the deal and the kicker, now what? :) lol
                */
+
               
               console.log(req.body)
 
