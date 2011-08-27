@@ -288,15 +288,6 @@ app.get('/createClient', createClient, function(req, res, next){
     client: req.client
   })
 })
-app.get('/generateKicker',function(req,res,next){
-  var psuedo = '';
-  var l = validURLCharacters.length-1;
-  for(var i = 0; i<9; i++){
-    psuedo += validURLCharacters[Math.round(mrg.generate_real()*l)];
-  }
-
-  res.send(psuedo)
-})
 app.post('/k:id',function(req,res,next){
   Client.findById(req.body.client_id,function(err,data){
     if(err)
@@ -318,6 +309,13 @@ app.post('/k:id',function(req,res,next){
             })
           else
             Deal.findById({_id:kicker[0].deal_id},function(err,deal){
+
+
+              /*
+               * Okay, we found the deal and the kicker, now what? :) lol
+               */
+
+
               res.send({
                 err: err,
                 deal: deal,
@@ -1002,8 +1000,140 @@ var myImage = function(src, x, y, options) {
 
 
 
+var url_string = function(){
+  var psuedo = '';
+  var l = validURLCharacters.length-1;
+  for(var i = 0; i<9; i++){
+    psuedo += validURLCharacters[Math.round(mrg.generate_real()*l)];
+  }
+  return psuedo;
+}
+
+/*
+TODO : Make this middleware, use it from both kicker generation functions.
+*/
+var generateKickers = function(req, res, next){
+
+  var qty = req.params.qty || 1;
+
+  var strings = []
+  for(var i = 0; i<qty; i++){
+    strings.push(url_string())
+  }
+  Kicker.find({urlString:strings},[],function(err,data){
+    if(err)
+      res.send({err:err})
+    else if(data.length!=0)
+      res.send({err:'Collision!'})
+    else{
+      for(var i in strings){
+        var kicker = new Kicker();
+        kicker.url_string = strings[i];
+        kicker.deal_id = req.deal._id;
+        kicker.reusable = (req.params.qty?false:true);
+        kicker.save()
+      }
+      req.strings = strings;
+      next() 
+    }
+  })
+}
 
 
+
+var findNearestSpaceInAt = function(s,m){
+  for(var i = 0; i < s.length; i++){
+    var p = (
+      i%2
+        ?(m+(i+1)/2)
+        :(m-(i)/2)
+    )
+    if(s.charAt(p)==' ')
+      return p;
+  }
+  return false;
+}
+
+var addLineBreaks = function(s){
+  var l = s.length;
+
+  if(l<20){
+    
+  }else if(l>=20&&l<40){
+
+    var m = Math.floor(l/2);
+    var p = findNearestSpaceInAt(s,m);
+    if(p)
+      s = s.substr(0,p)+' \n'+s.substr(p+1,l)
+  }else{
+    var m = Math.floor(l/3);
+    var p1 = findNearestSpaceInAt(s,m);
+    var p2 = findNearestSpaceInAt(s,m*2);
+    if(p1 && p2 && p1!=p2)
+      s = s.substr(0,p1)+' \n'+s.substr(p1+1,p2-p1)+' \n'+s.substr(p2+1,l)
+    
+  }
+  return s;
+}
+
+var fixBrokenPNG = function(inPNG){
+  var p = inPNG.indexOf('B`')
+  if(p<500)
+    inPNG = inPNG.substr(p+3,inPNG.length)
+
+  return inPNG;
+}
+
+
+
+var generateDealNameVendorText = function(req, res, next){
+  
+
+  var params = req.params || {}
+  
+  var deal_text = addLineBreaks(
+    (!req.deal.tag_line || req.deal.tag_line.length==0)
+      ?req.deal.default_tag_line
+      :req.deal.tag_line
+  );
+  var vendor_name = addLineBreaks(req.vendor.name);
+
+
+  im.convert([
+    __dirname+'/public/images/_.png',
+    '-background','transparent',
+    '-fill','black',
+    '-font', __dirname+'/LuckiestGuy.ttf',
+    '-size','900x300',
+    'label:'+vendor_name,
+    'png:-'
+  ],
+  function(vendorImageErr, vendorImage, stderr){
+
+    im.convert([
+      __dirname+'/public/images/_.png',
+      '-background','transparent',
+      '-fill','black',
+      '-font', __dirname+'/LuckiestGuy.ttf',
+      '-size','900x300',
+      'label:'+deal_text,
+      'png:-'
+    ],
+    function(dealImageErr, dealImage, stderr){
+
+      if(!vendorImage || !dealImage){
+        res.send({
+          vendorImageErr: vendorImageErr,
+          dealImageErr: dealImageErr
+        })
+      }else{
+        req.vendorImage = vendorImage;
+        req.dealImage = dealImage;
+        next();
+      }
+    });
+  });
+};
 
 
 
@@ -1014,7 +1144,7 @@ var myImage = function(src, x, y, options) {
 var qrcode = require(__dirname + '/qrcode.js')
 
 
-app.get('/deal/:id/kicks-:qty.pdf', securedArea, function(req, res, next){
+app.get('/deal/:id/kicks-:qty.pdf', /*securedArea,*/ getDeal, getVendorFromDeal, generateKickers, generateDealNameVendorText, function(req, res, next){
   
   var params = req.params || {}
   
@@ -1052,24 +1182,24 @@ app.get('/deal/:id/kicks-:qty.pdf', securedArea, function(req, res, next){
     setDoc()
     doc.image(__dirname + '/public/images/bizbg.png',0,0,{fit:[252,144]})
 
-    offset = [offset[0]+18,offset[1]+36]
+    offset = [offset[0]+18,offset[1]+24]
     setDoc()
-    doc.fontSize(16)
-    doc.font('Body Font')
-    doc.text('Jimmy John\'s')
-    doc.font('Heading Font')
-    doc.moveDown().fontSize(9)
-    doc.text('Buy 10 subs get 1 FREE sub!')
+
+    doc.image(new Buffer(fixBrokenPNG(req.vendorImage),'binary'),0,0,{fit:[130,60]})
+
+    offset = [offset[0]+0,offset[1]+36]
+    setDoc()
+    doc.image(new Buffer(fixBrokenPNG(req.dealImage),'binary'),0,0,{fit:[100,40]})
 
 
 
 
-    offset = [offset[0]+135,offset[1]-18]
+    offset = [offset[0]+135,offset[1]-36]
     var ecclevel = 4;
     var wd = 125;
     var ht = 125;
 
-    var string = 'http://kckb.ac/test'+Math.random()/card;
+    var string = 'http://kckb.ac/k'+req.strings[card];
     string = string.substr(0,30)
     var qrCode = qrcode.genframe(string);
     var qf = qrCode.qf
@@ -1121,160 +1251,77 @@ app.get('/deal/:id/kicks-:qty.pdf', securedArea, function(req, res, next){
 
 })
 
-var findNearestSpaceInAt = function(s,m){
-  for(var i = 0; i < s.length; i++){
-    var p = (
-      i%2
-        ?(m+(i+1)/2)
-        :(m-(i)/2)
-    )
-    if(s.charAt(p)==' ')
-      return p;
+app.get('/deal/:id/kicker.pdf', getDeal, getVendorFromDeal, generateKickers, generateDealNameVendorText, function(req, res, next){
+
+
+  var doc = new PDFDocument()
+
+  doc.registerFont('Heading Font',__dirname+'/LuckiestGuy.ttf','Luckiest-Guy')
+  doc.registerFont('Body Font',__dirname+'/OpenSans-Regular.ttf','Open-Sans-Regular')
+  doc.image = myImage;
+
+
+  var offset = [0,0];
+  var setDoc = function(){
+    doc.x = offset[0]
+    doc.y = offset[1]
   }
-  return false;
-}
+  setDoc()
 
-var addLineBreaks = function(s){
-  var l = s.length;
+  doc.image(__dirname + '/public/images/kicker-bg-opaque.png',0,0,{width:612,height:792})
 
-  if(l<20){
-    
-  }else if(l>=20&&l<40){
+  offset = [340,64]
+  setDoc()
+  doc.image(new Buffer(fixBrokenPNG(req.vendorImage),'binary'),0,0,{fit:[210,80]})
 
-    var m = Math.floor(l/2);
-    var p = findNearestSpaceInAt(s,m);
-    if(p)
-      s = s.substr(0,p)+' \n'+s.substr(p+1,l)
-  }else{
-    var m = Math.floor(l/3);
-    var p1 = findNearestSpaceInAt(s,m);
-    var p2 = findNearestSpaceInAt(s,m*2);
-    if(p1 && p2 && p1!=p2)
-      s = s.substr(0,p1)+' \n'+s.substr(p1+1,p2-p1)+' \n'+s.substr(p2+1,l)
-    
-  }
-  return s;
-}
+  offset = [340,132];
+  setDoc();
+  doc.image(new Buffer(fixBrokenPNG(req.dealImage),'binary'),0,0,{fit:[180,80]})
 
-var fixBrokenPNG = function(inPNG){
-  var p = inPNG.indexOf('B`')
-  if(p<500)
-    inPNG = inPNG.substr(p+3,inPNG.length)
 
-  return inPNG;
-}
 
-app.get('/deal/:id/kicker.pdf', getDeal, getVendorFromDeal, function(req, res, next){
 
-  var params = req.params || {}
+
+
+
+  offset = [335,230]
+  var ecclevel = 4;
+  var wd = 250;
+  var ht = 250;
+
+  var string = 'http://kckb.ac/k'+req.strings[0];
   
-  var deal_text = addLineBreaks(
-    (!req.deal.tag_line || req.deal.tag_line.length==0)
-      ?req.deal.default_tag_line
-      :req.deal.tag_line
-  );
-  var vendor_name = addLineBreaks(req.vendor.name);
+  string = string.substr(0,30)
+  var qrCode = qrcode.genframe(string);
+  var qf = qrCode.qf
+  var width = qrCode.width
 
+  var i,j;
+  var px = wd;
+  if( ht < wd )
+      px = ht;
+  px /= width+10;
+  px=Math.round(px - 0.5);
 
-  im.convert([
-    __dirname+'/public/images/_.png',
-    '-background','transparent',
-    '-fill','black',
-    '-font', __dirname+'/LuckiestGuy.ttf',
-    '-size','900x300',
-    'label:'+vendor_name,
-    'png:-'
-  ],
-  function(vendorImageErr, vendorImage, stderr){
-
-    im.convert([
-      __dirname+'/public/images/_.png',
-      '-background','transparent',
-      '-fill','black',
-      '-font', __dirname+'/LuckiestGuy.ttf',
-      '-size','900x300',
-      'label:'+deal_text,
-      'png:-'
-    ],
-    function(dealImageErr, dealImage, stderr){
-
-      var doc = new PDFDocument()
-
-      doc.registerFont('Heading Font',__dirname+'/LuckiestGuy.ttf','Luckiest-Guy')
-      doc.registerFont('Body Font',__dirname+'/OpenSans-Regular.ttf','Open-Sans-Regular')
-      doc.image = myImage;
-
-
-      var offset = [0,0];
-      var setDoc = function(){
-        doc.x = offset[0]
-        doc.y = offset[1]
-      }
-      setDoc()
-
-      doc.image(__dirname + '/public/images/kicker-bg-opaque.png',0,0,{width:612,height:792})
-
-
-      if(!vendorImageErr){
-        offset = [340,64]
-        setDoc()
-        doc.image(new Buffer(fixBrokenPNG(vendorImage),'binary'),0,0,{fit:[210,80]})
-      }else
-        console.log(vendorImageErr)
-
-      if(!dealImageErr){
-        offset = [340,132];
-        setDoc();
-        doc.image(new Buffer(fixBrokenPNG(dealImage),'binary'),0,0,{fit:[180,80]}) 
-      }else
-        console.log(dealImageErr)
+  doc.fillColor('black')
+  for( i = 0; i < width; i++ )
+      for( j = 0; j < width; j++ )
+          if( qf[j*width+i] )
+              doc.rect(px*(4+i)+offset[0],px*(4+j)+offset[1],px,px).fill()   
 
 
 
+  /* Back Side */
+  doc.addPage();
 
+  offset = [0,0];
+  setDoc()
+  doc.image(__dirname + '/public/images/kicker-back.png',0,0,{width:612,height:792});
 
-
-
-      offset = [335,230]
-      var ecclevel = 4;
-      var wd = 250;
-      var ht = 250;
-
-      var string = 'http://kckb.ac/test'+Math.random();
-      
-      string = string.substr(0,30)
-      var qrCode = qrcode.genframe(string);
-      var qf = qrCode.qf
-      var width = qrCode.width
-
-      var i,j;
-      var px = wd;
-      if( ht < wd )
-          px = ht;
-      px /= width+10;
-      px=Math.round(px - 0.5);
-
-      doc.fillColor('black')
-      for( i = 0; i < width; i++ )
-          for( j = 0; j < width; j++ )
-              if( qf[j*width+i] )
-                  doc.rect(px*(4+i)+offset[0],px*(4+j)+offset[1],px,px).fill()   
-
-
-
-      /* Back Side */
-      doc.addPage();
-
-      offset = [0,0];
-      setDoc()
-      doc.image(__dirname + '/public/images/kicker-back.png',0,0,{width:612,height:792});
-
-      var output = doc.output()
-      res.send(new Buffer(output,'binary'),{
-        'Content-Type' : 'application/pdf'
-      })
-    });
-  });
+  var output = doc.output()
+  res.send(new Buffer(output,'binary'),{
+    'Content-Type' : 'application/pdf'
+  })
 
 })
 
