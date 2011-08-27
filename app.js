@@ -1187,9 +1187,9 @@ app.get('/deal/:id/kicks-:qty.pdf', /*securedArea,*/ getDeal, getVendorFromDeal,
 
     doc.image(new Buffer(fixBrokenPNG(req.vendorImage),'binary'),0,0,{fit:[130,60]})
 
-    offset = [offset[0]+0,offset[1]+36]
+    offset = [offset[0]+0,offset[1]+44]
     setDoc()
-    doc.image(new Buffer(fixBrokenPNG(req.dealImage),'binary'),0,0,{fit:[100,40]})
+    doc.image(new Buffer(fixBrokenPNG(req.dealImage),'binary'),0,0,{fit:[100,50]})
 
 
 
