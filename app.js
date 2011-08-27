@@ -314,7 +314,8 @@ app.post('/k:id',function(req,res,next){
               /*
                * Okay, we found the deal and the kicker, now what? :) lol
                */
-
+              
+              console.log(req.body)
 
               res.send({
                 err: err,
