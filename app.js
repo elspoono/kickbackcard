@@ -308,7 +308,7 @@ app.post('/k:id',function(req,res,next){
               err: err || 'Kicker not found'
             })
           else
-            Deal.findById({_id:kicker[0].deal_id},function(err,deal){
+            Deal.findById(kicker[0].deal_id,function(err,deal){
 
 
               /*
