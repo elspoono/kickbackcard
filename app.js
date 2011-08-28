@@ -37,6 +37,15 @@ nodemailer.SMTP = {
   domain: process.env.SENDGRID_DOMAIN
 }
 
+var yelp = require("yelp").createClient({
+  consumer_key: "eq6BAiYIY0RsNqW-A8gfxw", 
+  consumer_secret: "5eQ8zi9j9naNVHb28gXKr6-uwaU",
+  token: "wnIjFR8UhGlwBt_f2wYSY8a3lbc3GlWt",
+  token_secret: "KKML2M7SsQvjEZ2hc1l98sO3s4g"
+});
+
+
+
 var bcrypt = require('bcrypt');
 var encrypted = function(inString){
   var salt = bcrypt.gen_salt_sync(10);
@@ -335,6 +344,20 @@ app.get('/k:id',function(req,res,next){
       Location:'/'
   },302);
 })
+
+app.get('/yelp',function(req,res,next){
+
+  // See http://www.yelp.com/developers/documentation/v2/business
+  yelp.business("market-bistro-phoenix", function(error, data) {
+    res.send({
+      data: data,
+      error: error
+    });
+  });
+  
+})
+
+
 
 /**********************************
  * 

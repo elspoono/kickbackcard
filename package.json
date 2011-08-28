@@ -16,5 +16,6 @@
     , "nodemailer": ">=0.0.1"
     , "pdfkit": ">=0.0.1"
     , "imagemagick": ">=0.0.1"
+    , "yelp": ">=0.0.1"
   }
 }
