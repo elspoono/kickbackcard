@@ -328,31 +328,41 @@ app.post('/k:id',function(req,res,next){
                 Kick.find({scan_id:req.body.scan_id},[],function(err,scan){
                   if(err)
                     res.send({err:err})
-                  else if(scan.length){
-                    /*
-                      Send scan info back if already exists
-                    */
-                    res.send({
-                      scan: scan,
-                      deal: deal,
-                      kicker: kicker
-                    })
-                  }else{
-                    /*
-                      Otherwise, create a new kick
-                    */
-                    var kick = new Kick();
-                    kick.scan_id = req.body.scan_id;
-                    kick.kicker_id = kicker._id;
-                    kick.client_id = client._id;
-                    kick.date_added = new Date();
-                    kick.save(function(err,data){
+                  else{
+                    
+
+                    /* Set tag line to default or what it is */
+                    deal.tag_line = (!req.deal.tag_line || req.deal.tag_line.length==0)
+                      ?req.deal.default_tag_line
+                      :req.deal.tag_line;
+                      
+
+                    if(scan.length){
+                      /*
+                        Send scan info back if already exists
+                      */
                       res.send({
-                        err: err,
+                        scan: scan,
                         deal: deal,
                         kicker: kicker
-                      });
-                    })
+                      })
+                    }else{
+                      /*
+                        Otherwise, create a new kick
+                      */
+                      var kick = new Kick();
+                      kick.scan_id = req.body.scan_id;
+                      kick.kicker_id = kicker._id;
+                      kick.client_id = client._id;
+                      kick.date_added = new Date();
+                      kick.save(function(err,data){
+                        res.send({
+                          err: err,
+                          deal: deal,
+                          kicker: kicker
+                        });
+                      })
+                    }
                   }
                 })
             })
