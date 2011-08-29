@@ -319,20 +319,34 @@ app.post('/k:id',function(req,res,next){
             })
           else
             Deal.findById(kicker[0].deal_id,function(err,deal){
-
-
-              /*
-               * Okay, we found the deal and the kicker, now what? :) lol
-               */
-
-              
-              console.log(req.body)
-
-              res.send({
-                err: err,
-                deal: deal,
-                kicker: kicker
-              });
+              if(err||!deal)
+                res.send({err:err||'Deal not found'})
+              else
+                /*
+                  See if there's an existing "kick" with this scan id
+                */
+                Kick.find({scan_id:req.body.scan_id},[],function(err,scan){
+                  if(err)
+                    res.send({err:err})
+                  else if(scan.length){
+                    /*
+                      Send scan info back if already exists
+                    */
+                    res.send({
+                      scan: scan,
+                      deal: deal,
+                      kicker: kicker
+                    })
+                  }else{
+                    /*
+                      Otherwise, create a new kick
+                    */
+                    res.send({
+                      deal: deal,
+                      kicker: kicker
+                    });
+                  }
+                })
             })
         })
       }
