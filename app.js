@@ -299,7 +299,7 @@ app.get('/createClient', createClient, function(req, res, next){
   })
 })
 app.post('/k:id',function(req,res,next){
-  Client.findById(req.body.client_id,function(err,data){
+  Client.findById(req.body.client_id,function(err,client){
     if(err)
       res.send({err:err})
     else{
@@ -308,7 +308,7 @@ app.post('/k:id',function(req,res,next){
         Validate the shared token against the secret/client_id/kick_id
       */
 
-      var isValid = bcrypt.compare_sync(data.client_secret+data._id+req.params.id, req.body.client_shared);
+      var isValid = bcrypt.compare_sync(client.client_secret+client._id+req.params.id, req.body.client_shared);
       if(!isValid)
         res.send({err:'Invalid Token'})
       else{
@@ -341,10 +341,18 @@ app.post('/k:id',function(req,res,next){
                     /*
                       Otherwise, create a new kick
                     */
-                    res.send({
-                      deal: deal,
-                      kicker: kicker
-                    });
+                    var kick = new Kick();
+                    kick.scan_id = req.body.scan_id;
+                    kick.kicker_id = kicker._id;
+                    kick.client_id = client._id;
+                    kick.date_added = new Date();
+                    kick.save(function(err,data){
+                      res.send({
+                        err: err,
+                        deal: deal,
+                        kicker: kicker
+                      });
+                    })
                   }
                 })
             })
