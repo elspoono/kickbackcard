@@ -332,10 +332,10 @@ app.post('/k:id',function(req,res,next){
                     
 
                     /* Set tag line to default or what it is */
-                    deal.tag_line = (!req.deal.tag_line || req.deal.tag_line.length==0)
-                      ?req.deal.default_tag_line
-                      :req.deal.tag_line;
-                      
+                    deal.tag_line = (!deal.tag_line || deal.tag_line.length==0)
+                      ?deal.default_tag_line
+                      :deal.tag_line;
+
 
                     if(scan.length){
                       /*
