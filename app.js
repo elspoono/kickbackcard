@@ -321,50 +321,75 @@ app.post('/k:id',function(req,res,next){
             Deal.findById(kicker[0].deal_id,function(err,deal){
               if(err||!deal)
                 res.send({err:err||'Deal not found'})
-              else
-                /*
-                  See if there's an existing "kick" with this scan id
-                */
-                Kick.find({scan_id:req.body.scan_id},[],function(err,scan){
-                  if(err)
-                    res.send({err:err})
-                  else{
-                    
-
-                    /* Set tag line to default or what it is */
-                    deal.tag_line = (!deal.tag_line || deal.tag_line.length==0)
-                      ?deal.default_tag_line
-                      :deal.tag_line;
+              else{
+                Vendor.find({deal_ids:deal._id},function(err, vendor){
 
 
-                    if(scan.length){
-                      /*
-                        Send scan info back if already exists
-                      */
-                      res.send({
-                        scan: scan,
-                        deal: deal,
-                        kicker: kicker
-                      })
-                    }else{
-                      /*
-                        Otherwise, create a new kick
-                      */
-                      var kick = new Kick();
-                      kick.scan_id = req.body.scan_id;
-                      kick.kicker_id = kicker._id;
-                      kick.client_id = client._id;
-                      kick.date_added = new Date();
-                      kick.save(function(err,data){
+
+
+
+
+
+                  /*
+
+                    Maybe all that should be middleware, eh?
+
+
+                    app.post/k:id up util here is what we need for redeem too
+                  */
+
+
+
+
+
+                  
+                  /*
+                    See if there's an existing "kick" with this scan id
+                  */
+                  Kick.find({scan_id:req.body.scan_id},[],function(err,scan){
+                    if(err)
+                      res.send({err:err})
+                    else{
+                      
+
+                      /* Set tag line to default or what it is */
+                      deal.tag_line = (!deal.tag_line || deal.tag_line.length==0)
+                        ?deal.default_tag_line
+                        :deal.tag_line;
+
+
+                      if(scan.length){
+                        /*
+                          Send scan info back if already exists
+                        */
                         res.send({
-                          err: err,
+                          scan: scan,
                           deal: deal,
-                          kicker: kicker
-                        });
-                      })
+                          kicker: kicker,
+                          vendor: vendor
+                        })
+                      }else{
+                        /*
+                          Otherwise, create a new kick
+                        */
+                        var kick = new Kick();
+                        kick.scan_id = req.body.scan_id;
+                        kick.kicker_id = kicker._id;
+                        kick.client_id = client._id;
+                        kick.date_added = new Date();
+                        kick.save(function(err,data){
+                          res.send({
+                            err: err,
+                            deal: deal,
+                            kicker: kicker,
+                            vendor: vendor
+                          });
+                        })
+                      }
                     }
-                  }
+                  })
                 })
+              }
             })
         })
       }
