@@ -118,6 +118,28 @@ body .body .step-copy .burger {
 body .body .step-copy .burger div {
   margin: 20px 0 0 35px;
 }
+body .body .col-left,
+body .body .col-right {
+  text-align: center;
+}
+body .body .col-left .qr-container,
+body .body .col-right .qr-container {
+  margin: 10px;
+  padding: 10px 10px 0 10px;
+  background: #fff;
+  border: 1px solid #000;
+  color: #000;
+}
+body .body .col-left .qr-container .text,
+body .body .col-right .qr-container .text {
+  margin: 10px;
+}
+body .body .col-left {
+  float: left;
+}
+body .body .col-right {
+  float: right;
+}
 body .body .container {
   overflow: hidden;
 }
