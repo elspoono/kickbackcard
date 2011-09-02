@@ -1,0 +1,284 @@
+h1, h2, h3, th {
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: left;
+}
+.hidden {
+  display: none;
+}
+
+body {
+  background-color: #DAD8E0;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  line-height: 18px;
+  padding: 32px;
+}
+
+a {
+  color: #474386;
+  cursor: pointer;
+  text-decoration: none;
+}
+a:hover {
+  color: #5B54CF;
+}
+
+/* TABLE =================================================================== */
+
+table.app {
+  margin: 40px 0 30px 0;
+}
+
+table,
+table table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+}
+table th {
+  font-weight: bold;
+}
+table th.type,
+table th.name {
+  font-family: "CorbelBold", sans-serif;
+  font-size: 20px;
+  font-weight: normal;
+  line-height: 36px;
+  margin: 0;
+  padding-left: .3em !important;
+}
+table table thead .type {
+  color: #444;
+  font-family: "CorbelBold", sans-serif;
+  font-size: 16px;
+  font-weight: normal;
+  line-height: 32px;
+}
+table table table thead .type {
+  color: #444;
+  font-family: "Helvetica Neue", sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+}
+thead.resource th {
+  font-weight: bold;
+}
+thead.resource th sup {
+  font-weight: normal;
+}
+
+table td,
+table th {
+  whitespace: nowrap;
+}
+table#myapps tbody tr,
+table table thead tr,
+table thead.summary tr,
+table .dynos,
+table tr.sibling {
+  border-bottom: 1px solid #ccc;
+}
+table table table thead.hide tr,
+table table table tbody.visible tr {
+  border-bottom: 1px solid #bbb;
+}
+table thead.summary th {
+  line-height: 36px;
+}
+table thead.summary th.quantity,
+table thead.summary th.rate {
+  visibility: hidden;
+}
+table table table th.type a {
+  display: inline-block;
+}
+table table table thead.show th {
+  line-height: 24px !important;
+}
+table table table thead.hide {
+  background-color: rgba(102,100,164,.2);
+}
+table table table tbody.visible {
+  background-color: rgba(102,100,164,.1);
+}
+table table table tbody.visible tr:hover {
+  background-color: rgba(102,100,164,.1);
+}
+table table table tbody.visible tr.graph:hover {
+  background-color: rgba(102,100,164,0);
+}
+
+
+
+table table table thead.hide th.type a:before {
+  content: "▼ ";
+}
+table table table thead.show th.type a:before {
+  content: "► ";
+}
+table tr.sibling td {
+  line-height: 24px !important;
+}
+table tr.sibling td.type,
+table tr.sibling td.name {
+  color: #474386;
+  font-weight: bold;
+  padding-left: 1.5em !important;
+}
+
+
+table tfoot td {
+  line-height: 36px;
+}
+table tfoot .total {
+  text-align: right;
+}
+table tfoot .totalcost {
+  color: #5B54CF;
+  font-size: 18px;
+  font-weight: bold;
+  padding-right: .4em !important;
+}
+
+
+table table table tbody.visible td {
+  line-height: 24px;
+}
+table table table td:first-child {
+  padding-left: 1.5em;
+}
+
+table .name,
+table .type,
+table .timestamp {
+  width: 280px !important;
+}
+table .description {
+  font-weight: normal;
+  width: auto;
+}
+table .description code {
+  font-family: Monaco, fixed-width;
+  font-size: 11px;
+}
+table .unit {
+  color: #777;
+  width: 90px;
+}
+table .rate {
+  color: #777;
+  font-weight: normal;
+  text-align: right;
+  width: 90px;
+}
+table .quantity {
+  font-weight: normal;
+  padding-right: 4px !important;
+  text-align: right;
+  width: 100px;
+}
+table .cost {
+  font-weight: normal;
+  padding-right: .4em !important;
+  text-align: right;
+  width: 130px;
+}
+table .cost sup {
+  color: #777;
+  font-size: 11px;
+  padding-right: 2px;
+  vertical-align: top;
+}
+table tfoot .totalcost sup {
+  color: #8B87CF;
+}
+table .total {
+  text-align: right;
+  padding-right: 0;
+}
+
+
+/* == HEADER =============================================================== */
+
+
+header,
+section {
+  background-color: #F2F1F7;
+  border: 1px solid #C0BEC7;
+  -moz-box-shadow: 0 0 1px #fff inset;
+  -webkit-box-shadow: 0 0 1px #fff inset;
+  box-shadow: 0 0 1px #fff inset;
+}
+header .wrapper,
+section .wrapper {
+  overflow: hidden;
+  padding: 24px;
+}
+header {
+  -webkit-border-top-left-radius: 5px;
+  -webkit-border-top-right-radius: 5px;
+  -moz-border-radius-topleft: 5px;
+  -moz-border-radius-topright: 5px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+header dl,
+section.summary dl {
+  float: left;
+  width: auto;
+}
+header dl {
+  color: #474386;
+  height: 72px;
+}
+header dl dt {
+  font-family: "HybreaRegular", sans-serif;
+  font-size: 16px;
+  line-height: 30px;
+}
+header hgroup {
+  float: right;
+  text-align: right;
+  width: 30%;
+}
+header hgroup h1 {
+  font-family: "CorbelRegular", sans-serif;
+  font-size: 32px;
+  line-height: 36px;
+  text-align: right;
+}
+header dl {
+  background: url(https://payments.heroku.com/images/invoice/logo.png) no-repeat left center;
+  padding-left: 65px;
+}
+section.summary dt {
+  font-family: "CorbelRegular", sans-serif;
+  font-size: 20px;
+  line-height: 36px;
+}
+section.summary table {
+  float: right;
+  width: 66%;
+  margin-left: 4%;
+}
+section.summary table th.cost {
+  visibility: hidden;
+}
+table#myapps td {
+  line-height: 24px !important;
+}
+
+table#myapps td.name {
+  padding-left: .4em;
+}
+section.apps {
+  -webkit-border-bottom-right-radius: 5px;
+  -webkit-border-bottom-left-radius: 5px;
+  -moz-border-radius-bottomright: 5px;
+  -moz-border-radius-bottomleft: 5px;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-bottom: 2px solid #C0BEC7;
+}
+

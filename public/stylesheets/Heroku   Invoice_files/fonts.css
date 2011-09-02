@@ -1,0 +1,49 @@
+/*
+  Heroku fonts used all over.
+
+  * Last edited: February 6th, 2011
+
+  #### Compatibility:
+
+  You are using `@font-face`. What'd ya think?!
+*/
+
+@font-face {
+    font-family: 'CorbelBold';
+    font-style: normal;
+    font-weight: normal;
+    src: url('/fonts/corbelbold-webfont.eot?') format('eot'),
+         url('/fonts/corbelbold-webfont.woff') format('woff'),
+         url('/fonts/corbelbold-webfont.ttf') format('truetype'),
+         url('/fonts/corbelbold-webfont.svg#webfontlZZPxZYu') format('svg');
+}
+
+@font-face {
+    font-family: 'CorbelRegular';
+    font-style: normal;
+    font-weight: normal;
+    src: url('/fonts/corbel-webfont.eot?') format('eot'),
+         url('/fonts/corbel-webfont.woff') format('woff'),
+         url('/fonts/corbel-webfont.ttf') format('truetype'),
+         url('/fonts/corbel-webfont.svg#webfontO0rfJpd7') format('svg');
+}
+
+@font-face {
+    font-family: 'HybreaLight';
+    font-style: normal;
+    font-weight: normal;
+    src: url('/fonts/hybrealight-webfont.eot?') format('eot'),
+         url('/fonts/hybrealight-webfont.woff') format('woff'),
+         url('/fonts/hybrealight-webfont.ttf') format('truetype'),
+         url('/fonts/hybrealight-webfont.svg#webfontHioEustJ') format('svg');
+}
+
+@font-face {
+    font-family: 'HybreaRegular';
+    font-style: normal;
+    font-weight: normal;
+    src: url('/fonts/hybrea-webfont.eot?') format('eot'),
+         url('/fonts/hybrea-webfont.woff') format('woff'),
+         url('/fonts/hybrea-webfont.ttf') format('truetype'),
+         url('/fonts/hybrea-webfont.svg#webfonto3DdN6lX') format('svg');
+}
