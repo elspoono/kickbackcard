@@ -555,6 +555,8 @@ var saveVendor = function(req, res, next){
             next()
           }else{
             data.name = params.name
+            if(formattedAddress)
+              params.address = formattedAddress;
             data.address = params.address
             data.coordinates = params.coordinates
             data.description = params.description
