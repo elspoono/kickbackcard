@@ -1484,6 +1484,10 @@ app.get('/vendors.json', get10Vendors, function(req, res){
   res.send(req.data)
 })
 
+app.post('/vendors.json', get10Vendors, function(req, res){
+  res.send(req.data)
+})
+
 
 
 
