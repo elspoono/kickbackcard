@@ -1505,6 +1505,7 @@ var findOrSetMapClientId = function(req, res, next){
       mapClient.map_client_id = params.map_client_id;
       mapClient.vendor_ids = [];
     }
+    console.log(req.mapClient);
     next()
   });
 
@@ -1531,6 +1532,7 @@ var findNearVendors = function(req, res, next){
       }
       req.mapClient.save();
       req.vendors = data;
+      console.log(req.vendors);
       next();
 
     }
