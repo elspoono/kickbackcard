@@ -1492,14 +1492,14 @@ app.get('/', get10Vendors, function(req, res){
   /*
     Find their Map Client ID or create it
   */
-var findOrSetMapClientId = function(req, res){
+var findOrSetMapClientId = function(req, res, next){
   
   var params = req.body || {};
   console.log(params);
   next()
 }
 
-app.post('/vendors.json', function(req, res){
+app.post('/vendors.json', findOrSetMapClientId, function(req, res){
 
 
   var params = req.body || {
@@ -1515,10 +1515,7 @@ app.post('/vendors.json', function(req, res){
     {skip:0,limit:10},
     function(err, data){
 
-      res.send({
-        err: err,
-        data: data
-      });
+      res.send(data);
 
     }
   );
