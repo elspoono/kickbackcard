@@ -1546,7 +1546,8 @@ var findNearVendors = function(req, res, next){
         console.log(deals);
         for(var i in data){
           for(var j in deals){
-            if(data[i]._id == deals[j].vendor_id){
+            console.log(data[i]._id+' -- '+deals[j].vendor_id);
+            if(data[i]._id+'' == deals[j].vendor_id){
               if(!data[i].deals)
                 data[i].deals = [];
               data[i].deals.push(deals[j]);
