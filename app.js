@@ -1482,8 +1482,6 @@ app.get('/', get10Vendors, function(req, res){
   }
 });
 
-Vendor.update({coordinates:{$size:3}},{$pop:{coordinates:1}},false,true)
-
 
 app.post('/vendors.json', function(req, res){
 
