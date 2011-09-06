@@ -1530,13 +1530,33 @@ var findNearVendors = function(req, res, next){
     ['coordinates','name','address','contact'],
     {skip:0,limit:10},
     function(err, data){
+
+      // Update mapClient to show these guys as viewed already
+      var remainingIds = [];
       for(var i in data){
         req.mapClient.vendor_ids.push(data[i]._id);
+        remainingIds.push(data[i]._id);
       }
       req.mapClient.save();
-      req.vendors = data;
-      console.log(req.vendors);
-      next();
+
+      // Find their deals
+      Deal.find({
+        vendor_id : { $in : remainingIds}
+      },function(err,deals){
+        for(var i in data){
+          for(var j in deals){
+            if(data[i]._id == deals[j].vendor_id){
+              if(!data[i].deals)
+                data[i].deals = [];
+              data[i].deals.push(deals[j]);
+            }
+          }
+        }
+
+        req.vendors = data;
+        next();
+
+      })
 
     }
   );
