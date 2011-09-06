@@ -1493,7 +1493,7 @@ app.post('/vendors.json', function(req, res){
   console.log(params);
 
   Vendor.find(
-    {coordinates : { $near : [params.longitude, params.latitude] } },
+    {coordinates : { $near : [params.latitude, params.longitude] } },
     ['coordinates','name','address','contact'],
     {skip:0,limit:1,sort:{name:1}},
     function(err, data){
