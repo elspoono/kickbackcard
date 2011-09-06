@@ -252,6 +252,7 @@ var VendorSchema = new Schema({
   deal_ids: [String],
   user_ids: [String]
 })
+VendorSchema.index({coordinates:'2d'});
 var Vendor = mongoose.model('Vendor',VendorSchema);
 var VendorBackup = mongoose.model('VendorBackup',VendorSchema);
 
@@ -1482,6 +1483,7 @@ app.get('/', get10Vendors, function(req, res){
 });
 
 Vendor.update({coordinates:{$size:3}},{$pop:{coordinates:1}},false,true)
+
 
 app.post('/vendors.json', function(req, res){
 
