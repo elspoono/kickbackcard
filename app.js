@@ -1551,8 +1551,8 @@ var findNearVendors = function(req, res, next){
               //console.log(deals[j]);
               if(typeof(data[i].deals)=='undefined')
                 data[i].deals = [];
-              //data[i].deals.push(deals[j]);
-              console.log(data[i].deals);
+              data[i].deals.push(deals[j]);
+              //console.log(data[i].deals);
             }
           }
         }
