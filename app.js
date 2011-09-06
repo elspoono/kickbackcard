@@ -1543,20 +1543,20 @@ var findNearVendors = function(req, res, next){
       Deal.find({
         vendor_id : { $in : remainingIds}
       },function(err,deals){
-        console.log(deals);
+        //console.log(deals);
         for(var i in data){
           for(var j in deals){
-            console.log(data[i]._id+' -- '+deals[j].vendor_id);
+            //console.log(data[i]._id+' -- '+deals[j].vendor_id);
             if(data[i]._id+'' == deals[j].vendor_id){
-              console.log(deals[j]);
+              //console.log(deals[j]);
               if(typeof(data[i].deals)=='undefined')
                 data[i].deals = [];
-              data[i].deals.push(deals[j]);
+              //data[i].deals.push(deals[j]);
               console.log(data[i].deals);
             }
           }
         }
-
+        console.log(data)
         req.vendors = data;
         next();
 
@@ -1568,6 +1568,7 @@ var findNearVendors = function(req, res, next){
 }
 
 app.post('/vendors.json', findOrSetMapClientId, findNearVendors, function(req, res){
+  console.log(req.vendors)
   res.send(req.vendors||'Not Found');
 });
 
