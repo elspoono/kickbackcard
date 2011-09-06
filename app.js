@@ -1490,18 +1490,51 @@ app.post('/vendors.json', function(req, res){
     latitude: 33.449777
   }
 
-  mongoose.connection.db.executeDbCommand({ geoNear: "coordinates", near: [ params.latitude, params.longitude ] },['coordinates','name','address','contact'],{skip:0,limit:10,sort:{name:1}}, function (err, data) { 
+  console.log(params);
 
-    res.send(data);
-  });
-  /*Vendor.find({coordinates : { $near : [params.latitude, params.longitude] } },['coordinates','name','address','contact'],{skip:0,limit:10,sort:{name:1}},function(err, data){
+  Vendor.find(
+    {coordinates : { $near : [params.longitude, params.latitude] } },
+    ['coordinates','name','address','contact'],
+    {skip:0,limit:1,sort:{name:1}},
+    function(err, data){
 
+      res.send(data);
 
-  });
-*/
+    }
+  );
 
 })
 
+
+app.get('/test1', function(req, res){
+
+  Vendor.find(
+    {coordinates : { $near : [0, 0] } },
+    ['coordinates','name','address','contact'],
+    {skip:0,limit:1,sort:{name:1}},
+    function(err, data){
+
+      res.send(data);
+
+    }
+  );
+  
+});
+
+app.get('/test2', function(req, res){
+
+  Vendor.find(
+    {coordinates : { $near : [45, -120] } },
+    ['coordinates','name','address','contact'],
+    {skip:0,limit:1},
+    function(err, data){
+
+      res.send(data);
+
+    }
+  );
+  
+});
 
 
 
