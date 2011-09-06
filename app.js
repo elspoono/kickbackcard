@@ -1492,7 +1492,7 @@ app.get('/', get10Vendors, function(req, res){
     Find their Map Client ID or create it
   */
 var findOrSetMapClientId = function(req, res, next){
-  console.log('Come ON!!');
+
   var params = req.body || {};
 
   MapClient.find({
@@ -1500,14 +1500,20 @@ var findOrSetMapClientId = function(req, res, next){
   },function(err,data){
     console.log(err);
     console.log(data);
+
     if(data.length>0){
-      req.mapClient = data[0];
+      var mapClient = data[0];
     }else{
-      req.mapClient = new MapClient();
+      var mapClient = new MapClient();
       mapClient.map_client_id = params.map_client_id;
       mapClient.vendor_ids = [];
     }
-    console.log(req.mapClient);
+
+
+    console.log(mapClient);
+    
+    req.mapClient = mapClient;
+
     next()
   });
 
