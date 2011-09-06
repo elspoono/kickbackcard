@@ -1490,11 +1490,15 @@ app.post('/vendors.json', function(req, res){
     latitude: 33.449777
   }
 
-  Vendor.find({coordinates : { $near : [params.latitude, params.longitude] } },['coordinates','name','address','contact'],{skip:0,limit:10,sort:{name:1}},function(err, data){
+  mongoose.connection.db.executeDbCommand({ geoNear: "coordinates", near: [ params.latitude, params.longitude ] },['coordinates','name','address','contact'],{skip:0,limit:10,sort:{name:1}}, function (err, data) { 
 
     res.send(data);
+  });
+  /*Vendor.find({coordinates : { $near : [params.latitude, params.longitude] } },['coordinates','name','address','contact'],{skip:0,limit:10,sort:{name:1}},function(err, data){
+
 
   });
+*/
 
 })
 
