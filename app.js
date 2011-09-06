@@ -1492,11 +1492,7 @@ app.post('/vendors.json', function(req, res){
 
   Vendor.find({coordinates : { $near : [params.latitude, params.longitude] } },['coordinates','name','address','contact'],{skip:0,limit:10,sort:{name:1}},function(err, data){
 
-    res.send({
-      err: err,
-      data: data
-    });
-
+    res.send(data);
 
   });
 
