@@ -256,6 +256,11 @@ VendorSchema.index({coordinates:'2d'});
 var Vendor = mongoose.model('Vendor',VendorSchema);
 var VendorBackup = mongoose.model('VendorBackup',VendorSchema);
 
+var MapClientSchema = new Schema({
+  map_client_id: {type:String},
+  vendor_ids: [String]
+})
+var MapClient = mongoose.model('MapClient',MapClientSchema);
 
 
 /***
@@ -1483,7 +1488,19 @@ app.get('/', get10Vendors, function(req, res){
 });
 
 
-app.post('/vendors.json', function(req, res){
+
+  /*
+    Find their Map Client ID or create it
+  */
+var findOrSetMapClientId = function(req, res){
+  
+  var params = req.body || {};
+  console.log(params);
+  next()
+}
+
+app.post('/vendors.json', findOrSetMapClientId, function(req, res){
+
 
   var params = req.body || {
     longitude: -112.068787,
