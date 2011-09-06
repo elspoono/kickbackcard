@@ -1124,7 +1124,6 @@ var generateKickers = function(req, res, next){
         kicker.deal_id = req.deal._id;
         kicker.reusable = (req.params.qty?false:true);
         kicker.save()
-        console.log(kicker);
       }
       req.strings = strings;
       next() 
@@ -1495,31 +1494,52 @@ app.get('/', get10Vendors, function(req, res){
 var findOrSetMapClientId = function(req, res, next){
   
   var params = req.body || {};
-  console.log(params);
-  next()
+
+  MapClient.find({
+    map_client_id : params.map_client_id
+  },function(err,data){
+    if(data.length>0){
+      req.mapClient = data[0];
+    }else{
+      req.mapClient = new MapClient();
+      mapClient.map_client_id = params.map_client_id;
+      mapClient.vendor_ids = [];
+    }
+    next()
+  });
+
 }
 
-app.post('/vendors.json', findOrSetMapClientId, function(req, res){
-
+var findNearVendors = function(req, res, next){
+  
 
   var params = req.body || {
     longitude: -112.068787,
     latitude: 33.449777
   }
 
-  console.log(params);
-
   Vendor.find(
-    {coordinates : { $near : [params.latitude, params.longitude] } },
+    {
+      coordinates : { $near : [params.latitude, params.longitude] },
+      _id : { $nin : req.mapClient.vendor_ids}
+    },
     ['coordinates','name','address','contact'],
     {skip:0,limit:10},
     function(err, data){
-
-      res.send(data);
+      for(var i in data){
+        req.mapClient.vendor_ids.push(data[i]._id);
+      }
+      req.mapClient.save();
+      req.vendors = data;
+      next();
 
     }
   );
 
+}
+
+app.post('/vendors.json', findOrSetMapClientId, findNearVendors, function(req, res){
+  res.send(req.vendors||'Not Found');
 });
 
 
