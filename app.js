@@ -1543,6 +1543,7 @@ var findNearVendors = function(req, res, next){
       Deal.find({
         vendor_id : { $in : remainingIds}
       },function(err,deals){
+        console.log(deals);
         for(var i in data){
           for(var j in deals){
             if(data[i]._id == deals[j].vendor_id){
