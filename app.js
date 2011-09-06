@@ -1499,7 +1499,7 @@ var findOrSetMapClientId = function(req, res){
   next()
 }
 
-app.post('/vendors.json', findOrSetMapClientId, function(req, res){
+app.post('/vendors.json', function(req, res){
 
 
   var params = req.body || {
@@ -1515,7 +1515,10 @@ app.post('/vendors.json', findOrSetMapClientId, function(req, res){
     {skip:0,limit:10},
     function(err, data){
 
-      res.send(data);
+      res.send({
+        err: err,
+        data: data
+      });
 
     }
   );
