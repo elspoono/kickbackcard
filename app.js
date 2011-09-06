@@ -1548,9 +1548,11 @@ var findNearVendors = function(req, res, next){
           for(var j in deals){
             console.log(data[i]._id+' -- '+deals[j].vendor_id);
             if(data[i]._id+'' == deals[j].vendor_id){
-              if(!data[i].deals)
+              console.log(deals[j]);
+              if(typeof(data[i].deals)=='undefined')
                 data[i].deals = [];
               data[i].deals.push(deals[j]);
+              console.log(data[i].deals);
             }
           }
         }
