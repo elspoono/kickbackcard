@@ -1495,7 +1495,7 @@ app.post('/vendors.json', function(req, res){
   Vendor.find(
     {coordinates : { $near : [params.latitude, params.longitude] } },
     ['coordinates','name','address','contact'],
-    {skip:0,limit:1,sort:{name:1}},
+    {skip:0,limit:10},
     function(err, data){
 
       res.send(data);
@@ -1503,38 +1503,8 @@ app.post('/vendors.json', function(req, res){
     }
   );
 
-})
-
-
-app.get('/test1', function(req, res){
-
-  Vendor.find(
-    {coordinates : { $near : [0, 0] } },
-    ['coordinates','name','address','contact'],
-    {skip:0,limit:1,sort:{name:1}},
-    function(err, data){
-
-      res.send(data);
-
-    }
-  );
-  
 });
 
-app.get('/test2', function(req, res){
-
-  Vendor.find(
-    {coordinates : { $near : [45, -120] } },
-    ['coordinates','name','address','contact'],
-    {skip:0,limit:1},
-    function(err, data){
-
-      res.send(data);
-
-    }
-  );
-  
-});
 
 
 
