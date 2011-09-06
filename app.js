@@ -1492,7 +1492,7 @@ app.get('/', get10Vendors, function(req, res){
     Find their Map Client ID or create it
   */
 var findOrSetMapClientId = function(req, res, next){
-  
+  console.log('Come ON!!');
   var params = req.body || {};
 
   MapClient.find({
