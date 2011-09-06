@@ -1498,6 +1498,8 @@ var findOrSetMapClientId = function(req, res, next){
   MapClient.find({
     map_client_id : params.map_client_id
   },function(err,data){
+    console.log(err);
+    console.log(data);
     if(data.length>0){
       req.mapClient = data[0];
     }else{
