@@ -244,7 +244,8 @@ var DealBackup = mongoose.model('DealBackup',DealSchema);
 var VendorSchema = new Schema({
   name: { type: String, validate: /\b.{1,1500}\b/i },
   address: { type: String, validate: /\b.{1,1500}\b/i },
-  coordinates: Array,
+  coordinates: [Number],
+  real_address: {type: String},
   description: { type: String },
   hours: { type: String },
   contact: { type: String },
@@ -546,7 +547,7 @@ var saveVendor = function(req, res, next){
   }else{
     var sensor = false;
     geo.geocoder(geo.google, params.address, false, function(formattedAddress, latitude, longitude) {
-      params.coordinates = [latitude, longitude, formattedAddress]
+      params.coordinates = [latitude, longitude]
       if(params.id){
         Vendor.findById(params.id,function(err,data){
           if(err){
@@ -1480,10 +1481,25 @@ app.get('/', get10Vendors, function(req, res){
   }
 });
 
+Vendor.update({coordinates:{$size:3}},{$pop:{coordinates:1}},false,true)
 
-app.post('/vendors.json', get10Vendors, function(req, res){
-  console.log(req.body);
-  res.send(req.data);
+app.post('/vendors.json', function(req, res){
+
+  var params = req.body || {
+    longitude: -112.068787,
+    latitude: 33.449777
+  }
+
+  Vendor.find({coordinates : { $near : [params.latitude, params.longitude] } },['coordinates','name','address','contact'],{skip:0,limit:10,sort:{name:1}},function(err, data){
+
+    res.send({
+      err: err,
+      data: data
+    });
+
+
+  });
+
 })
 
 
