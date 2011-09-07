@@ -208,8 +208,9 @@ var KickSchema = new Schema({
   date_added: Date
 })
 var RedeemSchema = new Schema({
+  url_string: String,
   client_id: String,
-  kicker_id: String,
+  deal_id: String,
   date_added: Date,
   kick_ids: [String]
 })
@@ -1575,6 +1576,87 @@ app.post('/vendors.json', findOrSetMapClientId, findNearVendors, function(req, r
   res.send(req.vendors||'Not Found');
 });
 
+
+
+app.post('/redeem',function(req, res){
+  
+  Client.findById(req.body.client_id,function(err,client){
+    if(err)
+      res.send({err:err})
+    else{
+
+      /*
+        Validate the shared token against the secret/client_id/deal_id
+      */
+
+      var isValid = bcrypt.compare_sync(client.client_secret+client._id+req.body.deal_id, req.body.client_shared);
+      if(!isValid)
+        res.send({err:'Invalid Token'})
+      else{
+        Deal.findById(req.body.deal_id, function(err,deal){
+          if(err)
+            res.send({err: err})
+          else{
+            
+            // Make sure we have enough kicks based on deal.get_qty
+
+            Kick.find({client_id: client._id, redeemed: false},function(err,kicks){
+              
+              if(kicks.length >= deal.get_qty){
+
+                // Generate and validate redemption url_string
+                
+                var my_url_string = url_string();
+
+                Redeem.find({url_string:my_url_string},function(err,data){
+                  if(err)
+                    res.send({err:err})
+                  else if(data.length!=0)
+                    res.send({err:'Collision!'})
+                  else{
+
+                    // Create Redemption Record
+                    var redeem = new Redeem();
+                    redeem.url_string = my_url_string;
+                    redeem.date_added = new Date();
+                    redeem.deal_id = deal._id;
+                    redeem.client_id = client._id;
+                    redeem.kick_ids = [];
+
+
+                    // Mark all those kicks as redeemed 
+                    for(var i = 0; i < deal.get_qty; i++){
+                      // Okay to process in background ... I guess, fucking A
+                      // Don't know what do except crazy back checking???
+
+                      kicks[i].redeemed = true;
+                      kicks[i].save(function(err,data){
+                        if(err)
+                          error(err);
+                      })
+
+                      redeem.kick_ids.push(kicks[i]._id);
+
+                    }
+                    redeem.save(function(err,data){
+                      res.send(redeem)
+                    });
+                    // IOS will use javascript/canvas / UIWebView to draw it http://d-project.googlecode.com/svn/trunk/misc/qrcode/js/
+                    
+                  }
+                });
+
+              }else{
+                res.send({err: 'Not Enough Kicks'});
+              }
+
+            })
+          }
+        });
+      }
+    }
+  });
+});
 
 
 
