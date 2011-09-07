@@ -1529,7 +1529,7 @@ var findNearVendors = function(req, res, next){
       _id : { $nin : req.mapClient.vendor_ids}
     },
     ['coordinates','name','address','contact'],
-    {skip:0,limit:10},
+    {skip:0,limit:4},
     function(err, vendors){
 
       // Update mapClient to show these guys as viewed already
