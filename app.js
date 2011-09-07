@@ -1529,7 +1529,7 @@ var findNearVendors = function(req, res, next){
       _id : { $nin : req.mapClient.vendor_ids}
     },
     ['coordinates','name','address','contact'],
-    {skip:0,limit:1},
+    {skip:0,limit:10},
     function(err, vendors){
 
       // Update mapClient to show these guys as viewed already
@@ -1542,7 +1542,8 @@ var findNearVendors = function(req, res, next){
 
       // Find their deals
       Deal.find({
-        vendor_id : { $in : remainingIds}
+        vendor_id : { $in : remainingIds},
+        archived : false
       },function(err,deals){
         //console.log(deals);
         for(var i in vendors){
@@ -1553,11 +1554,9 @@ var findNearVendors = function(req, res, next){
               if(typeof(vendors[i].deals)=='undefined')
                 vendors[i].deals = [];
               vendors[i].deals.push(deals[j]);
-              console.log(vendors[i].deals);
             }
           }
         }
-        console.log(vendors)
         req.vendors = vendors;
         next();
 
