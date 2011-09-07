@@ -250,6 +250,7 @@ var VendorSchema = new Schema({
   hours: { type: String },
   contact: { type: String },
   deal_ids: [String],
+  deals: [], // This is absolutely retarded, I can't set stuff later in /vendors.json without this
   user_ids: [String]
 })
 VendorSchema.index({coordinates:'2d'});
