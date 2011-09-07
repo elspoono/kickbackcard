@@ -383,6 +383,7 @@ app.post('/k:id',function(req,res,next){
                         */
                         var kick = new Kick();
                         kick.scan_id = req.body.scan_id;
+                        kick.redeemed = false;
                         kick.kicker_id = kicker._id;
                         kick.client_id = client._id;
                         kick.date_added = new Date();
