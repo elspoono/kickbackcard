@@ -1633,7 +1633,7 @@ app.post('/redeem',function(req, res){
                       // Okay to process in background ... I guess, fucking A
                       // Don't know what do except crazy back checking???
 
-                      kicks[i].redeemed = true;
+                      //kicks[i].redeemed = true;
                       kicks[i].save(function(err,data){
                         if(err)
                           error(err);
