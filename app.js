@@ -1644,6 +1644,7 @@ app.post('/redeem',function(req, res){
                     }
                     redeem.save(function(err,data){
                       res.send({
+                        remaining: kicks.length - deal.buy_qty,
                         deal: deal,
                         redeem: redeem
                       })
