@@ -202,6 +202,7 @@ var KickerSchema = new Schema({
 var KickSchema = new Schema({
   kicker_id: String,
   redeem_id: String,
+  deal_id: String,
   client_id: String,
   scan_id: String,
   redeemed: Boolean,
@@ -385,6 +386,7 @@ app.post('/k:id',function(req,res,next){
                         kick.scan_id = req.body.scan_id;
                         kick.redeemed = false;
                         kick.kicker_id = kicker._id;
+                        kick.deal_id = deal._id;
                         kick.client_id = client._id;
                         kick.date_added = new Date();
                         kick.save(function(err,data){
@@ -1600,7 +1602,6 @@ app.post('/redeem',function(req, res){
           else{
             
             
-
             // Make sure we have enough kicks based on deal.buy_qty
             Kick.find({client_id: client._id, deal_id: deal._id, redeemed: false},function(err,kicks){
               
