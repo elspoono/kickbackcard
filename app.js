@@ -1552,11 +1552,11 @@ var findNearVendors = function(req, res, next){
               if(typeof(data[i].deals)=='undefined')
                 data[i].deals = [];
               data[i].deals.push(deals[j]);
-              //console.log(data[i].deals);
+              console.log(data[i].deals);
             }
           }
         }
-        console.log(data)
+        //console.log(data)
         req.vendors = data;
         next();
 
@@ -1568,7 +1568,7 @@ var findNearVendors = function(req, res, next){
 }
 
 app.post('/vendors.json', findOrSetMapClientId, findNearVendors, function(req, res){
-  console.log(req.vendors)
+  //console.log(req.vendors)
   res.send(req.vendors||'Not Found');
 });
 
