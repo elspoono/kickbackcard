@@ -1606,7 +1606,7 @@ app.post('/redeem',function(req, res){
             // Make sure we have enough kicks based on deal.get_qty
             Kick.find({client_id: client._id, redeemed: false},function(err,kicks){
               
-              console.log(kicks);
+              console.log(kicks.length+' --'+deal.get_qty);
 
               if(kicks.length >= deal.get_qty){
 
