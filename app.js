@@ -1642,6 +1642,9 @@ app.post('/redeem',function(req, res){
                       redeem.kick_ids.push(kicks[i]._id);
 
                     }
+                    deal.tag_line = (!deal.tag_line || deal.tag_line.length==0)
+                      ?deal.default_tag_line
+                      :deal.tag_line;
                     redeem.save(function(err,data){
                       res.send({
                         remaining: kicks.length - deal.buy_qty,
