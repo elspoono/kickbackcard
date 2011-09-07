@@ -1553,6 +1553,9 @@ var findNearVendors = function(req, res, next){
               //console.log(deals[j]);
               if(typeof(vendors[i].deals)=='undefined')
                 vendors[i].deals = [];
+              deals[j].tag_line = (!deals[j].tag_line || deals[j].tag_line.length==0)
+                ?deals[j].default_tag_line
+                :deals[j].tag_line;
               vendors[i].deals.push(deals[j]);
             }
           }
