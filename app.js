@@ -1529,13 +1529,13 @@ var findNearVendors = function(req, res, next){
     },
     ['coordinates','name','address','contact'],
     {skip:0,limit:10},
-    function(err, data){
+    function(err, vendors){
 
       // Update mapClient to show these guys as viewed already
       var remainingIds = [];
-      for(var i in data){
-        req.mapClient.vendor_ids.push(data[i]._id);
-        remainingIds.push(data[i]._id);
+      for(var i in vendors){
+        req.mapClient.vendor_ids.push(vendors[i]._id);
+        remainingIds.push(vendors[i]._id);
       }
       req.mapClient.save();
 
@@ -1544,20 +1544,20 @@ var findNearVendors = function(req, res, next){
         vendor_id : { $in : remainingIds}
       },function(err,deals){
         //console.log(deals);
-        for(var i in data){
+        for(var i in vendors){
           for(var j in deals){
             //console.log(data[i]._id+' -- '+deals[j].vendor_id);
-            if(data[i]._id+'' == deals[j].vendor_id){
+            if(vendors[i]._id+'' == deals[j].vendor_id){
               //console.log(deals[j]);
-              if(typeof(data[i].deals)=='undefined')
-                data[i].deals = [];
-              data[i].deals.push(deals[j]);
-              console.log(data[i].deals);
+              if(typeof(vendors[i].deals)=='undefined')
+                vendors[i].deals = [];
+              vendors[i].deals.push(deals[j]);
+              console.log(vendors[i].deals);
             }
           }
         }
-        //console.log(data)
-        req.vendors = data;
+        console.log(vendors)
+        req.vendors = vendors;
         next();
 
       })
