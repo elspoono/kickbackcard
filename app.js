@@ -1600,15 +1600,12 @@ app.post('/redeem',function(req, res){
           else{
             
             
-            console.log(client);
-            console.log(deal);
 
-            // Make sure we have enough kicks based on deal.get_qty
+            // Make sure we have enough kicks based on deal.buy_qty
             Kick.find({client_id: client._id, redeemed: false},function(err,kicks){
               
-              console.log(kicks.length+' --'+deal.get_qty);
-
-              if(kicks.length >= deal.get_qty){
+            
+              if(kicks.length >= deal.buy_qty){
 
                 // Generate and validate redemption url_string
                 
@@ -1631,7 +1628,7 @@ app.post('/redeem',function(req, res){
 
 
                     // Mark all those kicks as redeemed 
-                    for(var i = 0; i < deal.get_qty; i++){
+                    for(var i = 0; i < deal.buy_qty; i++){
                       // Okay to process in background ... I guess, fucking A
                       // Don't know what do except crazy back checking???
 
