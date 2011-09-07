@@ -1643,7 +1643,10 @@ app.post('/redeem',function(req, res){
 
                     }
                     redeem.save(function(err,data){
-                      res.send(redeem)
+                      res.send({
+                        deal: deal,
+                        redeem: redeem
+                      })
                     });
                     // IOS will use javascript/canvas / UIWebView to draw it http://d-project.googlecode.com/svn/trunk/misc/qrcode/js/
                     
