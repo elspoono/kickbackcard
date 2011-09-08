@@ -124,15 +124,16 @@ body .body .col-right {
 }
 body .body .col-left .qr-container,
 body .body .col-right .qr-container {
-  margin: 10px 0;
-  padding: 10px 10px 0 10px;
+  margin: 10px;
+  padding: 5px;
   background: #fff;
   border: 1px solid #6f6f6e;
   color: #000;
+  width: auto;
 }
-body .body .col-left .qr-container .text,
-body .body .col-right .qr-container .text {
-  margin: 10px;
+body .body .col-left .text,
+body .body .col-right .text {
+  margin: 5px;
 }
 body .body .col-left {
   float: left;
