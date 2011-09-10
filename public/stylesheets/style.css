@@ -50,7 +50,7 @@ body .header a {
   color: #4e7a3c;
 }
 body .header .container {
-  padding: 15px 30px;
+  padding: 15px 15px;
   overflow: hidden;
 }
 body .header .container .logo {
@@ -156,6 +156,7 @@ body .body .container .phone-area {
   float: right;
 }
 body .body .container .phone-area .screenshot {
+  margin-left: 15px;
   background: url("/images/screenshot_03.png");
   height: 584px;
   width: 300px;
