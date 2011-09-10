@@ -11,7 +11,7 @@ body .body .step-copy .earn {
   margin-top: 30px;
 }
 body .body .step-copy .earn div {
-  margin: 40px 0 0 0px;
+  margin: 60px 0 0 0px;
 }
 body .body .step-copy .burger {
   background: url("/images/step3-burger.png") no-repeat 130px 0;
@@ -19,7 +19,7 @@ body .body .step-copy .burger {
 }
 body .body .step-copy .burger div {
   width: 140px;
-  margin: 40px 0 0 0;
+  margin: 15px 0 0 0;
 }
 body .body .col-left,
 body .body .col-right {
