@@ -1,0 +1,27 @@
+body .body .step-copy .scan {
+  background: url("/images/step1-scan.png") no-repeat 20px 0;
+  width: 250px;
+}
+body .body .step-copy .scan div {
+  margin: 120px 0 0 0;
+}
+body .body .step-copy .earn {
+  background: url("/images/step2-earn.png") no-repeat 130px 0;
+  width: 250px;
+  margin-top: 30px;
+}
+body .body .step-copy .earn div {
+  margin: 40px 0 0 0px;
+}
+body .body .step-copy .burger {
+  background: url("/images/step3-burger.png") no-repeat 130px 0;
+  width: 250px;
+}
+body .body .step-copy .burger div {
+  width: 140px;
+  margin: 40px 0 0 0;
+}
+body .body .col-left,
+body .body .col-right {
+  display: none;
+}
