@@ -289,7 +289,7 @@ $(function(){
   var doSlideFast = function(){
     slideUl.css({marginLeft:current});
   }
-  var slideInterval = setInterval(function(){slideLeft();},2000);
+  var slideInterval = setInterval(function(){slideLeft();},3000);
   slideUl.bind('mousedown touchstart',function(e){
     if(e.originalEvent.touches && e.originalEvent.touches.length) {
         e = e.originalEvent.touches[0];
