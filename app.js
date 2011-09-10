@@ -44,6 +44,16 @@ var yelp = require("yelp").createClient({
   token_secret: "KKML2M7SsQvjEZ2hc1l98sO3s4g"
 });
 
+/*
+Your API credentials are shown below. Please keep them safe.
+Key
+eef68a4879ad5230d58f3d2cb080ffab04e6a8d57
+Secret
+7e76ba07d2d21cfdf05a921077b4a1ce
+
+var mooKey = 'eef68a4879ad5230d58f3d2cb080ffab04e6a8d57';
+var mooSecret = '7e76ba07d2d21cfdf05a921077b4a1ce';
+*/
 
 
 var bcrypt = require('bcrypt');

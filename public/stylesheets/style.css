@@ -17,6 +17,9 @@ body input,
 body select {
   font: 16px "Open Sans", Helvetica, Arial, sans-serif;
 }
+body b {
+  font-weight: bold;
+}
 body a {
   color: #fff;
 }
@@ -156,11 +159,20 @@ body .body .container .phone-area .screenshot {
   background: url("/images/screenshot_03.png");
   height: 584px;
   width: 300px;
-  position: relative;
 }
-body .body .container .phone-area .screenshot img {
-  margin-left: 27px;
+body .body .container .phone-area .screenshot .screens {
+  float: left;
+  margin-left: 26px;
   margin-top: 105px;
+  height: 378px;
+  width: 252px;
+  overflow: hidden;
+}
+body .body .container .phone-area .screenshot .screens ul {
+  width: 9000px;
+}
+body .body .container .phone-area .screenshot .screens ul li {
+  float: left;
 }
 body .body .row {
   background: #aaa;
