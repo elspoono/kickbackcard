@@ -25,3 +25,10 @@ body .body .col-left,
 body .body .col-right {
   display: none;
 }
+body .container .modal {
+  display: none;
+}
+body .container .window {
+  width: 230px;
+  margin: 0 0 0 -15px;
+}
