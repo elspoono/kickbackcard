@@ -333,7 +333,7 @@ app.post('/k:id',function(req,res,next){
         res.send({err:'Invalid Token'})
       else{
         Kicker.find({url_string:req.params.id}, [], function(err,kickers){
-          if(err || kicker.length==0)
+          if(err || kickers.length==0)
             res.send({
               err: err || 'Kicker not found'
             })
