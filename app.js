@@ -339,7 +339,7 @@ app.post('/k:id',function(req,res,next){
             })
           else{
             var kicker = kickers[0];
-            Deal.findById(kicker[0].deal_id,function(err,deal){
+            Deal.findById(kicker.deal_id,function(err,deal){
               if(err||!deal)
                 res.send({err:err||'Deal not found'})
               else{
