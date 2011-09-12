@@ -332,12 +332,13 @@ app.post('/k:id',function(req,res,next){
       if(!isValid)
         res.send({err:'Invalid Token'})
       else{
-        Kicker.find({url_string:req.params.id}, [], function(err,kicker){
+        Kicker.find({url_string:req.params.id}, [], function(err,kickers){
           if(err || kicker.length==0)
             res.send({
               err: err || 'Kicker not found'
             })
-          else
+          else{
+            var kicker = kickers[0];
             Deal.findById(kicker[0].deal_id,function(err,deal){
               if(err||!deal)
                 res.send({err:err||'Deal not found'})
@@ -349,7 +350,7 @@ app.post('/k:id',function(req,res,next){
 
 
 
-
+                  
                   /*
 
                     Maybe all that should be middleware, eh?
@@ -417,11 +418,7 @@ app.post('/k:id',function(req,res,next){
                           /*
                             See if there's an existing "kick" with this scan id
                           */
-                          console.log('kicker');
-                          console.log(kicker._id);
                           Kick.find({kicker_id:kicker._id},[],function(err,previousKick){
-                            console.log('previousKick');
-                            console.log(previousKick);
                             if(err)
                               res.send({err:err})
                             else{
@@ -463,6 +460,7 @@ app.post('/k:id',function(req,res,next){
                 })
               }
             })
+          }
         })
       }
     }
