@@ -417,7 +417,11 @@ app.post('/k:id',function(req,res,next){
                           /*
                             See if there's an existing "kick" with this scan id
                           */
+                          console.log('kicker');
+                          console.log(kicker._id);
                           Kick.find({kicker_id:kicker._id},[],function(err,previousKick){
+                            console.log('previousKick');
+                            console.log(previousKick);
                             if(err)
                               res.send({err:err})
                             else{
