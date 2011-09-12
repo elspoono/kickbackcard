@@ -276,11 +276,11 @@ $(function(){
   }
   var doSlide = function(){
     slideUl.stop(true,false);
-    if(current < -oneUnit*4){
+    if(current < -oneUnit*5){
       current = 0;
       slideUl.animate({marginLeft:current},2000); 
     }else if(current > 0){
-      current = current - oneUnit*5;
+      current = current - oneUnit*6;
       slideUl.animate({marginLeft:current},2000); 
     }else{
       slideUl.animate({marginLeft:current},500); 

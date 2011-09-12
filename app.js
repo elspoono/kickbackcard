@@ -1323,7 +1323,7 @@ app.get('/deal/:id/kicks-:qty.pdf', /*securedArea,*/ getDeal, getVendorFromDeal,
     for( i = 0; i < width; i++ )
         for( j = 0; j < width; j++ )
             if( qf[j*width+i] )
-                doc.rect(px*(4+i)+offset[0],px*(4+j)+offset[1],px,px).fill()      
+                doc.rect(px*(4+i)+offset[0],px*(4+j)+offset[1],px,px).fill()
   }
 
 
