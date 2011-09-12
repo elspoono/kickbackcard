@@ -390,23 +390,69 @@ app.post('/k:id',function(req,res,next){
                         })
                       }else{
                         /*
-                          Otherwise, create a new kick
+
+                        Check if it's a paper kick and already used by someone else??
+
                         */
-                        var kick = new Kick();
-                        kick.scan_id = req.body.scan_id;
-                        kick.redeemed = false;
-                        kick.kicker_id = kicker._id;
-                        kick.deal_id = deal._id;
-                        kick.client_id = client._id;
-                        kick.date_added = new Date();
-                        kick.save(function(err,data){
-                          res.send({
-                            err: err,
-                            deal: deal,
-                            kicker: kicker,
-                            vendor: vendor
+                        if(kicker.reusable){
+                          /*
+                            Otherwise, create a new kick
+                          */
+                          var kick = new Kick();
+                          kick.scan_id = req.body.scan_id;
+                          kick.redeemed = false;
+                          kick.kicker_id = kicker._id;
+                          kick.deal_id = deal._id;
+                          kick.client_id = client._id;
+                          kick.date_added = new Date();
+                          kick.save(function(err,data){
+                            res.send({
+                              err: err,
+                              deal: deal,
+                              kicker: kicker,
+                              vendor: vendor
+                            });
+                          })
+                        }else{
+                          /*
+                            See if there's an existing "kick" with this scan id
+                          */
+                          Kick.find({kicker_id:kicker._id},[],function(err,previousKick){
+                            if(err)
+                              res.send({err:err})
+                            else{
+                              if(previousKick.length){
+                                res.send({
+                                  deal: deal,
+                                  vendor: vendor,
+                                  kicker: kicker,
+                                  previousKick: previousKick
+                                })
+                              }else{
+                                /*
+                                  Otherwise, create a new kick
+                                */
+                                var kick = new Kick();
+                                kick.scan_id = req.body.scan_id;
+                                kick.redeemed = false;
+                                kick.kicker_id = kicker._id;
+                                kick.deal_id = deal._id;
+                                kick.client_id = client._id;
+                                kick.date_added = new Date();
+                                kick.save(function(err,data){
+                                  res.send({
+                                    err: err,
+                                    deal: deal,
+                                    kicker: kicker,
+                                    vendor: vendor
+                                  });
+                                })
+                              }
+
+                            }
                           });
-                        })
+                          
+                        }
                       }
                     }
                   })
