@@ -1050,41 +1050,41 @@ app.post('/saveVendor', securedFunction, function(req, res, next){
     };
     var req1 = http.request(
       options,
-      function (res){
-        console.log(res.headers);
-        options.headers.Cookie = res.headers['set-cookie'];
-        var finalUrl = res.headers.location;
+      function (res1){
+        //console.log(res1.headers);
+        options.headers.Cookie = res1.headers['set-cookie'];
+        var finalUrl = res1.headers.location;
         //console.log(finalUrl);
         options.method = 'GET';
         options.path = finalUrl.replace(/http:\/\/[^\/]*/,'');
         var req2 = http.request(
           options,
-          function(res){
-            console.log(res.headers);
-            res.setEncoding('utf8');
+          function(res2){
+            //console.log(res2.headers);
+            res2.setEncoding('utf8');
             var completeString = '';
-            res.on('data',function(chunk){
+            var found = false;
+            res2.on('data',function(chunk){
+              if(!found){
                 completeString += chunk;
+
+                var allMatches = completeString.match(/"hours"[^>]*>([^<]*)/g)
+
+                var foundHours = [];
+                for(var i in allMatches){
+                  found = true;
+                  var thisMatch = allMatches[i].match(/"hours"[^>]*>([^<]*)/)[1];
+                  foundHours.push(thisMatch);
+                }
+                if(found){
+                  req.foundHours = foundHours.join('\n');
+                  next();
+                }
+              }
             })
-            res.on('end',function(){
-              console.log(completeString);
-
-
-
-              var allMatches = completeString.match(/"hours"[^>]*>([^<]*)/g)
-
-              var foundHours = [];
-              for(var i in allMatches){
-                found = true;
-                var thisMatch = allMatches[i].match(/"hours"[^>]*>([^<]*)/)[1];
-                foundHours.push(thisMatch);
-              }
-              if(found){
-                req.foundHours = foundHours.join('\n');
-                
-              }
-
-              next();
+            res2.on('end',function(){
+              if(!found)
+                next();
             })
           }
         );
