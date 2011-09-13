@@ -1115,7 +1115,9 @@ app.post('/saveVendor', securedFunction, function(req, res, next){
     vendor.contact = params.factual.tel;
   }
   vendor.hours = foundHours || params.hours;
+  console.log(vendor);
   vendor.save(function(err,data){
+    console.log(err);
     req.data = data;
     next();
   })
