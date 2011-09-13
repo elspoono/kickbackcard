@@ -1060,7 +1060,7 @@ app.post('/saveVendor', securedFunction, function(req, res, next){
         var req2 = http.request(
           options,
           function(res){
-            //console.log(res);
+            console.log(res.headers);
             res.setEncoding('utf8');
             var completeString = '';
             var found = false;
