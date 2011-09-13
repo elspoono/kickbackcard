@@ -1042,15 +1042,17 @@ app.post('/saveVendor', securedFunction, function(req, res, next){
     });
     console.log(yelp_url);
     dl.asString(function(err,res){
-      console.log(res);
-      var allMatches = res.match(/"hours"[^>]*>([^<]*)/g)
+      console.log(err);
+      if(typeof(res)=='string'){
+        var allMatches = res.match(/"hours"[^>]*>([^<]*)/g)
 
-      var foundHours = [];
-      for(var i in allMatches){
-        var thisMatch = allMatches[i].match(/"hours"[^>]*>([^<]*)/)[1];
-        foundHours.push(thisMatch);
+        var foundHours = [];
+        for(var i in allMatches){
+          var thisMatch = allMatches[i].match(/"hours"[^>]*>([^<]*)/)[1];
+          foundHours.push(thisMatch);
+        }
+        req.foundHours = foundHours.join('\n');
       }
-      req.foundHours = foundHours.join('\n');
       next();
     });
   }else{
