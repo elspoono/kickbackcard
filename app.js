@@ -1078,13 +1078,16 @@ app.post('/saveVendor', securedFunction, function(req, res, next){
                 }
                 if(found){
                   req.foundHours = foundHours.join('\n');
+                  console.log(req.foundHours);
                   next();
                 }
               }
             })
             res2.on('end',function(){
-              if(!found)
-                next();
+              if(!found){
+                console.log('other');
+                next(); 
+              }
             })
           }
         );
