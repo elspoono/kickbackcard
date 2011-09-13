@@ -1063,28 +1063,28 @@ app.post('/saveVendor', securedFunction, function(req, res, next){
             console.log(res.headers);
             res.setEncoding('utf8');
             var completeString = '';
-            var found = false;
             res.on('data',function(chunk){
-              if(!found){
                 completeString += chunk;
-
-                var allMatches = completeString.match(/"hours"[^>]*>([^<]*)/g)
-
-                var foundHours = [];
-                for(var i in allMatches){
-                  found = true;
-                  var thisMatch = allMatches[i].match(/"hours"[^>]*>([^<]*)/)[1];
-                  foundHours.push(thisMatch);
-                }
-                if(found){
-                  req.foundHours = foundHours.join('\n');
-                  next();
-                }
-              }
             })
             res.on('end',function(){
-              if(!found)
-                next();
+              console.log(completeString);
+
+
+
+              var allMatches = completeString.match(/"hours"[^>]*>([^<]*)/g)
+
+              var foundHours = [];
+              for(var i in allMatches){
+                found = true;
+                var thisMatch = allMatches[i].match(/"hours"[^>]*>([^<]*)/)[1];
+                foundHours.push(thisMatch);
+              }
+              if(found){
+                req.foundHours = foundHours.join('\n');
+                
+              }
+
+              next();
             })
           }
         );
