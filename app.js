@@ -7,6 +7,8 @@ var express = require('express');
 
 var get = require('get');
 
+var http = require('http');
+
 /**********************************
  * 
  * Generic Libraries Setup
@@ -972,6 +974,8 @@ app.post('/checkName', checkName, function(req, res, next){
     name: req.name
   })
 })
+
+
 app.post('/saveVendor', securedFunction, function(req, res, next){
   var params = req.body || {}
   if(
@@ -1027,34 +1031,71 @@ app.post('/saveVendor', securedFunction, function(req, res, next){
   var params = req.body || {}
 
   if(yelp_url){
-    var dl = new get({
-      uri: yelp_url,
+    var options =   {
+      method: 'POST',
+      host: 'www.historyhelp.net',
+      port: 80,
+      path: '/inc/request.php?action=update',
       headers: {
         'Accept' : '*/*',
         'Accept-Charset':'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
         'Accept-Encoding':'gzip,deflate,sdch',
         'Accept-Language':'en-US,en;q=0.8',
         'Connection':'keep-alive',
-        'Host':'www.yelp.com:80',
-        'Referer' : 'http://www.google.com/search?sourceid=chrome&ie=UTF-8&q='+escape(params.name),
-        'User-Agent' : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_1) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.220 Safari/535.1'
+        'User-Agent' : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_1) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.220 Safari/535.1',
+        'Origin' : 'http://www.historyhelp.net',
+        'Referer' : 'http://www.historyhelp.net/',
+        'Content-Type' : 'application/x-www-form-urlencoded'
       }
-    });
-    console.log(yelp_url);
-    dl.asString(function(err,res){
-      console.log(err);
-      if(typeof(res)=='string'){
-        var allMatches = res.match(/"hours"[^>]*>([^<]*)/g)
+    };
+    var req1 = http.request(
+      options,
+      function (res){
+        options.headers.Cookie = res.headers['set-cookie'];
+        var finalUrl = res.headers.location;
+        //console.log(finalUrl);
+        options.method = 'GET';
+        options.path = finalUrl.replace(/http:\/\/[^\/]*/,'');
+        var req2 = http.request(
+          options,
+          function(res){
+            //console.log(res);
+            res.setEncoding('utf8');
+            var completeString = '';
+            var found = false;
+            res.on('data',function(chunk){
+              if(!found){
+                completeString += chunk;
 
-        var foundHours = [];
-        for(var i in allMatches){
-          var thisMatch = allMatches[i].match(/"hours"[^>]*>([^<]*)/)[1];
-          foundHours.push(thisMatch);
-        }
-        req.foundHours = foundHours.join('\n');
+                var allMatches = completeString.match(/"hours"[^>]*>([^<]*)/g)
+
+                var foundHours = [];
+                for(var i in allMatches){
+                  found = true;
+                  var thisMatch = allMatches[i].match(/"hours"[^>]*>([^<]*)/)[1];
+                  foundHours.push(thisMatch);
+                }
+                if(found){
+                  req.foundHours = foundHours.join('\n');
+                  next();
+                }
+              }
+            })
+            res.on('end',function(){
+              if(!found)
+                next();
+            })
+          }
+        );
+        req2.end();
       }
-      next();
-    });
+    );
+    req1.write('a='+yelp_url);
+    req1.end();
+
+
+
+
   }else{
     next();
   }
