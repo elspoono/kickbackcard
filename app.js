@@ -1040,7 +1040,9 @@ app.post('/saveVendor', securedFunction, function(req, res, next){
         'User-Agent' : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_1) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.220 Safari/535.1'
       }
     });
+    console.log(yelp_url);
     dl.asString(function(err,res){
+      console.log(res);
       var allMatches = res.match(/"hours"[^>]*>([^<]*)/g)
 
       var foundHours = [];
