@@ -969,8 +969,38 @@ $(function(){
             if(!$p.attr('id'))
               tabs.hide()
 
-            
-
+            var currentFactual = {};
+            var updateFactualAndMap = function(){
+              $.ajax({
+                url: '/factual',
+                data: {
+                  name: win.find('.name').val(),
+                  address: win.find('.address').val()
+                },
+                success: function(records){
+                  if(records && records.length > 0 ){
+                    currentFactual = records[0];
+                    $('.real-address').html(records[0].name+'<br>'+records[0].address+'<br>'+(records[0].address_extended||''));
+                    var address = records[0].latitude+','+records[0].longitude;
+                    var $img = $('<img class="google-map" src="//maps.googleapis.com/maps/api/staticmap?center='+address+'&markers=color:red%7Clabel:V%7C'+address+'&zoom=13&size=256x100&sensor=false" />')
+                    $img.load(function(){
+                      $window.resize()
+                    }).click(function(){
+                      window.open('//maps.google.com/?q='+address)
+                    })
+                    win.find('.google-map').replaceWith($img)
+                    $('.contact').val(records[0].tel)
+                  }else{
+                    $('.real-address').html('');
+                    $('.google-map').attr('src','');
+                    $('.contact').val('');
+                  }
+                },
+                error: function(){
+                  
+                }
+              })
+            }
             /******************
              *
              * Name Validation auto ajaxyness
@@ -993,39 +1023,9 @@ $(function(){
               $t.removeClass('loading valid')
 
               if(name.match(/\b.{1,1500}\b/i)){
-                $t.addClass('loading')
-                $.ajax({
-                  url: '/checkName',
-                  data: {
-                    name: name,
-                    id: $p.attr('id')
-                  },
-                  success: function(data){
-                    $t.removeClass('loading valid error')
-                    if(data.err){
-                      $t.addClass('error')
-                      $t.showTooltip({message:'db error'})
-                    }else if(data.data==0){
-                      if(name.match(/\b.{1,1500}\b/i)){
-                        $t.addClass('valid')
-                        $t.showTooltip({message:name+' is good'})
-                      }else{
-                        $t.addClass('error')
-                        $t.showTooltip({message:name+' doesn\'t look like a name'})
-                      }
-                    }else{
-                      $t.addClass('error')
-                      $t.showTooltip({message:name+' is taken'})
-                    }
-                    if(next) next()
-                  },
-                  error: function(){
-                    $t.removeClass('loading,valid,error')
-                    $t.addClass('error')
-                    $t.showTooltip({message:'server error'})
-                    if(next) next()
-                  }
-                })
+                $t.addClass('valid')
+                $t.showTooltip({message:name+' is good'})
+                updateFactualAndMap();
               }else{
                 $t.addClass('error')
                 $t.showTooltip({message:name+' doesn\'t look like a name'})
@@ -1050,29 +1050,20 @@ $(function(){
               }
             }).bind('customValidate',function(e,next){
               var $t = $(this)
+              address = this.value;
               /* It appears the address has changed, and we think they stopped typing */
               $t.removeClass('valid error')
 
-              if(address.match(/\b.{1,}\s{1,}.{1,}\b/i)){
+              if(address.match(/\b.{1,1500}\b/i)){
                 $t.addClass('valid')
                 $t.showTooltip({message:address+' is good'})
-                var $img = $('<img class="google-map" src="//maps.googleapis.com/maps/api/staticmap?center='+address+'&markers=color:red%7Clabel:V%7C'+address+'&zoom=13&size=256x100&sensor=false" />')
-                $img.load(function(){
-                  $window.resize()
-                }).click(function(){
-                  window.open('//maps.google.com/?q='+address)
-                })
-                win.find('.google-map').replaceWith($img)
+                updateFactualAndMap();
               }else{
                 $t.addClass('error')
                 $t.showTooltip({message:address+' doesn\'t look like a address'})
                 if(next) next()
               }
             })
-            win.find('.google-map').click(function(){
-              window.open('//maps.google.com/?q='+win.find('.address').val())
-            })
-
 
 
 
@@ -1092,69 +1083,55 @@ $(function(){
              ******************/
             win.find('form').submit(function(){
 
-              /* Always instantaneous, no next required */
-              win.find('.address').trigger('customValidate');
+              if(
+                win.find('.hours').val().length > 1500
+                || win.find('.contact').val().length > 1500
+              ){
+                loadAlert('Apologies, that text is too long')
+                return;
+              }
+              var err = win.find('.error')
+              if(err.length){
 
-              /**************************
-               *
-               * We rely on the name's customValidate function 
-               * to show it's own loading indicators as we wait
-               * for it here.
-               * 
-               **************************/
-              win.find('.name').trigger('customValidate',function(){
-                if(
-                  win.find('.description').val().length > 1500
-                  || win.find('.hours').val().length > 1500
-                  || win.find('.contact').val().length > 1500
-                ){
-                  loadAlert('Apologies, that text is too long')
-                  return;
-                }
-                var err = win.find('.error')
-                if(err.length){
-
-                }else{
-                  var data = {
-                    /* id is null when it's new */
-                    id: $p.attr('id'),
-                    name: win.find('.name').val(),
-                    address: win.find('.address').val(),
-                    description: win.find('.description').val(),
-                    hours: win.find('.hours').val(),
-                    contact: win.find('.contact').val()
-                  };
-                  loadLoading({},function(err,win,modal){
-                    $.ajax({
-                      url: '/saveVendor',
-                      data: data,
-                      success: function(data,t,xhr){
-                        modal.click();
-                        if(typeof(data)=='object'&&data.err)
-                          loadAlert(data.err)
-                        else{
-                          var $newRow = $(data)
-                          $newRow.hide()
-                          /* If it's existing, replace that row */
-                          if($p.attr('id'))
-                            $p.replaceWith($newRow)
-                          /* Otherwise, put it right after the add button they just clicked */
-                          else
-                            $('.vendor .add-row').after($newRow)
-                          $newRow.addClass('modified').fadeIn().delay(usualDelay).queue(function(){
-                            $(this).removeClass('modified')
-                          })
-                        }
-                      },
-                      error: function(){
-                        modal.click();
-                        loadAlert('server error')
+              }else{
+                var data = {
+                  /* id is null when it's new */
+                  id: $p.attr('id'),
+                  name: win.find('.name').val(),
+                  factual: currentFactual,
+                  hours: win.find('.hours').val()
+                };
+                loadLoading({},function(err,win,modal){
+                  $.ajax({
+                    url: '/saveVendor',
+                    data: data,
+                    success: function(data,t,xhr){
+                      modal.click();
+                      if(typeof(data)=='object'&&data.err)
+                        loadAlert(data.err)
+                      else{
+                        var $newRow = $(data)
+                        $newRow.hide()
+                        /* If it's existing, replace that row */
+                        if($p.attr('id'))
+                          $p.replaceWith($newRow)
+                        /* Otherwise, put it right after the add button they just clicked */
+                        else
+                          $('.vendor .add-row').after($newRow)
+                        $newRow.addClass('modified').fadeIn().delay(usualDelay).queue(function(){
+                          $(this).removeClass('modified')
+                        })
+                        $newRow.find('.edit').click();
                       }
-                    })
-                  })
-                  modal.click(); 
-                }
-              })
+                    },
+                    error: function(){
+                      modal.click();
+                      loadAlert('server error')
+                    }
+                  });
+                });
+                modal.click(); 
+              }
               return false;
             })
             if($p.attr('id'))

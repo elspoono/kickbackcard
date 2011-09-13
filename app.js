@@ -5,7 +5,7 @@
 
 var express = require('express');
 
-
+var get = require('get');
 
 /**********************************
  * 
@@ -15,11 +15,13 @@ var express = require('express');
  * 
  * 
  **********************************/
+
+
 var im = require('imagemagick');
 
 var validURLCharacters = '$-_.+!*\'(),0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
-var db_uri = process.env.MONGOHQ_URL || 'mongodb://localhost:27017/db';
+var db_uri = process.env.MONGOHQ_URL || 'mongodb://localhost:27017/staging';
 
 var geo = require('geo');
 
@@ -43,6 +45,12 @@ var yelp = require("yelp").createClient({
   token: "wnIjFR8UhGlwBt_f2wYSY8a3lbc3GlWt",
   token_secret: "KKML2M7SsQvjEZ2hc1l98sO3s4g"
 });
+
+// mkdir myproj
+// cd myproj
+// git clone https://github.com/unscene/node-oauth.git
+
+
 
 /*
 Your API credentials are shown below. Please keep them safe.
@@ -146,11 +154,13 @@ var UserSchema = new Schema({
   email: { type: String, validate: /\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i, set: function(v){ return v.toLowerCase() } },
   password_encrypted: String,
   roles: [RoleSchema],
-  vendor_id: String
+  vendor_id: String,
+  date_added: {type: Date, default: Date.now},
+  active: {type: Boolean, default: true}
 });
 /* Auth Handling */
 UserSchema.static('authenticate', function(email, password, next){
-  this.find({email:email}, function(err,data){
+  this.find({email:email,active:true}, function(err,data){
     if(err){
       error(err)
       next(err)
@@ -166,7 +176,6 @@ UserSchema.static('authenticate', function(email, password, next){
   })
 });
 /* Default Data */
-var UserBackup = mongoose.model('UserBackup',UserSchema);
 var User = mongoose.model('User',UserSchema);
 User.count({},function(err,data){
   if(err)
@@ -200,14 +209,15 @@ User.count({},function(err,data){
 /* Role / Vendor mongoose Schemas */
 var ClientSchema = new Schema({
   client_secret: String,
-  date_added: Date
+  date_added: {type: Date, default: Date.now}
 })
 var KickerSchema = new Schema({
   url_string: String,
   deal_id: String,
   reusable: Boolean,
   kick_ids: [String],
-  date_added: Date
+  date_added: {type: Date, default: Date.now},
+  active: {type: Boolean, default: true}
 })
 var KickSchema = new Schema({
   kicker_id: String,
@@ -216,14 +226,14 @@ var KickSchema = new Schema({
   client_id: String,
   scan_id: String,
   redeemed: Boolean,
-  date_added: Date
+  date_added: {type: Date, default: Date.now}
 })
 var RedeemSchema = new Schema({
   url_string: String,
   client_id: String,
   deal_id: String,
-  date_added: Date,
-  kick_ids: [String]
+  kick_ids: [String],
+  date_added: {type: Date, default: Date.now}
 })
 var Client = mongoose.model('Client',ClientSchema);
 var Kicker = mongoose.model('Kicker',KickerSchema);
@@ -238,36 +248,33 @@ var DealSchema = new Schema({
   get_item: String,
   tag_line: String,
   vendor_id: String,
-  archived: {type: Boolean, default: false}
+  date_added: {type: Date, default: Date.now},
+  active: {type: Boolean, default: true}
 })
 DealSchema.virtual('default_tag_line').get(function(){
-  var tag_line = '';
-  if(this.get_type == '1 FREE')
-    tag_line = 'Buy '+this.buy_qty+' '+this.buy_item+' and get 1 '+this.get_item+' FREE!';
-  if(this.get_type == 'Dollar(s) Off')
-    tag_line = 'Buy '+this.buy_qty+' '+this.buy_item+' and get '+this.get_item+' dollars off!';
-  if(this.get_type == 'Percent Off')
-    tag_line = 'Buy '+this.buy_qty+' '+this.buy_item+' and get '+this.get_item+' percent off!';
+  var tag_line = 'Buy '+this.buy_qty+' '+this.buy_item+' get '+this.get_item+'';
   return tag_line;
 })
 var Deal = mongoose.model('Deal',DealSchema);
-var DealBackup = mongoose.model('DealBackup',DealSchema);
 
 var VendorSchema = new Schema({
   name: { type: String, validate: /\b.{1,1500}\b/i },
   address: { type: String, validate: /\b.{1,1500}\b/i },
+  factual_id: String,
   coordinates: [Number],
   real_address: {type: String},
-  description: { type: String },
   hours: { type: String },
+  yelp_url: String,
+  site_url: String,
   contact: { type: String },
   deal_ids: [String],
-  deals: [], // This is absolutely retarded, I can't set stuff later in /vendors.json without this
-  user_ids: [String]
+  deals: [], // I can't set stuff later in /vendors.json without this
+  user_ids: [String],
+  date_added: {type: Date, default: Date.now},
+  active: {type: Boolean, default: true}
 })
 VendorSchema.index({coordinates:'2d'});
 var Vendor = mongoose.model('Vendor',VendorSchema);
-var VendorBackup = mongoose.model('VendorBackup',VendorSchema);
 
 var MapClientSchema = new Schema({
   map_client_id: {type:String},
@@ -293,6 +300,50 @@ app.get('*',function(req,res,next){
   else
     next()
 })
+
+
+
+
+
+
+
+var OAuth = require(__dirname + '/oauth.js').OAuth;
+
+
+var factual_key    = "OEikPbAN3W60RVhAKS7atr6lURGJIgWOZ6VDthUY";
+var factual_secret = "gZRGCuGs1OE7YhOilzNyDmfmJ52GvF8BQN4VkRoC";
+var factual = new OAuth(null, null, factual_key, factual_secret,'1.0', null,'HMAC-SHA1');
+
+
+app.post('/factual',function(req,res){
+  factual.get(
+    'http://api.v3.factual.com/t/places.json?q='+escape(req.body.name)+','+escape(req.body.address)+'&limit=1',
+    null,
+    null,
+    function (err, data, result) {
+      var results = JSON.parse(data);
+      if(results.status == 'ok'){
+        res.send(results.response.data);
+      }else{
+        res.send({err: 'Error'})
+      }
+    });
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /**********************************
@@ -332,7 +383,7 @@ app.post('/k:id',function(req,res,next){
       if(!isValid)
         res.send({err:'Invalid Token'})
       else{
-        Kicker.find({url_string:req.params.id}, [], function(err,kickers){
+        Kicker.find({url_string:req.params.id,active:true}, [], function(err,kickers){
           if(err || kickers.length==0)
             res.send({
               err: err || 'Kicker not found'
@@ -343,7 +394,7 @@ app.post('/k:id',function(req,res,next){
               if(err||!deal)
                 res.send({err:err||'Deal not found'})
               else{
-                Vendor.find({deal_ids:deal._id},function(err, vendor){
+                Vendor.find({deal_ids:deal._id,active:true},function(err, vendor){
 
 
 
@@ -405,7 +456,6 @@ app.post('/k:id',function(req,res,next){
                           kick.kicker_id = kicker._id;
                           kick.deal_id = deal._id;
                           kick.client_id = client._id;
-                          kick.date_added = new Date();
                           kick.save(function(err,data){
                             res.send({
                               err: err,
@@ -439,7 +489,6 @@ app.post('/k:id',function(req,res,next){
                                 kick.kicker_id = kicker._id;
                                 kick.deal_id = deal._id;
                                 kick.client_id = client._id;
-                                kick.date_added = new Date();
                                 kick.save(function(err,data){
                                   res.send({
                                     err: err,
@@ -495,38 +544,39 @@ app.get('/yelp',function(req,res,next){
  * 
  **********************************/
 var getVendor = function(req, res, next){
-  var params = req.body || {}
-  var id = params.id || ''
+  var params = req.body || {};
+  var id = params.id || '';
   if(id=='')
-    next()
+    next();
   else
     Vendor.findById(params.id,function(err, vendor){
-      req.err = err
+      req.err = err;
       if(err)
-        next()
+        next();
       else
-        User.find({vendor_id:vendor._id},function(err, data){
-          req.err = err
+        User.find({vendor_id:vendor._id},function(err, users){
+          req.err = err;
           if(err)
-            next()
+            next();
           else
-            Deal.find({vendor_id:vendor._id,archived:false},function(err, data){
-              req.err = err
-              vendor.deals = data
-              req.vendor = vendor
-              next()
+            Deal.find({vendor_id:vendor._id,active:true},function(err, data){
+              req.err = err;
+              vendor.deals = data;
+              req.vendor = vendor;
+              req.users = users;
+              next();
             })
         })
     });
 }
 var get10Vendors = function(req, res, next){
-  var params = req.body || {}
-  var skip = params.skip || 0
+  var params = req.body || {};
+  var skip = params.skip || 0;
 
-  Vendor.find({},['coordinates','name','address','contact'],{skip:skip,limit:10,sort:{name:1}},function(err, data){
-    req.err = err
-    req.data = data
-    next()
+  Vendor.find({active:true},['coordinates','name','address','contact'],{skip:skip,limit:10,sort:{name:1}},function(err, data){
+    req.err = err;
+    req.data = data;
+    next();
   });
 }
 var checkName = function(req, res, next){
@@ -594,7 +644,7 @@ var saveDeal = function(req, res, next){
       else if(params.tag_line == '')
         data.tag_line = '';
       if(params.archive)
-        data.archived = true
+        data.active = false;
       data.save(function(err,data){
         req.err = err
         next()
@@ -602,76 +652,18 @@ var saveDeal = function(req, res, next){
     }
   })
 }
-var saveVendor = function(req, res, next){
-  var params = req.body || {}
-  if(
-    !params.name.match(/\b.{1,1500}\b/i)
-    || !params.address.match(/\b.{1,1500}\b/i)
-    || params.description.length > 1500
-    || params.hours.length > 1500
-    || params.contact.length > 1500
-  ){
-    req.err = 'parameter validation failed'
-    next()
-  }else{
-    var sensor = false;
-    geo.geocoder(geo.google, params.address, false, function(formattedAddress, latitude, longitude) {
-      params.coordinates = [latitude, longitude]
-      if(params.id){
-        Vendor.findById(params.id,function(err,data){
-          if(err){
-            req.data = data
-            req.err = err
-            next()
-          }else{
-            data.name = params.name
-            if(formattedAddress)
-              params.address = formattedAddress;
-            data.address = params.address
-            data.coordinates = params.coordinates
-            data.description = params.description
-            data.hours = params.hours
-            data.contact = params.contact
-            data.save(function(err,data){
-              req.data = data
-              req.err = err
-              next()
-            })
-          }
-        })
-      }else{
-        var vendor = new Vendor()
-        vendor.name = params.name
-        vendor.address = params.address
-        vendor.coordinates = params.coordinates
-        vendor.description = params.description
-        vendor.hours = params.hours
-        vendor.contact = params.contact
-        vendor.save(function(err,data){
-          req.data = data
-          req.err = err
-          next()
-        })
-      }
-    });
-  }
-}
 var deleteVendor = function(req, res, next){
   var params = req.body || {}
   if(params.id){
-    Vendor.findById(params.id,function(err,data){
+    Vendor.findById(params.id,function(err,vendor){
       if(err){
         req.err = err
         next()
       }else{
-        var vendor = new VendorBackup()
-        vendor.name = data.name
-        vendor.address = data.address
+        vendor.active = false;
         vendor.save(function(err,data){
-          Vendor.remove({_id: params.id},function(err,data){
-            req.err = err
-            next()
-          })
+          req.err = err
+          next()
         })
       }
     })
@@ -729,7 +721,7 @@ var get10Users = function(req, res, next){
   var params = req.body || {}
   var skip = params.skip || 0
 
-  User.find({},{},{skip:skip,limit:10,sort:{email:1}},function(err, data){
+  User.find({active:true},{},{skip:skip,limit:10,sort:{email:1}},function(err, data){
     req.data = data;
     next();
   });
@@ -980,7 +972,109 @@ app.post('/checkName', checkName, function(req, res, next){
     name: req.name
   })
 })
-app.post('/saveVendor', securedFunction, saveVendor, function(req, res, next){
+app.post('/saveVendor', securedFunction, function(req, res, next){
+  var params = req.body || {}
+  if(
+    params.name.length > 1500
+    || params.hours.length > 1500
+  ){
+    res.send({err:'Parameter validation failed.'});
+  }else{
+    if(params.factual){
+      
+      factual.get(
+      'http://api.v3.factual.com/places/crosswalk?factual_id='+params.factual.factual_id,
+      null,
+      null,
+      function (err, data, result) {
+
+        var results = JSON.parse(data);
+        if(results.status == 'ok'){
+          var links = results.response.data;
+          for(var i in links){
+            if (links[i].url.match(/yelp\.com/i))
+              req.yelp_url = links[i].url;
+          }
+          next();
+        }else{
+          res.send({err: 'Error'})
+        }
+      });
+    }else{
+      next();
+    }
+  }
+}, function(req, res, next){
+  var yelp_url = req.yelp_url;
+  var params = req.body || {}
+  if(params.id){
+    Vendor.findById(params.id,function(err,vendor){
+      if(err){
+        res.send({err:err});
+      }else{
+        req.vendor = vendor;
+        next();
+      }
+    })
+  }else{
+    req.vendor = new Vendor()
+    next();
+  }
+}, function(req, res, next){
+  
+  var vendor = req.vendor;
+  var yelp_url = req.yelp_url;
+  var params = req.body || {}
+
+  if(yelp_url){
+    var dl = new get({
+      uri: yelp_url,
+      headers: {
+        'Accept' : '*/*',
+        'Accept-Charset':'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
+        'Accept-Encoding':'gzip,deflate,sdch',
+        'Accept-Language':'en-US,en;q=0.8',
+        'Connection':'keep-alive',
+        'Host':'www.yelp.com:80',
+        'Referer' : 'http://www.google.com/search?sourceid=chrome&ie=UTF-8&q='+escape(params.name),
+        'User-Agent' : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_1) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.220 Safari/535.1'
+      }
+    });
+    dl.asString(function(err,res){
+      var allMatches = res.match(/"hours"[^>]*>([^<]*)/g)
+
+      var foundHours = [];
+      for(var i in allMatches){
+        var thisMatch = allMatches[i].match(/"hours"[^>]*>([^<]*)/)[1];
+        foundHours.push(thisMatch);
+      }
+      req.foundHours = foundHours.join('\n');
+      next();
+    });
+  }else{
+    next();
+  }
+}, function(req, res, next){
+
+  var vendor = req.vendor;
+  var yelp_url = req.yelp_url;
+  var foundHours = req.foundHours;
+  var params = req.body || {};
+
+  vendor.name = params.name;
+  if(params.factual){
+    vendor.address = params.factual.address+' '+(params.factual.address_extended||'');
+    vendor.coordinates = [params.factual.latitude, params.factual.longitude];
+    vendor.site_url = params.factual.website;
+    vendor.yelp_url = yelp_url;
+    vendor.contact = params.factual.tel;
+  }
+  vendor.hours = foundHours || params.hours;
+  vendor.save(function(err,data){
+    req.data = data;
+    next();
+  })
+}, function(req, res, next){
   if(req.err)
     res.send({
       err: req.err
@@ -1175,7 +1269,7 @@ var generateKickers = function(req, res, next){
   for(var i = 0; i<qty; i++){
     strings.push(url_string())
   }
-  Kicker.find({url_string:{$in:strings}},[],function(err,data){
+  Kicker.find({url_string:{$in:strings},active:true},[],function(err,data){
     if(err)
       res.send({err:err})
     else if(data.length!=0)
@@ -1588,7 +1682,8 @@ var findNearVendors = function(req, res, next){
   Vendor.find(
     {
       coordinates : { $near : [params.latitude, params.longitude] },
-      _id : { $nin : req.mapClient.vendor_ids}
+      _id : { $nin : req.mapClient.vendor_ids},
+      active: true
     },
     ['coordinates','name','address','contact'],
     {skip:0,limit:20},
@@ -1605,7 +1700,7 @@ var findNearVendors = function(req, res, next){
       // Find their deals
       Deal.find({
         vendor_id : { $in : remainingIds},
-        archived : false
+        active: true
       },function(err,deals){
         //console.log(deals);
         for(var i in vendors){
@@ -1680,7 +1775,6 @@ app.post('/redeem',function(req, res){
                     // Create Redemption Record
                     var redeem = new Redeem();
                     redeem.url_string = my_url_string;
-                    redeem.date_added = new Date();
                     redeem.deal_id = deal._id;
                     redeem.client_id = client._id;
                     redeem.kick_ids = [];

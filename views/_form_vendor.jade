@@ -6,25 +6,24 @@ form(method='POST')
     h2 Vendor
     fieldset
       .fields.required
-        label name
-        input.input.name(name='name',placeholder='e.g. Jodesco',value=vendor.name)
-      .fields
-        label phone
-        input.input.contact(name='contact',placeholder='e.g. 555-555-5555',value=vendor.contact)
+        label business name
+        input.input.name(name='name',placeholder='e.g. Jodesco',value=vendor.name,autocomplete='off')
       .fields.required
-        label address
-        input.input.address(name='address',placeholder='e.g. 123 Fake St',value=vendor.address)
+        label zip or city
+        input.input.address(name='address',placeholder='e.g. 85260',value=vendor.address,autocomplete='off')
       .fields
+        .real-address
+          =vendor.address
         - if (typeof(vendor.coordinates)=='object' && vendor.coordinates.length && vendor.coordinates.length == 3)
           img.google-map(src='//maps.googleapis.com/maps/api/staticmap?center='+vendor.coordinates[0]+','+vendor.coordinates[1]+'&markers=color:red%7Clabel:V%7C'+vendor.coordinates[0]+','+vendor.coordinates[1]+'&zoom=13&size=256x100&sensor=false')
         - else
           img.google-map.disabled(src='//maps.googleapis.com/maps/api/staticmap?center=Times%20Square%20NY&markers=color:red%7Clabel:V%7CTimes%20Square%20NY&zoom=13&size=256x100&sensor=false')
       .fields
-        label description
-        textarea.input.description(name='description',placeholder="e.g. Subs so fast you'll freak")=vendor.description
+        label phone
+        input.input.contact(name='contact',disabled='disabled',value=vendor.contact)
       .fields
         label hours
-        textarea.input.hours(name='hours',placeholder='e.g. Monday-Saturday 11-9')=vendor.hours
+        textarea.input.hours(name='hours',disabled='disabled')=vendor.hours
     .buttons
       input.submit(type='submit',value='Save')
       input.cancel.delete(type='button',value='Delete')
