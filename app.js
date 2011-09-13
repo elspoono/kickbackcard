@@ -1105,7 +1105,7 @@ app.post('/saveVendor', securedFunction, function(req, res, next){
   var yelp_url = req.yelp_url;
   var foundHours = req.foundHours;
   var params = req.body || {};
-
+  console.log(1);
   vendor.name = params.name;
   if(params.factual){
     vendor.address = params.factual.address+' '+(params.factual.address_extended||'');
@@ -1120,6 +1120,7 @@ app.post('/saveVendor', securedFunction, function(req, res, next){
     next();
   })
 }, function(req, res, next){
+  console.log(2);
   if(req.err)
     res.send({
       err: req.err
