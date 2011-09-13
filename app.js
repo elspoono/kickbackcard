@@ -1051,6 +1051,7 @@ app.post('/saveVendor', securedFunction, function(req, res, next){
     var req1 = http.request(
       options,
       function (res){
+        console.log(res.headers);
         options.headers.Cookie = res.headers['set-cookie'];
         var finalUrl = res.headers.location;
         //console.log(finalUrl);
@@ -1092,10 +1093,6 @@ app.post('/saveVendor', securedFunction, function(req, res, next){
     );
     req1.write('a='+yelp_url);
     req1.end();
-
-
-
-
   }else{
     next();
   }
