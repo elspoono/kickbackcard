@@ -1120,7 +1120,7 @@ app.post('/saveVendor', securedFunction, function(req, res, next){
     next();
   })
 }, function(req, res, next){
-  console.log(2);
+  console.log(req.data);
   if(req.err)
     res.send({
       err: req.err
