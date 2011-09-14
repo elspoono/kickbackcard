@@ -398,6 +398,12 @@ body .window fieldset .fields .disabled {
   opacity: 0.3;
   filter: alpha ( opacity = 30 );
 }
+body .window fieldset .factual-details li {
+  float: none;
+  display: block;
+  font-size: 10px;
+  text-align: right;
+}
 body .window fieldset .required label,
 body .window fieldset .required .input {
   font-weight: bold;

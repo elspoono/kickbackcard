@@ -18,9 +18,11 @@ form(method='POST')
           img.google-map(src='//maps.googleapis.com/maps/api/staticmap?center='+vendor.coordinates[0]+','+vendor.coordinates[1]+'&markers=color:red%7Clabel:V%7C'+vendor.coordinates[0]+','+vendor.coordinates[1]+'&zoom=13&size=256x100&sensor=false')
         - else
           img.google-map.disabled(src='//maps.googleapis.com/maps/api/staticmap?center=Times%20Square%20NY&markers=color:red%7Clabel:V%7CTimes%20Square%20NY&zoom=13&size=256x100&sensor=false')
-      .fields
-        label phone
-        input.input.contact(name='contact',disabled='disabled',value=vendor.contact)
+      .factual-details
+        ul
+          li=vendor.contact
+          li=vendor.site_url
+          li=vendor.yelp_url
       .fields
         label hours
         textarea.input.hours(name='hours',disabled='disabled')=vendor.hours
