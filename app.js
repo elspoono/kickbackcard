@@ -803,20 +803,13 @@ var saveUser = function(req, res, next){
 var deleteUser = function(req, res, next){
   var params = req.body || {}
   if(params.id){
-    User.findById(params.id,function(err,data){
+    User.findById(params.id,function(err,user){
       if(err){
-        req.err = err
-        next()
+        res.send({err:'DB Error'});
       }else{
-        var user = new UserBackup()
-        user.email = data.email
-        user.password_encrypted = data.password_encrypted
-        user.roles = data.roles
+        user.active = false;
         user.save(function(err,data){
-          User.remove({_id: params.id},function(err,data){
-            req.err = err
-            next()
-          })
+          next();
         })
       }
     })
