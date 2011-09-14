@@ -10,7 +10,7 @@ form(method='POST')
         input.input.name(name='name',placeholder='e.g. Jodesco',value=vendor.name,autocomplete='off')
       .fields.required
         label zip or city
-        input.input.address(name='address',placeholder='e.g. 85260',value=vendor.address,autocomplete='off')
+        input.input.address(name='address',placeholder='e.g. 85260',autocomplete='off')
       .fields
         .real-address
           =vendor.address
@@ -25,7 +25,7 @@ form(method='POST')
           li=vendor.yelp_url
       .fields
         label hours
-        textarea.input.hours(name='hours',disabled='disabled')=vendor.hours
+        textarea.input.hours(name='hours')=vendor.hours
     .buttons
       input.submit(type='submit',value='Save')
       input.cancel.delete(type='button',value='Delete')
