@@ -252,6 +252,9 @@ body .footer ul li {
   float: inherit;
   margin: 5px 10px;
 }
+body .faq .sample {
+  border: 1px solid #aaa;
+}
 body .faq .set {
   display: block;
   border-bottom: 1px solid #aaa;
