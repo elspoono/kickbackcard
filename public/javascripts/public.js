@@ -973,11 +973,16 @@ $(function(){
                       window.open('//maps.google.com/?q='+address)
                     })
                     win.find('.google-map').replaceWith($img)
-                    $('.contact').val(records[0].tel)
+                    $('.factual-details').html(
+                      '<ul>'
+                        +'<li>'+currentFactual.tel+'</li>'
+                        +'<li>'+currentFactual.website+'</li>'
+                      +'</ul>'
+                    )
                   }else{
                     $('.real-address').html('');
                     $('.google-map').attr('src','');
-                    $('.contact').val('');
+                    $('.factual-details').html('');
                   }
                 },
                 error: function(){
