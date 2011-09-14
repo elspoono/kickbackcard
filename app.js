@@ -246,7 +246,6 @@ var Redeem = mongoose.model('Redeem',RedeemSchema);
 var DealSchema = new Schema({
   buy_item: String,
   buy_qty: Number,
-  get_type: String,
   get_item: String,
   tag_line: String,
   vendor_id: String,
@@ -254,7 +253,7 @@ var DealSchema = new Schema({
   active: {type: Boolean, default: true}
 })
 DealSchema.virtual('default_tag_line').get(function(){
-  var tag_line = 'Buy '+this.buy_qty+' '+this.buy_item+' get '+this.get_item+'';
+  var tag_line = 'Buy '+this.buy_qty+' '+this.buy_item+' and Get '+this.get_item+'';
   return tag_line;
 })
 var Deal = mongoose.model('Deal',DealSchema);
@@ -427,9 +426,7 @@ app.post('/k:id',function(req,res,next){
                       
 
                       /* Set tag line to default or what it is */
-                      deal.tag_line = (!deal.tag_line || deal.tag_line.length==0)
-                        ?deal.default_tag_line
-                        :deal.tag_line;
+                      deal.tag_line = deal.default_tag_line;
 
 
                       if(scan.length){
@@ -607,8 +604,7 @@ var addDeal = function(req, res, next){
       var deal = new Deal()
       deal.buy_qty = 10
       deal.buy_item = 'lunches'
-      deal.get_type = '1 FREE'
-      deal.get_item = 'lunch'
+      deal.get_item = '1 FREE lunch'
       deal.vendor_id = vendor._id
       deal.save(function(err,data){
         req.data = data
@@ -637,14 +633,8 @@ var saveDeal = function(req, res, next){
         data.buy_qty = params.buy_qty
       if(params.buy_item && params.buy_item.match(/\b.{1,1500}\b/))
         data.buy_item = params.buy_item
-      if(params.get_type && params.get_type.match(/\b.{1,1500}\b/))
-        data.get_type = params.get_type
       if(params.get_item && params.get_item.match(/\b.{1,1500}\b/))
         data.get_item = params.get_item
-      if(params.tag_line && params.tag_line.match(/\b.{1,1500}\b/))
-        data.tag_line = params.tag_line;
-      else if(params.tag_line == '')
-        data.tag_line = '';
       if(params.archive)
         data.active = false;
       data.save(function(err,data){
@@ -1078,14 +1068,14 @@ app.post('/saveVendor', securedFunction, function(req, res, next){
                 }
                 if(found){
                   req.foundHours = foundHours.join('\n');
-                  console.log(req.foundHours);
+                  //console.log(req.foundHours);
                   next();
                 }
               }
             })
             res2.on('end',function(){
               if(!found){
-                console.log('other');
+                //console.log('other');
                 next(); 
               }
             })
@@ -1105,7 +1095,7 @@ app.post('/saveVendor', securedFunction, function(req, res, next){
   var yelp_url = req.yelp_url;
   var foundHours = req.foundHours;
   var params = req.body || {};
-  console.log(1);
+  //console.log(1);
   vendor.name = params.name;
   if(params.factual){
     vendor.address = params.factual.address+' '+(params.factual.address_extended||'');
@@ -1122,7 +1112,7 @@ app.post('/saveVendor', securedFunction, function(req, res, next){
     next();
   })
 }, function(req, res, next){
-  console.log(req.data);
+  //console.log(req.data);
   if(req.err)
     res.send({
       err: req.err
@@ -1389,9 +1379,7 @@ var generateDealNameVendorText = function(req, res, next){
   var params = req.params || {}
   
   var deal_text = addLineBreaks(
-    (!req.deal.tag_line || req.deal.tag_line.length==0)
-      ?req.deal.default_tag_line
-      :req.deal.tag_line
+    req.deal.default_tag_line
   );
   var vendor_name = addLineBreaks(req.vendor.name);
 
@@ -1758,9 +1746,7 @@ var findNearVendors = function(req, res, next){
               //console.log(deals[j]);
               if(typeof(vendors[i].deals)=='undefined')
                 vendors[i].deals = [];
-              deals[j].tag_line = (!deals[j].tag_line || deals[j].tag_line.length==0)
-                ?deals[j].default_tag_line
-                :deals[j].tag_line;
+              deals[j].tag_line = deals[j].default_tag_line;
               vendors[i].deals.push(deals[j]);
             }
           }
@@ -1842,9 +1828,7 @@ app.post('/redeem',function(req, res){
                       redeem.kick_ids.push(kicks[i]._id);
 
                     }
-                    deal.tag_line = (!deal.tag_line || deal.tag_line.length==0)
-                      ?deal.default_tag_line
-                      :deal.tag_line;
+                    deal.tag_line = deal.default_tag_line;
                     redeem.save(function(err,data){
                       res.send({
                         remaining: kicks.length - deal.buy_qty,

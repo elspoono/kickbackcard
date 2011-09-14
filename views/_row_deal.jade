@@ -6,14 +6,7 @@ ul.row(id=deal._id)
     input.input.buy_item(value=deal.buy_item,placeholder='lunches')
   li Get
   li
-    select.get_type
-      option(value='1 FREE',selected=(deal.get_type=='1 FREE')?'selected':false) 1 FREE
-      option(value='Dollar(s) Off',selected=(deal.get_type=='Dollar(s) Off')?'selected':false) Dollar(s) Off
-      option(value='Percent Off',selected=(deal.get_type=='Percent Off')?'selected':false) Percent Off
-  li
-    input.input.get_item(value=deal.get_item,placeholder='lunch')
-  li.text
-    input.input.tag_line(value=deal.tag_line,placeholder=deal.default_tag_line)
+    input.input.get_item(value=deal.get_item,placeholder='a FREE lunch!')
   li.buttons
     a.archive(href='#') archive
     |  &nbsp; or &nbsp; 

@@ -425,13 +425,13 @@ $(function(){
           clearTimeout(valT)
           valT = setTimeout(function(){
             $t.trigger('customValidate')
-          },500)
+            },500)
         }
       }).bind('customValidate',function(){
         var $t = $(this)
         $t.removeClass('valid error')
         val = this.value
-        if(val=='' && field != 'tag_line'){
+        if(val==''){
           $t.addClass('error')
           $t.showTooltip({message:'please fill in'})
         }else if(val.match(expression)){
@@ -449,20 +449,6 @@ $(function(){
                 $t.showTooltip({message:data.err})
               else{
                 $t.showTooltip({message:val+' saved'})
-                /* Update the placeholder for the tag line */
-                if(field!='tag_line'){
-                  var tag_line = '';
-                  if($row.find('.get_type').val() == '1 FREE')
-                    tag_line = 'Buy '+$row.find('.buy_qty').val()+' '+$row.find('.buy_item').val()+' and get one '+$row.find('.get_item').val()+' FREE!';
-                  if($row.find('.get_type').val() == 'Dollar(s) Off')
-                    tag_line = 'Buy '+$row.find('.buy_qty').val()+' '+$row.find('.buy_item').val()+' and get '+$row.find('.get_item').val()+' dollars off!';
-                  if($row.find('.get_type').val() == 'Percent Off')
-                    tag_line = 'Buy '+$row.find('.buy_qty').val()+' '+$row.find('.buy_item').val()+' and get '+$row.find('.get_item').val()+' percent off!';
-                  $row.find('.tag_line').each(function(){
-                    if(this.value=='')
-                      $(this).showTooltip({message:'default text saved',position:'below'});
-                  }).attr('placeholder',tag_line).blur()
-                }
               }
             },
             error: function(){
@@ -477,9 +463,7 @@ $(function(){
     }
     validateAndSave('buy_qty',new RegExp(/\b\d{1,1500}\b/i))
     validateAndSave('buy_item',new RegExp(/\b.{1,1500}\b/i))
-    validateAndSave('get_type',new RegExp(/\b.{1,1500}\b/i),'change')
     validateAndSave('get_item',new RegExp(/\b.{1,1500}\b/i))
-    validateAndSave('tag_line',new RegExp(/^.{0,1500}$/i))
 
 
     $row.find('.print').click(function(){

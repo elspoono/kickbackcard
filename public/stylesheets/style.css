@@ -422,7 +422,14 @@ body .window fieldset .row li .input {
 body .window fieldset .row li .buy_qty {
   width: 40px;
 }
+body .window fieldset .row li .buy_item {
+  width: 120px;
+}
+body .window fieldset .row li .get_item {
+  width: 180px;
+}
 body .window fieldset .row .text {
+  clear: both;
   float: inherit;
 }
 body .window fieldset .row .text .tag_line {
