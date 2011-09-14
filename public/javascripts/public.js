@@ -1,3 +1,16 @@
+/*
+ Google Analytics
+ */
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-25705975-1']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+
 $(function(){
 
 
@@ -387,6 +400,7 @@ $(function(){
           modal.click()
           $row.remove()
           $window.resize()
+          _gaq.push(['_trackPageview','/admin/deal/archive']);
           $.ajax({
             url: 'saveDeal',
             data: {
@@ -468,6 +482,7 @@ $(function(){
 
     $row.find('.print').click(function(){
       loadLoading({},function(err,win,modal){
+        _gaq.push(['_trackPageview','/admin/deal/print']);
         $.ajax({
           url: '/printDeal',
           data: {
@@ -549,6 +564,7 @@ $(function(){
     var $a = $t.closest('.add-row')
     var $v = $t.closest('.vendor-deal')
 
+    _gaq.push(['_trackPageview','/admin/deal/add']);
     $.ajax({
       url: '/addDeal',
       data: {
@@ -583,6 +599,11 @@ $(function(){
 
     /* Prompt for user add form */
     loadLoading({},function(err,win,modal){
+      if($p.attr('id'))
+        _gaq.push(['_trackPageview','/admin/user/edit']);
+      else
+        _gaq.push(['_trackPageview','/admin/user/new']);
+        
       $.ajax({
         url: '/getUser',
         data: {
@@ -737,6 +758,7 @@ $(function(){
                     role: win.find('.role').val()
                   };
                   loadLoading({},function(err,win,modal){
+                    _gaq.push(['_trackPageview','/admin/user/save']);
                     $.ajax({
                       url: '/saveUser',
                       data: params,
@@ -756,6 +778,7 @@ $(function(){
                           $newRow.addClass('modified').fadeIn(function(){
                             if(sendWelcome){
                               loadLoading({},function(err,win,modal){
+                                _gaq.push(['_trackPageview','/admin/user/sendemail']);
                                 $.ajax({
                                   url: 'sendWelcomeEmail',
                                   data: {
@@ -796,6 +819,7 @@ $(function(){
                     modal2.click()
                     modal.click()
                     loadLoading({},function(err,win,modal){
+                      _gaq.push(['_trackPageview','/admin/user/delete']);
                       $.ajax({
                         url: '/deleteUser',
                         data: {
@@ -903,6 +927,11 @@ $(function(){
 
     /* Prompt for vendor add form */
     loadLoading({},function(err,win,modal){
+      if($p.attr('id'))
+        _gaq.push(['_trackPageview','/admin/vendor/edit']);
+      else
+        _gaq.push(['_trackPageview','/admin/vendor/new']);
+              
       $.ajax({
         url:'/getVendor',
         data: {
@@ -1090,6 +1119,7 @@ $(function(){
                   hours: win.find('.hours').val()
                 };
                 loadLoading({},function(err,win,modal){
+                  _gaq.push(['_trackPageview','/admin/vendor/save']);
                   $.ajax({
                     url: '/saveVendor',
                     data: data,
@@ -1130,6 +1160,7 @@ $(function(){
                     modal2.click()
                     modal.click()
                     loadLoading({},function(err,win,modal){
+                      _gaq.push(['_trackPageview','/admin/vendor/delete']);
                       $.ajax({
                         url: '/deleteVendor',
                         data: {
