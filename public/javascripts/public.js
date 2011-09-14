@@ -1074,7 +1074,6 @@ $(function(){
 
               if(
                 win.find('.hours').val().length > 1500
-                || win.find('.contact').val().length > 1500
               ){
                 loadAlert('Apologies, that text is too long')
                 return;
