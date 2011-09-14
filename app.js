@@ -1658,16 +1658,19 @@ app.get('/', get10Vendors, function(req, res){
         Location:'/admin'
     },302);
   else{
-    var mystring = '//maps.googleapis.com/maps/api/staticmap?center=Phoenix%20AZ&'
-    for(var i in req.data){
-      var thisVendor = req.data[i]
-      if(typeof(thisVendor.coordinates)=='object' && thisVendor.coordinates.length == 3)
-        mystring += '&markers=color:red%7Clabel:V%7C'+thisVendor.coordinates[0]+','+thisVendor.coordinates[1]
-    }
-    mystring += '&zoom=10&size=250x331&sensor=false'
     res.render('index', {
-      title: 'KickbackCard.com',
-      mapUrl: mystring
+      title: 'KickbackCard - iPhone App Loyalty Card Program'
+    });
+  }
+});
+app.get('/faq', get10Vendors, function(req, res){
+  if(req.session.role == 'admin')
+    res.send('',{
+        Location:'/admin'
+    },302);
+  else{
+    res.render('faq', {
+      title: 'KickbackCard - Frequently Asked Questions'
     });
   }
 });
