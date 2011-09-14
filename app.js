@@ -1422,7 +1422,7 @@ var generateDealNameVendorText = function(req, res, next){
 var qrcode = require(__dirname + '/qrcode.js')
 
 
-app.get('/deal/:id/kicks-:qty.pdf', /*securedArea,*/ getDeal, getVendorFromDeal, generateKickers, generateDealNameVendorText, function(req, res, next){
+app.get('/deal/:id/kicks-:qty.pdf', securedArea, getDeal, getVendorFromDeal, generateKickers, generateDealNameVendorText, function(req, res, next){
   
   var params = req.params || {}
   
@@ -1529,7 +1529,7 @@ app.get('/deal/:id/kicks-:qty.pdf', /*securedArea,*/ getDeal, getVendorFromDeal,
 
 })
 
-app.get('/deal/:id/kicker.pdf', getDeal, getVendorFromDeal, generateKickers, generateDealNameVendorText, function(req, res, next){
+app.get('/deal/:id/kicker.pdf', securedArea, getDeal, getVendorFromDeal, generateKickers, generateDealNameVendorText, function(req, res, next){
 
 
   var doc = new PDFDocument()
