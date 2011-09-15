@@ -1945,6 +1945,12 @@ app.get('/_:partial', function(req, res, next){
   })
 })
 
+app.get(/^(?!(\/images|\/stylesheets|\/javascripts)).*/, function(req, res, next){
+  res.send('',{
+      Location:'/'
+  },301);
+})
+
 
 app.get('/robots.txt', function(req, res, next){
   res.send('User-agent: *\nDisallow: /',{'Content-Type':'text/plain'})
