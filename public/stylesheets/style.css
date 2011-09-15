@@ -101,21 +101,21 @@ body .body .step-copy li {
   line-height: 42px;
 }
 body .body .step-copy .scan {
-  background: url("/images/step1-scan.png") no-repeat 0 0;
+  background: url("/images/step1-scan.png") no-repeat 0px 50px;
   width: 193px;
 }
 body .body .step-copy .scan div {
-  margin: 120px 0 0 0;
+  margin: 10px 0 0 40px;
 }
 body .body .step-copy .earn {
-  background: url("/images/step2-earn.png") no-repeat 70px 40px;
+  background: url("/images/step2-earn.png") no-repeat 70px 50px;
   width: 200px;
 }
 body .body .step-copy .earn div {
   margin: 10px 0 0 50px;
 }
 body .body .step-copy .burger {
-  background: url("/images/step3-burger.png") no-repeat 20px 90px;
+  background: url("/images/step3-burger.png") no-repeat 20px 100px;
   width: 140px;
 }
 body .body .step-copy .burger div {
