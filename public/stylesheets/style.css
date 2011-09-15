@@ -62,9 +62,14 @@ body .header .container .logo {
 }
 body .header .container .navigation {
   float: right;
+  font-family: "Luckiest Guy";
+  line-height: 20px;
 }
 body .header .container .navigation li {
   margin: 0 0 0 15px;
+}
+body .header .container .navigation a {
+  text-decoration: none;
 }
 body .header .container .navigation .users .users,
 body .header .container .navigation .vendors .vendors {
@@ -569,7 +574,7 @@ body .window .buttons .cancel {
   float: left;
 }
 body .container .modal {
-  display: block;
+  display: none;
 }
 body .container .window {
   display: block;
