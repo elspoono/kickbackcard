@@ -453,7 +453,7 @@ app.post('/syncFacebook', function(req, res, next){
     }
 
     console.log(kicker_ids);
-    Kicker.find({_id:{$in:kicker_ids}}, [], function(err,kickers){
+    Kicker.find({id:{$in:kicker_ids}}, [], function(err,kickers){
       console.log(kickers);
       if(err)
         res.send({err: err})
