@@ -464,11 +464,11 @@ app.post('/syncFacebook', function(req, res, next){
         }
 
         //console.log(deal_ids);
-        Deal.find({id:{$in:deal_ids},active:true},function(err,deals){
+        Deal.find({_id:{$in:deal_ids},active:true},function(err,deals){
           if(err)
             res.send({err:err})
           else{
-              
+            console.log(deals);
             Vendor.find({deal_ids:{$in:deal_ids},active:true},function(err, vendors){
               console.log(vendors);
               req.sentClient.facebook_id = req.body.facebook_id;
