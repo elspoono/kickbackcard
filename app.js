@@ -409,7 +409,7 @@ app.post('/syncFacebook', function(req, res, next){
   });
   
 }, function(req, res, next){
-  Client.find({facebook_id:req.body.facebook_id},function(err,existingClients){
+  Client.find({facebook_id:req.body.facebook_id,_id:{$not:req.sentClient._id}},function(err,existingClients){
     if(err)
       res.send({err:err})
     else{
@@ -417,25 +417,8 @@ app.post('/syncFacebook', function(req, res, next){
         
         // Here's where it gets nasty
 
-        //console.log(existingClients);
-        
-        var badClients = [];
-        for(var i in existingClients){
-          if(existingClients[i]._id+'' != req.sentClient._id+''){
-            badClients.push(existingClients[i]);
-          }
-        }
-        if(badClients.length){
-          
-          console.log('IS BAD');
-          console.log(badClients);
-          
-          next();
-
-
-        }else{
-          next();
-        }
+        console.log(existingClients);
+        next();
 
       }else{
         next();
