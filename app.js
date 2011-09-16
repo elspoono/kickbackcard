@@ -373,7 +373,7 @@ app.get('/createClient', createClient, function(req, res, next){
 })
 app.post('/syncFacebook', function(req, res, next){
 
-  console.log(req.body);
+  //console.log(req.body);
 
   Client.findById(req.body.client_id,function(err,client){
     if(err)
@@ -417,8 +417,23 @@ app.post('/syncFacebook', function(req, res, next){
         
         // Here's where it gets nasty
 
-        console.log(existingClients);
-        next();
+        //console.log(existingClients);
+        
+        var badClients = [];
+        for(var i in existingClients){
+          if(existingClients[i]._id != req.sentClient._id){
+            badClients.push(existingClients[i]);
+          }
+        }
+        if(badClients.length){
+          
+
+          console.log(badClients);
+          next();
+
+        }else{
+          next();
+        }
 
       }else{
         next();
