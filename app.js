@@ -409,7 +409,7 @@ app.post('/syncFacebook', function(req, res, next){
   });
   
 }, function(req, res, next){
-  Client.find({facebook_id:req.body.facebook_id,_id:{$not:req.sentClient._id}},function(err,existingClients){
+  Client.find({facebook_id:req.body.facebook_id,_id:{$ne:req.sentClient._id}},function(err,existingClients){
     if(err)
       res.send({err:err})
     else{
