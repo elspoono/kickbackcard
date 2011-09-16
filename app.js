@@ -459,7 +459,7 @@ app.post('/syncFacebook', function(req, res, next){
         res.send({err: err})
       else{
         var deal_ids = [];
-        for(var i in kicks){
+        for(var i in kickers){
           deal_ids.push(kickers[i].deal_id);
         }
 
