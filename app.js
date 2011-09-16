@@ -422,9 +422,8 @@ app.post('/syncFacebook', function(req, res, next){
         for(var i in existingClients){
           ids.push(existingClients[i]._id);
         }
-        Kick.find({client_id:{$in:ids}},function(err,kicks){
+        Kick.update({client_id:{$in:ids}},{client_id:req.sentClient._id}function(err,kicks){
           
-          console.log(kicks);
           next();
 
         })
@@ -436,16 +435,18 @@ app.post('/syncFacebook', function(req, res, next){
     }
   });
 }, function(req, res, next){
-
-  req.sentClient.facebook_id = req.body.facebook_id;
-  req.sentClient.save(function(err,data){
-    if(err)
-      res.send({err:err});
-    else
-      res.send({
-        client_id: req.sentClient._id,
-        cards: req.foundCards
-      });
+  Kick.find({client_id: req.sentClient._id},function(err, kicks){
+    
+    req.sentClient.facebook_id = req.body.facebook_id;
+    req.sentClient.save(function(err,clientSaveResult){
+      if(err)
+        res.send({err:err});
+      else
+        res.send({
+          client_id: req.sentClient._id,
+          cards: req.kicks
+        });
+    });
   });
 
 });
