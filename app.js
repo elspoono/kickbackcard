@@ -481,6 +481,7 @@ app.post('/syncFacebook', function(req, res, next){
                   for(var i in deals){
                     var thisCard = {kicks:0};
                     thisCard.deal = deals[i];
+                    thisCard.deal.tag_line = thisCard.deal.default_tag_line;
                     for(var j in vendors){
                       for(var k in vendors[j].deal_ids){
                         if(vendors[j].deal_ids[k] == thisCard.deal._id){
