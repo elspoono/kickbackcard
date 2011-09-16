@@ -422,12 +422,20 @@ app.post('/syncFacebook', function(req, res, next){
         for(var i in existingClients){
           ids.push(existingClients[i]._id);
         }
-        Kick.update({client_id:{$in:ids}},{client_id:req.sentClient._id},{multi: true}, function(err,kicks){
-          console.log(err);
-          console.log(kicks);
-          next();
-
-        })
+        Kick.update(
+          {
+            client_id : {
+                $in : ids
+              }
+          },
+          {
+            client_id:req.sentClient._id
+          },
+          {multi: true},
+          function(err,kicks){
+            next();
+          }
+        );
 
       }else{
         next();
@@ -438,16 +446,47 @@ app.post('/syncFacebook', function(req, res, next){
 }, function(req, res, next){
   Kick.find({client_id: req.sentClient._id},function(err, kicks){
     
-    req.sentClient.facebook_id = req.body.facebook_id;
-    req.sentClient.save(function(err,clientSaveResult){
+
+    var kicker_ids = [];
+    for(var i in kicks){
+      kicker_ids.push(kicks[i].kicker_id);
+    }
+
+    console.log(kicker_ids);
+    Kicker.find({id:{$in:kicker_ids}}, [], function(err,kickers){
+      console.log(kickers);
       if(err)
-        res.send({err:err});
-      else
-        res.send({
-          client_id: req.sentClient._id,
-          cards: kicks
+        res.send({err: err})
+      else{
+        var deal_ids = [];
+        for(var i in kicks){
+          deal_ids.push(kickers[i].deal_id);
+        }
+        console.log(deal_ids);
+        Deal.find({id:{$in:deal_ids},active:true},function(err,deal){
+          if(err)
+            res.send({err:err})
+          else{
+            Vendor.find({deal_ids:deal._id,active:true},function(err, vendors){
+              console.log(vendors);
+              req.sentClient.facebook_id = req.body.facebook_id;
+              req.sentClient.save(function(err,clientSaveResult){
+                if(err)
+                  res.send({err:err});
+                else{
+                  res.send({
+                    client_id: req.sentClient._id,
+                    cards: kicks
+                  });
+                }
+              });
+
+            });
+          }
         });
+      }
     });
+
   });
 
 });
