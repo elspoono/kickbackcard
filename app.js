@@ -422,6 +422,7 @@ app.post('/syncFacebook', function(req, res, next){
         for(var i in existingClients){
           ids.push(existingClients._id);
         }
+        console.log(ids);
         Kick.find({client_id:{$in:ids}},function(err,kicks){
           
           console.log(kicks);
