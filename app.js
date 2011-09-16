@@ -1865,7 +1865,7 @@ var findNearVendors = function(req, res, next){
       _id : { $nin : req.mapClient.vendor_ids},
       active: true
     },
-    ['coordinates','name','address','contact'],
+    ['coordinates','name','address','contact','yelp_url','site_url'],
     {skip:0,limit:20},
     function(err, vendors){
 
