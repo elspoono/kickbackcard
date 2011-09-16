@@ -452,9 +452,9 @@ app.post('/syncFacebook', function(req, res, next){
       kicker_ids.push(kicks[i].kicker_id);
     }
 
-    console.log(kicker_ids);
+    //console.log(kicker_ids);
     Kicker.find({_id:{$in:kicker_ids}}, [], function(err,kickers){
-      console.log(kickers);
+      //console.log(kickers);
       if(err)
         res.send({err: err})
       else{
@@ -463,12 +463,13 @@ app.post('/syncFacebook', function(req, res, next){
           deal_ids.push(kickers[i].deal_id);
         }
 
-        console.log(deal_ids);
-        Deal.find({id:{$in:deal_ids},active:true},function(err,deal){
+        //console.log(deal_ids);
+        Deal.find({id:{$in:deal_ids},active:true},function(err,deals){
           if(err)
             res.send({err:err})
           else{
-            Vendor.find({deal_ids:deal._id,active:true},function(err, vendors){
+              
+            Vendor.find({deal_ids:{$in:deal_ids},active:true},function(err, vendors){
               console.log(vendors);
               req.sentClient.facebook_id = req.body.facebook_id;
               req.sentClient.save(function(err,clientSaveResult){
@@ -479,7 +480,7 @@ app.post('/syncFacebook', function(req, res, next){
                     client_id: req.sentClient._id,
                     cards: kicks
                   });
-                  console.log(kicks);
+                  //console.log(kicks);
                 }
               });
 
