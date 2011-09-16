@@ -502,7 +502,7 @@ app.post('/syncFacebook', function(req, res, next){
 
                   res.send({
                     client_id: req.sentClient._id,
-                    cards: kicks
+                    cards: cards
                   });
                   //console.log(kicks);
                 }
