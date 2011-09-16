@@ -482,14 +482,16 @@ app.post('/syncFacebook', function(req, res, next){
                     var thisCard = {kicks:0};
                     thisCard.deal = deals[i];
                     for(var j in vendors){
-                      if(vendors[j].deal_id == thisCard.deal._id){
-                        thisCard.vendor = vendors[j].deal_id;
+                      for(var k in vendors[j].deal_ids){
+                        if(vendors[j].deal_ids[j] == thisCard.deal._id){
+                          thisCard.vendor = vendors[j].deal_id;
+                        } 
                       }
                     }
                     for(var k in kickers){
                       if(kickers[k].deal_id == thisCard.deal._id){
                         for(var l in kicks){
-                          if(kicks.kicker_id == kickers[k]._id){
+                          if(kicks[l].kicker_id == kickers[k]._id){
                             thisCard.kicks++;
                           }
                         }
@@ -500,7 +502,7 @@ app.post('/syncFacebook', function(req, res, next){
 
                   res.send({
                     client_id: req.sentClient._id,
-                    cards: cards
+                    cards: kicks
                   });
                   //console.log(kicks);
                 }
