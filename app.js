@@ -211,6 +211,7 @@ User.count({},function(err,data){
 /* Role / Vendor mongoose Schemas */
 var ClientSchema = new Schema({
   client_secret: String,
+  facebook_id: String,
   date_added: {type: Date, default: Date.now}
 })
 var KickerSchema = new Schema({
@@ -382,18 +383,62 @@ app.post('/syncFacebook', function(req, res, next){
       /*
         Validate the shared token against the secret/client_id/kick_id
       */
-
+      req.sentClient = client;
       var isValid = bcrypt.compare_sync(client.client_secret+req.body.client_id+req.body.facebook_id, req.body.client_shared);
       if(!isValid)
         res.send({err:'Invalid Token'})
       else{
 
+        var scan_ids = req.body.kick_ids.split(',');
+        if(scan_ids){
+          Kick.find({scan_id:{$in:scan_ids},active:true},[],function(err,kicks){
+            if(err)
+              res.send({err:err})
+            else{
+              req.kicks = kicks;
+              next();
+            }
+          });
+        }else{
+          next();
+        }
+                
         
-        res.send({valid:'All is well in the land of Oz.'})
       }
     }
   });
   
+}, function(req, res, next){
+  Client.find({facebook_id:req.body.facebook_id},function(err,existingClients){
+    if(err)
+      res.send({err:err})
+    else{
+      if(existingClients.length){
+        
+        // Here's where it gets nasty
+
+        console.log(existingClients);
+        next();
+
+      }else{
+        next();
+
+      }
+    }
+  });
+}, function(req, res, next){
+
+  req.sentClient.facebook_id = req.body.facebook_id;
+  req.sentClient.save(function(err,data){
+    if(err)
+      res.send({err:err});
+    else
+      res.send({
+        client_id: req.sentClient.client_id,
+        cards: req.foundCards
+      });
+  });
+
 });
 app.post('/k:id',function(req,res,next){
   Client.findById(req.body.client_id,function(err,client){
