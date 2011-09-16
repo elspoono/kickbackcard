@@ -483,8 +483,8 @@ app.post('/syncFacebook', function(req, res, next){
                     thisCard.deal = deals[i];
                     for(var j in vendors){
                       for(var k in vendors[j].deal_ids){
-                        if(vendors[j].deal_ids[j] == thisCard.deal._id){
-                          thisCard.vendor = vendors[j].deal_id;
+                        if(vendors[j].deal_ids[k] == thisCard.deal._id){
+                          thisCard.vendor = vendors[j];
                         } 
                       }
                     }
