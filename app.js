@@ -476,9 +476,31 @@ app.post('/syncFacebook', function(req, res, next){
                 if(err)
                   res.send({err:err});
                 else{
+                  
+                  var cards = [];
+                  for(var i in deals){
+                    var thisCard = {kicks:0};
+                    thisCard.deal = deals[i];
+                    for(var j in vendors){
+                      if(vendors[j].deal_id == thisCard.deal._id){
+                        thisCard.vendor = vendors[j].deal_id;
+                      }
+                    }
+                    for(var k in kickers){
+                      if(kickers[k].deal_id == thisCard.deal._id){
+                        for(var l in kicks){
+                          if(kicks.kicker_id == kickers[k]._id){
+                            thisCard.kicks++;
+                          }
+                        }
+                      }
+                    }
+                    cards.push(thisCard);
+                  }
+
                   res.send({
                     client_id: req.sentClient._id,
-                    cards: kicks
+                    cards: cards
                   });
                   //console.log(kicks);
                 }
