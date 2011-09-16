@@ -421,15 +421,17 @@ app.post('/syncFacebook', function(req, res, next){
         
         var badClients = [];
         for(var i in existingClients){
-          if(existingClients[i]._id != req.sentClient._id){
+          if(existingClients[i]._id+'' != req.sentClient._id+''){
             badClients.push(existingClients[i]);
           }
         }
         if(badClients.length){
           
-
+          console.log('IS BAD');
           console.log(badClients);
+          
           next();
+
 
         }else{
           next();
