@@ -422,7 +422,7 @@ app.post('/syncFacebook', function(req, res, next){
         for(var i in existingClients){
           ids.push(existingClients[i]._id);
         }
-        Kick.update({client_id:{$in:ids}},{client_id:req.sentClient._id}function(err,kicks){
+        Kick.update({client_id:{$in:ids}},{client_id:req.sentClient._id},function(err,kicks){
           
           next();
 
