@@ -370,6 +370,31 @@ app.get('/createClient', createClient, function(req, res, next){
     client: req.client
   })
 })
+app.post('/syncFacebook', function(req, res, next){
+
+  console.log(req.body);
+
+  Client.findById(req.body.client_id,function(err,client){
+    if(err)
+      res.send({err:err})
+    else{
+
+      /*
+        Validate the shared token against the secret/client_id/kick_id
+      */
+
+      var isValid = bcrypt.compare_sync(client.client_secret+req.body.client_id+req.body.facebook_id, req.body.client_shared);
+      if(!isValid)
+        res.send({err:'Invalid Token'})
+      else{
+
+        
+        res.send({valid:'All is well in the land of Oz.'})
+      }
+    }
+  });
+  
+});
 app.post('/k:id',function(req,res,next){
   Client.findById(req.body.client_id,function(err,client){
     if(err)
