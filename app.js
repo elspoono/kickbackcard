@@ -453,7 +453,7 @@ app.post('/syncFacebook', function(req, res, next){
     }
 
     console.log(kicker_ids);
-    Kicker.find({id:{$in:kicker_ids}}, [], function(err,kickers){
+    Kicker.find({_id:{$in:kicker_ids}}, [], function(err,kickers){
       console.log(kickers);
       if(err)
         res.send({err: err})
@@ -462,7 +462,7 @@ app.post('/syncFacebook', function(req, res, next){
         for(var i in kicks){
           deal_ids.push(kickers[i].deal_id);
         }
-        
+
         console.log(deal_ids);
         Deal.find({id:{$in:deal_ids},active:true},function(err,deal){
           if(err)
