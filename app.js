@@ -478,6 +478,7 @@ app.post('/syncFacebook', function(req, res, next){
                     client_id: req.sentClient._id,
                     cards: kicks
                   });
+                  console.log(kicks);
                 }
               });
 
