@@ -434,7 +434,7 @@ app.post('/syncFacebook', function(req, res, next){
       res.send({err:err});
     else
       res.send({
-        client_id: req.sentClient.client_id,
+        client_id: req.sentClient._id,
         cards: req.foundCards
       });
   });
