@@ -492,7 +492,7 @@ app.post('/syncFacebook', function(req, res, next){
                     for(var k in kickers){
                       if(kickers[k].deal_id == thisCard.deal._id){
                         for(var l in kicks){
-                          if(kicks[l].kicker_id == kickers[k]._id){
+                          if(kicks[l].kicker_id == kickers[k]._id && kicks[l].redeemed == false){
                             thisCard.kicks++;
                           }
                         }
