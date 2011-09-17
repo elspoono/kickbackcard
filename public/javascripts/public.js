@@ -272,7 +272,7 @@ $(function(){
     var $t = $(this);
     var d = new Date($t.html());
     console.log(d);
-    $t.html(t+'');    
+    $t.html($t+'');    
 
   })
 
