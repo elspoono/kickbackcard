@@ -521,17 +521,22 @@ app.post('/syncFacebook', function(req, res, next){
 
 app.get('/r:id',function(req,res,next){
   Redeem.find({url_string:req.params.id}, [], function(err,redeems){
-    if(redeems.length)
+    if(redeems.length){
       Deal.findById(redeems[0].deal_id,function(err,deal){
-        res.render('redeem', {
-          title: 'KickbackCard - Valid Redemption',
-          redeem: redeems[0]
-        });
+        if(err)
+          res.send({err:err})
+        else
+          res.render('redeem', {
+            title: 'KickbackCard - Valid Redemption',
+            redeem: redeems[0],
+            deal: deal
+          });
       })
-    else
+    }else{
       res.send('',{
         Location:'/'
       },301);
+    }
   });
 });
 
