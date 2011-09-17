@@ -267,7 +267,7 @@ $(function(){
    **********************************/
   $('div.logo').click(function(){document.location.href='/'})
 
-  $('p.convert-date').each(function(){
+  $('.convert-date').each(function(){
     
     var $t = $(this);
     var d = new Date($t.html());
