@@ -6,5 +6,19 @@
     h1 Looks Good!
     .window
       p That Redemption QR code you just scanned looks good to me boss.
-      p I can see that it was added on:
-      p=redeem.date_added
+      p I can see that it was initially redeemed on:
+      p.convert-date=redeem.date_added
+      p If this sounds right, you're good to go.
+      p Be sure to let us know if you have any questions.
+.footer
+  .container
+    ul
+      li
+        a(href="mailto:help@kickbackcard.com")
+          img(src='/images/email icon.png')
+      li
+        a(href="http://twitter.com/#!/KickbackCard")
+          img(src='/images/twitter icon.png')
+      li
+        a(href="http://facebook.com/KickbackCard")
+          img(src='/images/facebook icon.png')
