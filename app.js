@@ -1947,7 +1947,7 @@ app.post('/vendors.json', findOrSetMapClientId, findNearVendors, function(req, r
 
 app.post('/redeem',function(req, res){
   
-                    console.log(0);
+                    console.log(req.body);
   Client.findById(req.body.client_id,function(err,client){
     if(err)
       res.send({err:err})
@@ -1957,7 +1957,7 @@ app.post('/redeem',function(req, res){
         Validate the shared token against the secret/client_id/deal_id
       */
 
-                    console.log(1);
+                    console.log(client);
       var isValid = bcrypt.compare_sync(client.client_secret+client._id+req.body.deal_id, req.body.client_shared);
       if(!isValid)
         res.send({err:'Invalid Token'})
@@ -1967,15 +1967,15 @@ app.post('/redeem',function(req, res){
             res.send({err: err})
           else{
             
-                    console.log(2);
+                    console.log(deal);
             
             // Make sure we have enough kicks based on deal.buy_qty
             Kick.find({client_id: client._id, deal_id: deal._id, redeemed: false},function(err,kicks){
               
-                    console.log(3);
+                    console.log(kicks);
             
               if(kicks.length >= deal.buy_qty){
-                    console.log(4);
+                    console.log(kicks.length);
 
                 // Generate and validate redemption url_string
                 
