@@ -522,10 +522,12 @@ app.post('/syncFacebook', function(req, res, next){
 app.get('/r:id',function(req,res,next){
   Redeem.find({url_string:req.params.id}, [], function(err,redeems){
     if(redeems.length)
-      res.render('redeem', {
-        title: 'KickbackCard - Valid Redemption',
-        redeem: redeems[0]
-      });
+      Deal.findById(redeems[0].deal_id,function(err,deal){
+        res.render('redeem', {
+          title: 'KickbackCard - Valid Redemption',
+          redeem: redeems[0]
+        });
+      })
     else
       res.send('',{
         Location:'/'
