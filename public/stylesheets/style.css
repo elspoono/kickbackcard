@@ -247,6 +247,16 @@ body .footer {
   text-align: center;
   background: #dbdbdb;
 }
+body .footer .other {
+  margin: 0 0 15px 0;
+  color: #2d6031;
+  font-size: 12px;
+}
+body .footer .other a {
+  color: #2d6031;
+  font-size: 12px;
+  text-decoration: none;
+}
 body .footer .container {
   padding: 0;
 }
@@ -256,7 +266,7 @@ body .footer ul {
 body .footer ul li {
   display: inline-block;
   float: inherit;
-  margin: 5px 10px;
+  margin: 15px 10px;
 }
 body .convert-date {
   background-color: #2d6031;
