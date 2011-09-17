@@ -1917,8 +1917,8 @@ var findNearVendors = function(req, res, next){
 app.post('/vendors.json', findOrSetMapClientId, findNearVendors, function(req, res){
   //console.log(req.vendors)
   res.send({
-    vendors: vendors,
-    allVendors: allVendors.length
+    vendors: req.vendors,
+    allVendors: req.allVendors.length
   });
 });
 
