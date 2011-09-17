@@ -6,10 +6,9 @@
     h1 Looks Good!
     .window
       p That Redemption QR code you just scanned for a 
-        =deal.get_item
-        |  looks good to me boss.
-      p I can see that it was initially redeemed on:
-      .convert-date=redeem.date_added
+      .highlighted-item=deal.get_item
+      p looks good to me boss. I can see that it was initially redeemed on:
+      .convert-date.highlighted-item=redeem.date_added
       p If this sounds right, you're good to go.
       p Be sure to let us know if you have any questions.
 .footer
