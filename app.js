@@ -1947,6 +1947,7 @@ app.post('/vendors.json', findOrSetMapClientId, findNearVendors, function(req, r
 
 app.post('/redeem',function(req, res){
   
+                    console.log(0);
   Client.findById(req.body.client_id,function(err,client){
     if(err)
       res.send({err:err})
@@ -1956,6 +1957,7 @@ app.post('/redeem',function(req, res){
         Validate the shared token against the secret/client_id/deal_id
       */
 
+                    console.log(1);
       var isValid = bcrypt.compare_sync(client.client_secret+client._id+req.body.deal_id, req.body.client_shared);
       if(!isValid)
         res.send({err:'Invalid Token'})
@@ -1965,12 +1967,15 @@ app.post('/redeem',function(req, res){
             res.send({err: err})
           else{
             
+                    console.log(2);
             
             // Make sure we have enough kicks based on deal.buy_qty
             Kick.find({client_id: client._id, deal_id: deal._id, redeemed: false},function(err,kicks){
               
+                    console.log(3);
             
               if(kicks.length >= deal.buy_qty){
+                    console.log(4);
 
                 // Generate and validate redemption url_string
                 
@@ -1993,8 +1998,7 @@ app.post('/redeem',function(req, res){
 
                     // Mark all those kicks as redeemed 
                     for(var i = 0; i < deal.buy_qty; i++){
-                      // Okay to process in background ... I guess, fucking A
-                      // Don't know what do except crazy back checking???
+                      // should be update
 
                       kicks[i].redeemed = true;
                       kicks[i].save(function(err,data){
@@ -2006,6 +2010,7 @@ app.post('/redeem',function(req, res){
 
                     }
                     deal.tag_line = deal.default_tag_line;
+                    console.log(5);
                     redeem.save(function(err,data){
                       res.send({
                         remaining: kicks.length - deal.buy_qty,
