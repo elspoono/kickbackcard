@@ -531,13 +531,13 @@ app.get('/r:id',function(req,res,next){
         Location:'/'
       },301);
   });
-);
+});
 
 app.post('/r:id',function(req,res,next){
   Redeem.find({url_string:req.params.id}, [], function(err,redeems){
     res.send(redeems);
   });
-);
+});
 
 app.post('/k:id',function(req,res,next){
   Client.findById(req.body.client_id,function(err,client){
