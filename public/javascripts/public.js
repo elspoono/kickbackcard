@@ -271,7 +271,7 @@ $(function(){
     
     var $t = $(this);
     var d = new Date($t.html());
-    $t.html(d+'');    
+    $t.html((d+'').replace(/GMT-[^ ]*/,''));
 
   })
 
