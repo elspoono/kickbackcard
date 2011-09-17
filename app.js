@@ -1868,38 +1868,47 @@ var findNearVendors = function(req, res, next){
     ['coordinates','name','address','contact','yelp_url','site_url'],
     {skip:0,limit:20},
     function(err, vendors){
-
-      // Update mapClient to show these guys as viewed already
-      var remainingIds = [];
-      for(var i in vendors){
-        req.mapClient.vendor_ids.push(vendors[i]._id);
-        remainingIds.push(vendors[i]._id);
-      }
-      req.mapClient.save();
-
-      // Find their deals
-      Deal.find({
-        vendor_id : { $in : remainingIds},
-        active: true
-      },function(err,deals){
-        //console.log(deals);
-        for(var i in vendors){
-          for(var j in deals){
-            //console.log(data[i]._id+' -- '+deals[j].vendor_id);
-            if(vendors[i]._id+'' == deals[j].vendor_id){
-              //console.log(deals[j]);
-              if(typeof(vendors[i].deals)=='undefined')
-                vendors[i].deals = [];
-              deals[j].tag_line = deals[j].default_tag_line;
-              vendors[i].deals.push(deals[j]);
-            }
+      Vendor.find(
+        {
+          coordinates : { $near : [params.latitude, params.longitude] },
+          active: true
+        },
+        ['name'],
+        {skip:0,limit:20},
+        function(err, allVendors){
+          // Update mapClient to show these guys as viewed already
+          var remainingIds = [];
+          for(var i in vendors){
+            req.mapClient.vendor_ids.push(vendors[i]._id);
+            remainingIds.push(vendors[i]._id);
           }
+          req.mapClient.save();
+
+          // Find their deals
+          Deal.find({
+            vendor_id : { $in : remainingIds},
+            active: true
+          },function(err,deals){
+            //console.log(deals);
+            for(var i in vendors){
+              for(var j in deals){
+                //console.log(data[i]._id+' -- '+deals[j].vendor_id);
+                if(vendors[i]._id+'' == deals[j].vendor_id){
+                  //console.log(deals[j]);
+                  if(typeof(vendors[i].deals)=='undefined')
+                    vendors[i].deals = [];
+                  deals[j].tag_line = deals[j].default_tag_line;
+                  vendors[i].deals.push(deals[j]);
+                }
+              }
+            }
+            req.vendors = vendors;
+            req.allVendors = allVendors;
+            next();
+
+          })
         }
-        req.vendors = vendors;
-        next();
-
-      })
-
+      );
     }
   );
 
@@ -1907,7 +1916,10 @@ var findNearVendors = function(req, res, next){
 
 app.post('/vendors.json', findOrSetMapClientId, findNearVendors, function(req, res){
   //console.log(req.vendors)
-  res.send(req.vendors||'Not Found');
+  res.send({
+    vendors: vendors,
+    allVendors: allVendors.length
+  });
 });
 
 
