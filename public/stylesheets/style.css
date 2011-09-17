@@ -258,6 +258,15 @@ body .footer ul li {
   float: inherit;
   margin: 5px 10px;
 }
+body .convert-date {
+  background-color: #2d6031;
+  font-family: "Luckiest Guy";
+  padding: 10px 10px 5px 10px;
+  color: #fff;
+  font-size: 24px;
+  line-height: 36px;
+  text-align: center;
+}
 body .faq .sample {
   border: 1px solid #aaa;
 }
