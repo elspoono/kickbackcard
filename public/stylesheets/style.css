@@ -293,6 +293,7 @@ body .faq .sample {
 }
 body .faq .set {
   display: block;
+  margin-bottom: 60px;
 }
 body .faq .set .line {
   margin: 20px 0;
@@ -305,7 +306,7 @@ body .faq .set .line h3 {
   font-family: "Luckiest Guy";
   float: left;
   font-size: 36px;
-  line-height: 34px;
+  line-height: 36px;
   margin: 20px;
 }
 body .faq .set .line img {
@@ -315,7 +316,7 @@ body .faq .set .line p {
   margin-left: 65px;
   text-align: left;
   font-size: 13px;
-  line-height: 34px;
+  line-height: 36px;
 }
 body .faq .set .q {
   -webkit-border-radius: 4px;

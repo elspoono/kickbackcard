@@ -570,6 +570,7 @@ $(function(){
           }
         })
       })
+      return false;
     })
   }
   $('.vendor-deal .add').live('click',function(){
@@ -593,6 +594,7 @@ $(function(){
         loadAlert('server error')
       }
     })
+    return false;
   });
 
   /**********************************
@@ -869,7 +871,7 @@ $(function(){
       })
     })
 
-    return false
+    return false;
   })
 
   /**********************************
