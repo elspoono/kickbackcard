@@ -298,11 +298,11 @@ $(function(){
   var doSlide = function(){
     slideUl.stop(true,false);
     if(current < -oneUnit*8){
-      current = current - oneUnit*9;
-      slideUl.animate({marginLeft:current},2000); 
+      current =  -oneUnit*8;
+      slideUl.animate({marginLeft:current},500); 
     }else if(current > 0){
       current = 0;
-      slideUl.animate({marginLeft:current},2000); 
+      slideUl.animate({marginLeft:current},500); 
     }else{
       slideUl.animate({marginLeft:current},500); 
     }
@@ -366,6 +366,11 @@ $(function(){
         current = current - oneUnit;
       else if(startPos[0]-mousePos[0] < 0)
         current = current + oneUnit;
+      else{
+        current = current - oneUnit;
+        if(current < -oneUnit*8)
+          current = 0;
+      }
 
 
       doSlide();
