@@ -9,11 +9,11 @@
       li
         | vendor login
 .body
+  .container.stacked
+    h1 Login
   .container
-    .modal
     .window
       form(method='POST')
-        h1 Login
         - if (typeof(err) != 'undefined')
           .error-message= err
         fieldset

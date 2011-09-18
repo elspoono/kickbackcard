@@ -310,8 +310,6 @@ app.get('*',function(req,res,next){
 
 
 var OAuth = require(__dirname + '/oauth.js').OAuth;
-
-
 var factual_key    = "OEikPbAN3W60RVhAKS7atr6lURGJIgWOZ6VDthUY";
 var factual_secret = "gZRGCuGs1OE7YhOilzNyDmfmJ52GvF8BQN4VkRoC";
 var factual = new OAuth(null, null, factual_key, factual_secret,'1.0', null,'HMAC-SHA1');

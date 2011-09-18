@@ -39,6 +39,8 @@ attention = #00B7FF
  * Generic Functions for css3/etc
  *
  ********************************/
+light-alpha(n)
+  background rgba(255,255,255,n);
 box-shadow(n = 4px, color = semi-light)
   -moz-box-shadow: 0px 0px n color
   -webkit-box-shadow: 0px 0px n color
@@ -117,7 +119,6 @@ body
     a
       color very-dark-alt
     .container
-      padding 15px 15px
       overflow hidden
       .logo
         background url('/images/KBHeader.png') no-repeat left top
@@ -135,7 +136,6 @@ body
           text-decoration none
         color semi-dark
         text-decoration none
-
   /************************************************
    *
    * Body top level tag definitions, e.g. p margins
@@ -179,8 +179,13 @@ body
         div
           margin 10px 0 0 35px
     .my-copy
+      padding 1px
+      light-alpha(.2)
       color dark
       margin 45px 0
+      border-radius(8px)
+      p
+        margin 14px 29px
     .col-left,.col-right
       text-align center
       .qr-container
@@ -274,6 +279,8 @@ body
     max-width 900px
     margin 0 auto
     padding 30px
+  .stacked
+    padding 30px 30px 0 30px
   .footer
     text-align center
     background gray
@@ -313,9 +320,8 @@ body
       border 1px solid semi-light
     .set
       display block
-      border-bottom 1px solid semi-light
-      margin-bottom 20px
       .line
+        margin 20px 0
         display block
         color dark
         overflow hidden
@@ -325,11 +331,21 @@ body
           font-size 36px
           line-height 34px
           margin 20px
+        text-align center
+        img
+          margin 15px
         p
+          margin-left 65px
+          text-align left
           font-size 13px
-          float right
-          width 430px
           line-height 34px
+      .q
+        border-radius(4px)
+        background very-dark
+        h3
+          color very-light
+        p
+          color light
   /**************************************
    *
    * These are the little popups above
@@ -370,15 +386,14 @@ body
     absolute()
     cursor pointer
   .window
-    background #fff
+    border 2px solid very-dark
+    light-alpha(.7)
     color very-dark
     a
       color very-dark
     h2
       font-size 1.5em
     border-radius(15px)
-    min-height 235px
-    width 500px
     padding 30px
     absolute()
     overflow hidden

@@ -9,15 +9,15 @@
       li
         a.login(href="/login") vendor login
 .body
-  .container
+  .container.stacked
     h1 Why am I Here?
-    p &nbsp;
+  .container
     .window
       .faq
         .set
-          .line
+          .line.q
             h3 Q
-            p What is this thing?
+            p So what's all this about now?
           .line
             h3 A
             p 
@@ -27,7 +27,7 @@
               b  earn rewards 
               |  like free food and meals.
         .set
-          .line
+          .line.q
             h3 Q
             p My restaurant has paper punch cards already, what's this for?
           .line
@@ -40,15 +40,14 @@
               | We ask you for a business name and a deal. &nbsp;And we ask you to 
               b  print a sheet of paper
               |  like this one:
-            p
-              img.sample(src='/images/sample-kicker.jpg', title="Yours won't have big grey text that says sample on it")
+            img.sample(src='/images/sample-kicker.jpg', title="Yours won't have big grey text that says sample on it")
             p 
               | We call this piece of paper a
               b  kicker.
             p
               | Your business is instantly listed inside of every KickbackCard App everywhere.
         .set
-          .line
+          .line.q
             h3 Q
             p I print that and ... ?
           .line
@@ -63,10 +62,9 @@
               |  and 
               b  rewards
               |  using the KickbackCard App.
-            p
-              img(src='/images/step1-scan.png', title="This phone is scanning that yellow QR code. In real life a scan takes < 1 second.")
+            img(src='/images/step1-scan.png', title="This phone is scanning that yellow QR code. In real life a scan takes < 1 second.")
         .set 
-          .line
+          .line.q
             h3 Q
             p That's it?
           .line
@@ -80,7 +78,7 @@
             p
               | And you can watch all of this happen in your analytics dashboard at kickbackcard.com.
         .set
-          .line
+          .line.q
             h3 Q
             p Tell me more about the sharing.
           .line
@@ -88,22 +86,15 @@
             p 
               | Every time a purchase or redemption is tracked in the KickbackCard app using that
               b  printed kicker
-              | , this appears:
-            p 
-              img(src='/images/facebook-share.jpg',title="Scott's brave, you could make your offer a little less bold.")
-            p
-              |  Hitting that 
-              b  big share button 
-              |  makes this happen:
-            p
-              img(src='/images/facebook-share-2.jpg',title="It's a better reason for getting a trophy than watering your virtual garden.") 
+              |  a big facebook share button shows up and gives this option:
+            img(src='/images/facebook-share-2.jpg',title="It's a better reason for getting a trophy than watering your virtual garden.") 
             p
               | Allowing anyone to share their good fortune and their smart shopper savvy with friends on facebook.
             p
               | Customers win. &nbsp;Businesses win.
               b  &nbsp;Everyone wins.
         .set
-          .line
+          .line.q
             h3 Q
             p And how much will this cost me?
           .line

@@ -50,7 +50,6 @@ body .header a {
   color: #4e7a3c;
 }
 body .header .container {
-  padding: 15px 15px;
   overflow: hidden;
 }
 body .header .container .logo {
@@ -124,8 +123,16 @@ body .body .step-copy .burger div {
   margin: 10px 0 0 35px;
 }
 body .body .my-copy {
+  padding: 1px;
+  background: rgba(255,255,255,0.2);
   color: #000;
   margin: 45px 0;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  border-radius: 8px;
+}
+body .body .my-copy p {
+  margin: 14px 29px;
 }
 body .body .col-left,
 body .body .col-right {
@@ -243,6 +250,9 @@ body .container {
   margin: 0 auto;
   padding: 30px;
 }
+body .stacked {
+  padding: 30px 30px 0 30px;
+}
 body .footer {
   text-align: center;
   background: #dbdbdb;
@@ -282,13 +292,13 @@ body .faq .sample {
 }
 body .faq .set {
   display: block;
-  border-bottom: 1px solid #aaa;
-  margin-bottom: 20px;
 }
 body .faq .set .line {
+  margin: 20px 0;
   display: block;
   color: #000;
   overflow: hidden;
+  text-align: center;
 }
 body .faq .set .line h3 {
   font-family: "Luckiest Guy";
@@ -297,11 +307,26 @@ body .faq .set .line h3 {
   line-height: 34px;
   margin: 20px;
 }
+body .faq .set .line img {
+  margin: 15px;
+}
 body .faq .set .line p {
+  margin-left: 65px;
+  text-align: left;
   font-size: 13px;
-  float: right;
-  width: 430px;
   line-height: 34px;
+}
+body .faq .set .q {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  background: #2d6031;
+}
+body .faq .set .q h3 {
+  color: #fff;
+}
+body .faq .set .q p {
+  color: #fff;
 }
 body .tooltip {
   border: 1px solid #990;
@@ -347,13 +372,12 @@ body .close {
   cursor: pointer;
 }
 body .window {
-  background: #fff;
+  border: 2px solid #2d6031;
+  background: rgba(255,255,255,0.7);
   color: #2d6031;
   -webkit-border-radius: 15px;
   -moz-border-radius: 15px;
   border-radius: 15px;
-  min-height: 235px;
-  width: 500px;
   padding: 30px;
   display: none;
   position: absolute;

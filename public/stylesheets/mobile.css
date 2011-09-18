@@ -25,15 +25,3 @@ body .body .col-left,
 body .body .col-right {
   display: none;
 }
-body .body .faq .set .line p {
-  float: right;
-  max-width: 430px;
-  width: auto;
-}
-body .container .modal {
-  display: none;
-}
-body .container .window {
-  width: 230px;
-  margin: 0 0 0 -15px;
-}
