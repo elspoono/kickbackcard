@@ -25,3 +25,9 @@ body .body .col-left,
 body .body .col-right {
   display: none;
 }
+body .window {
+  background: #fff;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}

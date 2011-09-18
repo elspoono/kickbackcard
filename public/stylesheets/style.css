@@ -124,6 +124,7 @@ body .body .step-copy .burger div {
 }
 body .body .my-copy {
   padding: 1px;
+  background: #fff;
   background: rgba(255,255,255,0.2);
   color: #000;
   margin: 45px 0;
@@ -347,8 +348,8 @@ body .tooltip {
 }
 body .modal {
   background: #000;
-  opacity: 0.7;
-  filter: alpha ( opacity = 70 );
+  opacity: 0.8;
+  filter: alpha ( opacity = 80 );
   height: 100%;
   width: 100%;
   display: none;
@@ -358,26 +359,45 @@ body .modal {
 }
 body .close {
   font-size: 1em;
-  border: 1px solid #6f6f6e;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
   padding: 4px 30px;
   background: #aaa;
+  background: #aaa;
+  background: rgba(170,170,170,0.95);
   color: #6f6f6e;
   display: none;
   position: absolute;
   top: 0;
   left: 0;
   cursor: pointer;
+  border-top-left-radius: 8px;
+  -moz-border-radius-topleft: 8px;
+  -webkit-border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  -moz-border-radius-topright: 8px;
+  -webkit-border-top-right-radius: 8px;
 }
 body .window {
+  background: #fff;
+  background: rgba(255,255,255,0.95);
+}
+body .body .window {
   border: 2px solid #2d6031;
+  background: #fff;
   background: rgba(255,255,255,0.7);
-  color: #2d6031;
   -webkit-border-radius: 15px;
   -moz-border-radius: 15px;
   border-radius: 15px;
+}
+body .window {
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  border-radius: 8px;
+  border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  -webkit-border-top-right-radius: 0;
+  color: #2d6031;
   padding: 30px;
   display: none;
   position: absolute;
@@ -398,20 +418,31 @@ body .window .error-message {
 }
 body .window .tabs {
   margin: 0 0 30px 0;
+  border-bottom: 1px solid #2d6031;
 }
 body .window .tabs li {
-  padding: 1px 8px;
-  border: 1px solid #6f6f6e;
+  border-top-left-radius: 8px;
+  -moz-border-radius-topleft: 8px;
+  -webkit-border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  -moz-border-radius-topright: 8px;
+  -webkit-border-top-right-radius: 8px;
+  font-family: "Luckiest Guy";
+  background: #2d6031;
+  padding: 10px 15px 0 15px;
   cursor: pointer;
-  color: #6f6f6e;
-  margin-top: 5px;
+  color: #aaa;
+  margin-top: 10px;
+  margin-right: 10px;
+  line-height: 24px;
+  font-size: 16px;
 }
 body .window .tabs li.active {
-  font-weight: bold;
   margin-top: 0;
-  padding: 4px 8px;
+  padding: 15px 15px 5px 15px;
   border-bottom: none;
-  color: #000;
+  font-size: 24px;
+  color: #fff;
   cursor: auto;
 }
 body .window .previews iframe {

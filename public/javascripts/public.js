@@ -95,15 +95,15 @@ $(function(){
       if(width < settings.width || height < win.height()){
         close.css({position:'relative'})
         win.width(width-60).css({position:'relative'})
-        $('.body').hide()
+        $('.body,.footer,.header').hide()
         var top = close.offset().top
         modal.css({top:0,left:0,width:width,height:top})
         window.scroll(0,top)
       }else{
         $body.css({overflow:'hidden','padding-right':scrollbarWidth})
-        win.position({of:$window, at:'center center'})
+        win.position({of:$window, at:'center top', my:'center top', offset:'0 40px'})
         modal.position({of:$window, at:'center center'})
-        close.position({of:win, at:'right top', my:'right bottom', offset:'-15px 4px'})
+        close.position({of:win, at:'right top', my:'right bottom', offset:'0 0'})
       }
     }
     $window.bind('resize',resizeEvent)
@@ -119,7 +119,7 @@ $(function(){
       win.fadeOut(function(){
         win.remove()
         if($('.window').length==0)
-          $('.body').show()
+          $('.body,.footer,.header').show()
       })
     }
     modal.click(myNext)
@@ -974,6 +974,7 @@ $(function(){
               var h2 = $t.find('h2')
               var text = h2.text()
               var contents = $t
+              h2.hide()
               contents.hide()
               var li = $('<li>')
               li.html(text)

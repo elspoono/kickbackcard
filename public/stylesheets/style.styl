@@ -39,8 +39,9 @@ attention = #00B7FF
  * Generic Functions for css3/etc
  *
  ********************************/
-light-alpha(n)
-  background rgba(255,255,255,n);
+alpha-bg(color,n)
+  background rgb(color);
+  background rgba(color,n);
 box-shadow(n = 4px, color = semi-light)
   -moz-box-shadow: 0px 0px n color
   -webkit-box-shadow: 0px 0px n color
@@ -50,6 +51,20 @@ border-radius(n)
   -webkit-border-radius n
   -moz-border-radius n
   border-radius n
+border-radius-except-top-right(n)
+  -webkit-border-radius n
+  -moz-border-radius n
+  border-radius n
+  border-top-right-radius 0
+  -moz-border-radius-topright 0
+  -webkit-border-top-right-radius 0
+border-radius-top-only(n)
+  border-top-left-radius n
+  -moz-border-radius-topleft n
+  -webkit-border-top-left-radius n
+  border-top-right-radius n
+  -moz-border-radius-topright n
+  -webkit-border-top-right-radius n
 opacity(n)
   opacity n
   filter alpha\(opacity\=n*100\)
@@ -180,7 +195,7 @@ body
           margin 10px 0 0 35px
     .my-copy
       padding 1px
-      light-alpha(.2)
+      alpha-bg(light,.2)
       color dark
       margin 45px 0
       border-radius(8px)
@@ -372,28 +387,33 @@ body
    **************************************/
   .modal
     background dark
-    opacity(.7)
+    opacity(.8)
     height 100%
     width 100%
     absolute()
   .close
     font-size 1em
-    border 1px solid semi-dark
-    border-radius(4px)
     padding 4px 30px
     background semi-light
+    alpha-bg(semi-light,.95)
     color semi-dark
     absolute()
     cursor pointer
+    border-radius-top-only(8px)
   .window
-    border 2px solid very-dark
-    light-alpha(.7)
+    alpha-bg(light,.95)
+  .body
+    .window
+      border 2px solid very-dark
+      alpha-bg(light,.7)
+      border-radius(15px)
+  .window
+    border-radius-except-top-right(8px)
     color very-dark
     a
       color very-dark
     h2
       font-size 1.5em
-    border-radius(15px)
     padding 30px
     absolute()
     overflow hidden
@@ -409,18 +429,24 @@ body
     .tabs
       margin 0 0 30px 0
       li
-        padding 1px 8px
-        border 1px solid semi-dark
+        border-radius-top-only(8px)
+        font-family font2
+        background very-dark
+        padding 10px 15px 0 15px
         cursor pointer
-        color semi-dark
-        margin-top 5px
+        color semi-light
+        margin-top 10px
+        margin-right 10px
+        line-height 24px
+        font-size 16px
       li.active
-        font-weight bold
         margin-top 0
-        padding 4px 8px
+        padding 15px 15px 5px 15px
         border-bottom none
-        color dark
+        font-size 24px
+        color light
         cursor auto
+      border-bottom 1px solid very-dark
     .previews
       iframe
         width 100%
