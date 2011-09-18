@@ -415,7 +415,7 @@ app.post('/syncFacebook', function(req, res, next){
         
         // Here's where it gets nasty
 
-        console.log(existingClients);
+        //console.log(existingClients);
         var ids = [];
         for(var i in existingClients){
           ids.push(existingClients[i]._id);
