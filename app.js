@@ -21,7 +21,7 @@ var http = require('http');
 
 var im = require('imagemagick');
 
-var validURLCharacters = '$-_.+!*\'(),0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+var validURLCharacters = '-_.+!*,0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
 var db_uri = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost:27017/staging';
 
