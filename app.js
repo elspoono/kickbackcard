@@ -1253,15 +1253,15 @@ app.post('/saveVendor', securedFunction, function(req, res, next){
 }, function(req, res, next){
 
   var vendor = req.vendor;
-  var yelp_url = req.yelp_url;
-  var foundHours = req.foundHours;
+  var yelp_url = req.yelp_url||false;
+  var foundHours = req.foundHours||false;
   var params = req.body || {};
   //console.log(1);
   vendor.name = params.name;
   if(params.factual){
     vendor.address = params.factual.address+' '+(params.factual.address_extended||'');
     vendor.coordinates = [params.factual.latitude, params.factual.longitude];
-    vendor.site_url = params.factual.website;
+    vendor.site_url = params.factual.website||false;
     vendor.yelp_url = yelp_url;
     vendor.contact = params.factual.tel;
   }
