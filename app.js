@@ -1876,12 +1876,15 @@ var findNearVendors = function(req, res, next){
 
   var params = req.body || {
     longitude: -112.068787,
-    latitude: 33.449777
+    latitude: 33.449777,
+    longitudeDelta: .5
   }
-  console.log(params);
+  var finalDelta = params.longitudeDelta;
+  if(finalDelta < params.latitudeDelta)
+    finalDelta = params.latitudeDelta;
   Vendor.find(
     {
-      coordinates : { $near : [params.latitude, params.longitude], $maxDistance: params.longitudeDelta },
+      coordinates : { $near : [params.latitude, params.longitude], $maxDistance: finalDelta },
       _id : { $nin : req.mapClient.vendor_ids},
       active: true
     },
