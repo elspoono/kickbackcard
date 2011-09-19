@@ -1889,11 +1889,11 @@ var findNearVendors = function(req, res, next){
       active: true
     },
     ['coordinates','name','address','contact','yelp_url','site_url'],
-    {skip:0,limit:20},
+    {skip:0,limit:10},
     function(err, vendors){
       Vendor.find(
         {
-          coordinates : { $near : [params.latitude, params.longitude], $maxDistance: 0.5 },
+          coordinates : { $near : [params.latitude, params.longitude], $maxDistance: finalDelta },
           active: true
         },
         ['name'],
