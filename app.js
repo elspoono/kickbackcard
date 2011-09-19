@@ -1882,6 +1882,7 @@ var findNearVendors = function(req, res, next){
   var finalDelta = params.longitudeDelta;
   if(finalDelta < params.latitudeDelta)
     finalDelta = params.latitudeDelta;
+  finalDelta = finalDelta * .6; // "Just outside" the boundaries of the screen, do we still load??
   Vendor.find(
     {
       coordinates : { $near : [params.latitude, params.longitude], $maxDistance: finalDelta },
