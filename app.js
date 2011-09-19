@@ -1882,7 +1882,9 @@ var findNearVendors = function(req, res, next){
   var finalDelta = params.longitudeDelta;
   if(finalDelta < params.latitudeDelta)
     finalDelta = params.latitudeDelta;
-  finalDelta = finalDelta * .6; // "Just outside" the boundaries of the screen, do we still load??
+  finalDelta = finalDelta * .6;           // "Just outside" the boundaries of the screen, do we still load??
+  if(finalDelta < .3)
+    finalDelta = .3;                      // Ah, we do want to set a minimum though don't we.
   Vendor.find(
     {
       coordinates : { $near : [params.latitude, params.longitude], $maxDistance: finalDelta },
