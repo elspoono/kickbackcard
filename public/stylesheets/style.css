@@ -3,7 +3,7 @@
 @import "reset.css";
 body {
   font: 16px "Open Sans", Helvetica, Arial, sans-serif;
-  background: #dbdbdb;
+  background: #333;
   color: #fff;
 }
 body h1,
@@ -65,21 +65,31 @@ body .header .container .sign-up {
   float: right;
 }
 body .header .container .sign-up .disclaimer {
-  font-size: 10px;
+  color: #6f6f6e;
+  font-size: 14px;
   margin: 0 0 10px 0;
 }
 body .header .container .sign-up .button {
   display: block;
   padding: 20px 30px 5px 30px;
-  border: 1px solid #00b7ff;
+  background-color: #69cd68;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#69cd68), to(#359b34));
+  background-image: -webkit-linear-gradient(top, #69cd68, #359b34);
+  background-image: -moz-linear-gradient(top, #69cd68, #359b34);
+  background-image: -ms-linear-gradient(top, #69cd68, #359b34);
+  background-image: -o-linear-gradient(top, #69cd68, #359b34);
+  background-image: linear-gradient(top, #69cd68, #359b34);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=color1, EndColorStr=color2);
+  -moz-box-shadow: 4px 4px 4px #000;
+  -webkit-box-shadow: 4px 4px 4px #000;
+  box-shadow: 4px 4px 4px #000;
   -webkit-border-radius: 15px;
   -moz-border-radius: 15px;
   border-radius: 15px;
   font-size: 48px;
   font-weight: normal;
   font-family: "Luckiest Guy";
-  background: #000;
-  color: #00b7ff;
+  color: #fff;
   text-decoration: none;
 }
 body .header .navigation {
@@ -155,13 +165,22 @@ body .body .step-copy .burger div {
 }
 body .body .my-copy {
   padding: 1px;
-  background: #fff;
-  background: rgba(255,255,255,0.2);
-  color: #000;
+  background-color: #1d3d1f;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#1d3d1f), to(#2d6031));
+  background-image: -webkit-linear-gradient(top, #1d3d1f, #2d6031);
+  background-image: -moz-linear-gradient(top, #1d3d1f, #2d6031);
+  background-image: -ms-linear-gradient(top, #1d3d1f, #2d6031);
+  background-image: -o-linear-gradient(top, #1d3d1f, #2d6031);
+  background-image: linear-gradient(top, #1d3d1f, #2d6031);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=color1, EndColorStr=color2);
+  -moz-box-shadow: 2px 2px 2px #000;
+  -webkit-box-shadow: 2px 2px 2px #000;
+  box-shadow: 2px 2px 2px #000;
+  color: #fff;
   margin: 45px 0;
-  -webkit-border-radius: 8px;
-  -moz-border-radius: 8px;
-  border-radius: 8px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
 }
 body .body .my-copy p {
   margin: 14px 29px;
@@ -225,9 +244,9 @@ body .body .container .phone-area .screenshot .screens ul li {
 body .body .row {
   background: #aaa;
   color: #000;
-  -moz-box-shadow: 0px 0px 4px #fff;
-  -webkit-box-shadow: 0px 0px 4px #fff;
-  box-shadow: 0px 0px 4px #fff;
+  -moz-box-shadow: 4px 4px 4px #fff;
+  -webkit-box-shadow: 4px 4px 4px #fff;
+  box-shadow: 4px 4px 4px #fff;
   margin: 30px 0;
 }
 body .body .row a {
@@ -253,7 +272,7 @@ body .body .add-row {
 body .body .add-row a {
   background: #6f6f6e;
   border-color: #000;
-  color: #00b7ff;
+  color: #359b34;
   font-weight: bold;
   cursor: pointer;
   text-decoration: none;
@@ -266,16 +285,16 @@ body .body .add-row a {
 body .body .modified,
 body .body .modified:nth-child(even) {
   background: #cfc;
-  -moz-box-shadow: 0px 0px 12px #cfc;
-  -webkit-box-shadow: 0px 0px 12px #cfc;
-  box-shadow: 0px 0px 12px #cfc;
+  -moz-box-shadow: 12px 12px 12px #cfc;
+  -webkit-box-shadow: 12px 12px 12px #cfc;
+  box-shadow: 12px 12px 12px #cfc;
 }
 body .body .deleted,
 body .body .deleted:nth-child(even) {
   background: #fcc;
-  -moz-box-shadow: 0px 0px 12px #fcc;
-  -webkit-box-shadow: 0px 0px 12px #fcc;
-  box-shadow: 0px 0px 12px #fcc;
+  -moz-box-shadow: 12px 12px 12px #fcc;
+  -webkit-box-shadow: 12px 12px 12px #fcc;
+  box-shadow: 12px 12px 12px #fcc;
 }
 body .container {
   max-width: 900px;
@@ -287,15 +306,15 @@ body .stacked {
 }
 body .footer {
   text-align: center;
-  background: #dbdbdb;
+  background: #333;
 }
 body .footer .other {
-  margin: 0 0 15px 0;
-  color: #2d6031;
+  margin: 15px 0 0 0;
+  color: #fff;
   font-size: 12px;
 }
 body .footer .other a {
-  color: #2d6031;
+  color: #fff;
   font-size: 12px;
   text-decoration: none;
 }
@@ -551,9 +570,9 @@ body .window fieldset .required .input {
 body .window fieldset .row {
   margin: 15px 0;
   background: #aaa;
-  -moz-box-shadow: 0px 0px 4px #aaa;
-  -webkit-box-shadow: 0px 0px 4px #aaa;
-  box-shadow: 0px 0px 4px #aaa;
+  -moz-box-shadow: 4px 4px 4px #aaa;
+  -webkit-box-shadow: 4px 4px 4px #aaa;
+  box-shadow: 4px 4px 4px #aaa;
   padding: 15px;
 }
 body .window fieldset .row li {
@@ -590,7 +609,7 @@ body .window fieldset .row .buttons {
 body .window fieldset .row .buttons .print {
   background: #6f6f6e;
   border-color: #000;
-  color: #00b7ff;
+  color: #359b34;
   font-weight: bold;
   cursor: pointer;
   text-decoration: none;
@@ -607,7 +626,7 @@ body .window fieldset .add-row {
 body .window fieldset .add-row a {
   background: #6f6f6e;
   border-color: #000;
-  color: #00b7ff;
+  color: #359b34;
   font-weight: bold;
   cursor: pointer;
   text-decoration: none;
@@ -621,9 +640,9 @@ body .window .print .option {
   margin: 15px 0;
   padding: 15px;
   background: rgba(190,190,190,0.1);
-  -moz-box-shadow: 0px 0px 4px #aaa;
-  -webkit-box-shadow: 0px 0px 4px #aaa;
-  box-shadow: 0px 0px 4px #aaa;
+  -moz-box-shadow: 4px 4px 4px #aaa;
+  -webkit-box-shadow: 4px 4px 4px #aaa;
+  box-shadow: 4px 4px 4px #aaa;
 }
 body .window .print .option .row {
   margin: 5px 0;
@@ -666,7 +685,7 @@ body .window .buttons .submit {
   margin-left: 15px;
   background: #6f6f6e;
   border-color: #000;
-  color: #00b7ff;
+  color: #359b34;
   font-weight: bold;
   cursor: pointer;
   text-decoration: none;
