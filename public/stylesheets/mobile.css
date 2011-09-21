@@ -1,3 +1,6 @@
+body .body .container {
+  padding: 15px;
+}
 body .body .container .phone-area {
   margin-top: 30px;
 }
@@ -27,6 +30,12 @@ body .body .step-copy .burger div {
 body .body .col-left,
 body .body .col-right {
   display: none;
+}
+body .window {
+  padding: 10px;
+}
+body .faq .set .line p {
+  margin-left: 5px;
 }
 body .window {
   background: #fff;
