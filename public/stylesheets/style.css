@@ -153,13 +153,13 @@ body .body p {
   margin: 15px 0;
 }
 body .body .content-area {
-  background-color: #0af;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#0af), to(#08c));
-  background-image: -webkit-linear-gradient(top, #0af, #08c);
-  background-image: -moz-linear-gradient(top, #0af, #08c);
-  background-image: -ms-linear-gradient(top, #0af, #08c);
-  background-image: -o-linear-gradient(top, #0af, #08c);
-  background-image: linear-gradient(top, #0af, #08c);
+  background-color: #09e;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#09e), to(#0078bb));
+  background-image: -webkit-linear-gradient(top, #09e, #0078bb);
+  background-image: -moz-linear-gradient(top, #09e, #0078bb);
+  background-image: -ms-linear-gradient(top, #09e, #0078bb);
+  background-image: -o-linear-gradient(top, #09e, #0078bb);
+  background-image: linear-gradient(top, #09e, #0078bb);
   filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=color1, EndColorStr=color2);
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
@@ -204,7 +204,7 @@ body .body .separator {
   margin: 30px 15px;
 }
 body .body .my-copy {
-  border: 4px dashed #069;
+  border: 4px dashed #005788;
   color: #000;
   margin: 15px;
 }
@@ -352,7 +352,7 @@ body .footer .other {
   font-size: 12px;
 }
 body .footer .other a {
-  color: #0af;
+  color: #09e;
   font-size: 12px;
   text-decoration: none;
 }
@@ -404,20 +404,25 @@ body .faq .set .line img {
 body .faq .set .line p {
   margin-left: 65px;
   text-align: left;
-  font-size: 13px;
+  font-size: 16px;
   line-height: 36px;
 }
-body .faq .set .q {
+body .faq .set .a {
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
   border-radius: 8px;
   background: #333;
 }
-body .faq .set .q h3 {
+body .faq .set .a h3 {
+  color: #6f6f6e;
+}
+body .faq .set .a p {
+  font-size: 13px;
   color: #fff;
 }
-body .faq .set .q p {
-  color: #fff;
+body .faq .set .a p b {
+  font-weight: normal;
+  color: #09e;
 }
 body .tooltip {
   border: 1px solid #990;
@@ -471,13 +476,13 @@ body .window {
   background: rgba(255,255,255,0.95);
 }
 body .body .window {
-  background-color: #0af;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#0af), to(#08c));
-  background-image: -webkit-linear-gradient(top, #0af, #08c);
-  background-image: -moz-linear-gradient(top, #0af, #08c);
-  background-image: -ms-linear-gradient(top, #0af, #08c);
-  background-image: -o-linear-gradient(top, #0af, #08c);
-  background-image: linear-gradient(top, #0af, #08c);
+  background-color: #09e;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#09e), to(#0078bb));
+  background-image: -webkit-linear-gradient(top, #09e, #0078bb);
+  background-image: -moz-linear-gradient(top, #09e, #0078bb);
+  background-image: -ms-linear-gradient(top, #09e, #0078bb);
+  background-image: -o-linear-gradient(top, #09e, #0078bb);
+  background-image: linear-gradient(top, #09e, #0078bb);
   filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=color1, EndColorStr=color2);
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
