@@ -49,7 +49,7 @@ body .header {
   background-image: -ms-linear-gradient(top, #f4f4f4, #dbdbdb);
   background-image: -o-linear-gradient(top, #f4f4f4, #dbdbdb);
   background-image: linear-gradient(top, #f4f4f4, #dbdbdb);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=color1, EndColorStr=color2);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=#f4f4f4, EndColorStr=#dbdbdb);
   color: #2d6031;
 }
 body .header a {
@@ -86,7 +86,7 @@ body .header .container .sign-up .button {
   background-image: -ms-linear-gradient(top, #69cd68, #359b34);
   background-image: -o-linear-gradient(top, #69cd68, #359b34);
   background-image: linear-gradient(top, #69cd68, #359b34);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=color1, EndColorStr=color2);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=#69cd68, EndColorStr=#359b34);
   -moz-box-shadow: 4px 4px 8px #1b4f1a;
   -webkit-box-shadow: 4px 4px 8px #1b4f1a;
   box-shadow: 4px 4px 8px #1b4f1a;
@@ -139,7 +139,7 @@ body .body {
   background-image: -ms-linear-gradient(top, #dbdbdb, #8e8e8e);
   background-image: -o-linear-gradient(top, #dbdbdb, #8e8e8e);
   background-image: linear-gradient(top, #dbdbdb, #8e8e8e);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=color1, EndColorStr=color2);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=#dbdbdb, EndColorStr=#8e8e8e);
 }
 body .body h2 {
   font-size: 2em;
@@ -160,7 +160,7 @@ body .body .content-area {
   background-image: -ms-linear-gradient(top, #0af, #08c);
   background-image: -o-linear-gradient(top, #0af, #08c);
   background-image: linear-gradient(top, #0af, #08c);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=color1, EndColorStr=color2);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=#0af, EndColorStr=#08c);
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
   border-radius: 8px;
@@ -307,7 +307,7 @@ body .body .add-row a {
   background-image: -ms-linear-gradient(top, #7eb468, #4e7a3c);
   background-image: -o-linear-gradient(top, #7eb468, #4e7a3c);
   background-image: linear-gradient(top, #7eb468, #4e7a3c);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=color1, EndColorStr=color2);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=#7eb468, EndColorStr=#4e7a3c);
   -moz-box-shadow: 2px 2px 4px #000;
   -webkit-box-shadow: 2px 2px 4px #000;
   box-shadow: 2px 2px 4px #000;
@@ -340,12 +340,12 @@ body .container {
   padding: 30px;
 }
 body .footer {
-  margin-top: 30px;
+  margin-top: 20px;
   text-align: center;
   background: #333;
 }
 body .footer .other {
-  padding: 0 0 30px 0;
+  padding: 0 0 15px 0;
   color: #6f6f6e;
   font-size: 12px;
 }
@@ -356,7 +356,7 @@ body .footer .other a {
 }
 body .footer .container {
   border-top: 1px solid #6f6f6e;
-  padding: 15px 0 0 0;
+  padding: 5px 0 0 0;
 }
 body .footer ul {
   text-align: center;
@@ -479,7 +479,7 @@ body .body .window {
   background-image: -ms-linear-gradient(top, #0af, #08c);
   background-image: -o-linear-gradient(top, #0af, #08c);
   background-image: linear-gradient(top, #0af, #08c);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=color1, EndColorStr=color2);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=#0af, EndColorStr=#08c);
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
   border-radius: 8px;
@@ -666,7 +666,7 @@ body .window fieldset .row .buttons .print {
   background-image: -ms-linear-gradient(top, #7eb468, #4e7a3c);
   background-image: -o-linear-gradient(top, #7eb468, #4e7a3c);
   background-image: linear-gradient(top, #7eb468, #4e7a3c);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=color1, EndColorStr=color2);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=#7eb468, EndColorStr=#4e7a3c);
   -moz-box-shadow: 2px 2px 4px #000;
   -webkit-box-shadow: 2px 2px 4px #000;
   box-shadow: 2px 2px 4px #000;
@@ -694,7 +694,7 @@ body .window fieldset .add-row a {
   background-image: -ms-linear-gradient(top, #7eb468, #4e7a3c);
   background-image: -o-linear-gradient(top, #7eb468, #4e7a3c);
   background-image: linear-gradient(top, #7eb468, #4e7a3c);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=color1, EndColorStr=color2);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=#7eb468, EndColorStr=#4e7a3c);
   -moz-box-shadow: 2px 2px 4px #000;
   -webkit-box-shadow: 2px 2px 4px #000;
   box-shadow: 2px 2px 4px #000;
@@ -764,7 +764,7 @@ body .window .buttons .submit {
   background-image: -ms-linear-gradient(top, #7eb468, #4e7a3c);
   background-image: -o-linear-gradient(top, #7eb468, #4e7a3c);
   background-image: linear-gradient(top, #7eb468, #4e7a3c);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=color1, EndColorStr=color2);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=#7eb468, EndColorStr=#4e7a3c);
   -moz-box-shadow: 2px 2px 4px #000;
   -webkit-box-shadow: 2px 2px 4px #000;
   box-shadow: 2px 2px 4px #000;

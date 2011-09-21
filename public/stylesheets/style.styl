@@ -85,7 +85,7 @@ gradient(color1=#444444,color2=#999999)
   background-image -ms-linear-gradient(top, color1, color2) /* IE10 */
   background-image -o-linear-gradient(top, color1, color2) /* Opera 11.10+ */
   background-image linear-gradient(top, color1, color2)
-  filter unquote('progid:DXImageTransform.Microsoft.gradient(startColorStr=color1, EndColorStr=color2)') /* IE6–IE9 */
+  filter unquote('progid:DXImageTransform.Microsoft.gradient(startColorStr='+color1+', EndColorStr='+color2+')') /* IE6–IE9 */
 submit()
   cursor pointer
   text-decoration none
@@ -348,11 +348,11 @@ body
     margin 0 auto
     padding 30px
   .footer
-    margin-top 30px
+    margin-top 20px
     text-align center
     background mostly-dark
     .other
-      padding 0 0 30px 0
+      padding 0 0 15px 0
       color semi-dark
       font-size 12px
       a
@@ -361,7 +361,7 @@ body
         text-decoration none
     .container
       border-top 1px solid semi-dark
-      padding 15px 0 0 0
+      padding 5px 0 0 0
     ul
       text-align center
       li
