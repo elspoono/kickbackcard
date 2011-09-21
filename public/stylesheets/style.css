@@ -383,10 +383,8 @@ body .faq .sample {
 }
 body .faq .set {
   display: block;
-  margin-bottom: 60px;
 }
 body .faq .set .line {
-  margin: 20px 0;
   display: block;
   color: #000;
   overflow: hidden;
@@ -409,6 +407,7 @@ body .faq .set .line p {
   line-height: 36px;
 }
 body .faq .set .a {
+  padding: 45px 0;
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
   border-radius: 8px;
@@ -792,7 +791,7 @@ body .container .modal {
 body .container .window {
   display: block;
   position: relative;
-  margin: 0 auto;
+  margin: 0 auto 60px auto;
 }
 body .assets {
   display: none;
