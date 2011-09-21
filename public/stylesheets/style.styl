@@ -33,6 +33,9 @@ darkShift = 60
 boxbg = rgba(190,190,190,.1)
 gray = #DBDBDB
 
+
+alt-color = #0af
+
 attention = #359b34
 
 /********************************
@@ -43,10 +46,10 @@ attention = #359b34
 alpha-bg(color,n)
   background rgb(color);
   background rgba(color,n);
-box-shadow(n = 4px, color = semi-light)
-  -moz-box-shadow: n n n color
-  -webkit-box-shadow: n n n color
-  box-shadow: n n n color
+box-shadow(n = 4px, color = semi-light, b = n)
+  -moz-box-shadow: n n b color
+  -webkit-box-shadow: n n b color
+  box-shadow: n n b color
 
 border-radius(n)
   -webkit-border-radius n
@@ -84,15 +87,17 @@ gradient(color1=#444444,color2=#999999)
   background-image linear-gradient(top, color1, color2)
   filter unquote('progid:DXImageTransform.Microsoft.gradient(startColorStr=color1, EndColorStr=color2)') /* IE6–IE9 */
 submit()
-  background semi-dark
-  border-color dark
-  color attention
-  font-weight bold
   cursor pointer
   text-decoration none
-  padding 4px 8px
-  border 1px solid semi-dark
-  border-radius(4px)
+  padding 8px 20px 0 20px
+  gradient(lighten(very-dark-alt,20),very-dark-alt)
+  box-shadow(2px, dark,4px)
+  border none
+  font-family font2
+  font-size 24px
+  border-radius(15px)
+  margin 0 6px 6px 0
+  color light
 
 /**************************************
  *
@@ -144,10 +149,11 @@ body
     a
       color very-dark-alt
     .container
+      padding 10px 0
       overflow hidden
       .logo
-        background url('/images/KBHeader.png') no-repeat left top
-        height 78px
+        background url('/images/KBHeader.png') no-repeat 0 15px
+        height 100px
         width 320px
         float left
         cursor pointer
@@ -163,7 +169,8 @@ body
           display block
           padding 20px 30px 5px 30px
           gradient(lighten(attention,20),attention)
-          box-shadow(4px, dark)
+          box-shadow(4px, darken(attention,20),8px)
+          margin 0 8px 8px 0
           border-radius(15px)
           font-size 48px
           font-weight normal
@@ -191,12 +198,16 @@ body
    * Body top level tag definitions, e.g. p margins
    *
    ************************************************/
+
+  h1
+    font-size 2em
+  .headline
+    .container
+      padding 20px 0 10px 0
+    background mostly-dark
   .body
-    background very-dark url('/images/body-bg.png') repeat-x 0 70px
-    h1
-      font-size 2em
-      line-height 2em
-      margin-top -20px
+    gradient(gray,darken(gray,15))
+    //background very-dark url('/images/body-bg.png') repeat-x 0 70px
     h2
       font-size 2em
       line-height 2em
@@ -205,7 +216,12 @@ body
       font-style italic
     p
       margin 15px 0
+    .content-area
+      gradient(alt-color,darken(alt-color,10))
+      border-radius(8px)
+      box-shadow(2px,dark,8px)
     .step-copy
+      margin 15px
       color dark
       li
         font-family 'Luckiest Guy'
@@ -228,17 +244,18 @@ body
         width 140px
         div
           margin 10px 0 0 35px
+    .separator
+      margin 30px 15px
     .my-copy
-      padding 1px
-      gradient(darken(very-dark,10),very-dark)
-      box-shadow(2px, dark)
-      color light
-      margin 45px 0
-      border-radius(10px)
+      border 4px dashed darken(alt-color,20)
+      color dark
+      margin 15px
       p
-        margin 14px 29px
+        margin 15px 15px
     .col-left,.col-right
+      margin 15px
       text-align center
+      color dark
       .qr-container
         display none
         margin 10px
@@ -259,12 +276,14 @@ body
      * Home Page specific containers and structure
      *
      **************************************/
+    .clear
+      clear both
     .container
-      overflow hidden
       .content-area
         float left
         max-width 580px
       .phone-area
+        margin-top -75px
         width 300px
         float right
         .screenshot
@@ -330,21 +349,22 @@ body
     max-width 900px
     margin 0 auto
     padding 30px
-  .stacked
-    padding 30px 30px 0 30px
+  .unstacked
+    margin-bottom -40px
   .footer
+    margin-top 40px
     text-align center
     background mostly-dark
     .other
-      margin 15px 0 0 0
-      color light
+      padding 0 0 15px 0
+      color semi-dark
       font-size 12px
       a
-        color light
+        color semi-dark
         font-size 12px
         text-decoration none
-      
     .container
+      border-top 1px solid semi-dark
       padding 0
     ul
       text-align center
@@ -441,9 +461,10 @@ body
     alpha-bg(light,.95)
   .body
     .window
-      border 2px solid very-dark
-      alpha-bg(light,.7)
-      border-radius(15px)
+      gradient(alt-color,darken(alt-color,10))
+      border-radius(8px)
+      box-shadow(2px,dark,8px)
+      color dark
   .window
     border-radius-except-top-right(8px)
     color very-dark
