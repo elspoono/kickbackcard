@@ -167,10 +167,10 @@ body .body .content-area {
   -moz-box-shadow: 2px 2px 8px #000;
   -webkit-box-shadow: 2px 2px 8px #000;
   box-shadow: 2px 2px 8px #000;
+  color: #1a1a1a;
 }
 body .body .step-copy {
   margin: 15px;
-  color: #000;
 }
 body .body .step-copy li {
   font-family: "Luckiest Guy";
@@ -205,7 +205,6 @@ body .body .separator {
 }
 body .body .my-copy {
   border: 4px dashed #069;
-  color: #000;
   margin: 15px;
 }
 body .body .my-copy p {
@@ -215,7 +214,6 @@ body .body .col-left,
 body .body .col-right {
   margin: 15px;
   text-align: center;
-  color: #000;
 }
 body .body .col-left .qr-container,
 body .body .col-right .qr-container {
@@ -385,7 +383,6 @@ body .faq .set {
 }
 body .faq .set .line {
   display: block;
-  color: #000;
   overflow: hidden;
   text-align: center;
 }
@@ -489,7 +486,7 @@ body .body .window {
   -moz-box-shadow: 2px 2px 8px #000;
   -webkit-box-shadow: 2px 2px 8px #000;
   box-shadow: 2px 2px 8px #000;
-  color: #000;
+  color: #1a1a1a;
 }
 body .window {
   -webkit-border-radius: 8px;
