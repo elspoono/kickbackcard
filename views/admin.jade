@@ -1,7 +1,9 @@
 .header
+  .navigation
+    .container
+      ul
+        !=partial('navigation_admin')
   .container
     .logo
-    ul.navigation
-      !=partial('navigation_admin')
 .body
   !=partial(view)

@@ -272,15 +272,15 @@ body .body .container .phone-area .screenshot .screens ul li {
   float: left;
 }
 body .body .row {
-  background: #aaa;
-  color: #000;
-  -moz-box-shadow: 4px 4px 4px #fff;
-  -webkit-box-shadow: 4px 4px 4px #fff;
-  box-shadow: 4px 4px 4px #fff;
+  background: #09e;
+  -moz-box-shadow: 2px 2px 2px #000;
+  -webkit-box-shadow: 2px 2px 2px #000;
+  box-shadow: 2px 2px 2px #000;
+  color: #333;
   margin: 30px 0;
 }
 body .body .row a {
-  color: #000;
+  color: #333;
 }
 body .body .row li {
   white-space: no-wrap;
@@ -622,10 +622,10 @@ body .window fieldset .required .input {
 }
 body .window fieldset .row {
   margin: 15px 0;
-  background: #aaa;
-  -moz-box-shadow: 4px 4px 4px #aaa;
-  -webkit-box-shadow: 4px 4px 4px #aaa;
-  box-shadow: 4px 4px 4px #aaa;
+  background: #09e;
+  -moz-box-shadow: 2px 2px 2px #000;
+  -webkit-box-shadow: 2px 2px 2px #000;
+  box-shadow: 2px 2px 2px #000;
   padding: 15px;
 }
 body .window fieldset .row li {
