@@ -334,16 +334,13 @@ body .container {
   margin: 0 auto;
   padding: 30px;
 }
-body .unstacked {
-  margin-bottom: -40px;
-}
 body .footer {
-  margin-top: 40px;
+  margin-top: 30px;
   text-align: center;
   background: #333;
 }
 body .footer .other {
-  padding: 0 0 15px 0;
+  padding: 0 0 30px 0;
   color: #6f6f6e;
   font-size: 12px;
 }
@@ -354,7 +351,7 @@ body .footer .other a {
 }
 body .footer .container {
   border-top: 1px solid #6f6f6e;
-  padding: 0;
+  padding: 15px 0 0 0;
 }
 body .footer ul {
   text-align: center;
