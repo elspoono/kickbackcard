@@ -1,13 +1,22 @@
 .header
+  .navigation
+    .container
+      ul
+        li
+          | home
+        li
+          a(href="/features") features
+        li
+          a(href="/about") about
+        li
+          a(href="/faq") faq
+        li
+          a(href="/login") login
   .container
     .logo
-    ul.navigation
-      li
-        | home
-      li
-        a.login(href="/faq") questions
-      li
-        a.login(href="/login") vendor login
+    .sign-up
+      .disclaimer Request a Beta Invite
+      a.button(href='/sign-up') sign up
 .body
   .container
     .content-area

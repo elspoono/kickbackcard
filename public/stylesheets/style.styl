@@ -25,6 +25,7 @@ very-light = #fff
 light = #FFF
 very-dark-alt = #4e7a3c
 semi-dark = #6f6f6e
+mostly-dark = #333
 red = #FCC
 green = #CFC
 yellow = #FFC
@@ -141,16 +142,40 @@ body
         width 320px
         float left
         cursor pointer
-      .navigation
+      .sign-up
+        width auto
+        text-align center
+        .disclaimer
+          font-size 10px
+          margin 0 0 10px 0
         float right
-        li
-          margin 0 0 0 15px
-        font-family font2
-        line-height 20px
-        a
+        .button
+          display block
+          padding 20px 30px 5px 30px
+          border 1px solid attention
+          border-radius(15px)
+          font-size 48px
+          font-weight normal
+          font-family font2
+          background dark
+          color attention
           text-decoration none
-        color semi-dark
+    .navigation
+      .container
+        padding 0
+      background mostly-dark
+      overflow hidden
+      ul
+        float right
+      li
+        margin 0 0 0 30px
+        padding 3px 0
+      font-size 14px
+      a
+        color light
         text-decoration none
+      color semi-dark
+      text-decoration none
   /************************************************
    *
    * Body top level tag definitions, e.g. p margins

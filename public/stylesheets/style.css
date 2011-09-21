@@ -59,17 +59,48 @@ body .header .container .logo {
   float: left;
   cursor: pointer;
 }
-body .header .container .navigation {
+body .header .container .sign-up {
+  width: auto;
+  text-align: center;
   float: right;
+}
+body .header .container .sign-up .disclaimer {
+  font-size: 10px;
+  margin: 0 0 10px 0;
+}
+body .header .container .sign-up .button {
+  display: block;
+  padding: 20px 30px 5px 30px;
+  border: 1px solid #00b7ff;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  border-radius: 15px;
+  font-size: 48px;
+  font-weight: normal;
   font-family: "Luckiest Guy";
-  line-height: 20px;
+  background: #000;
+  color: #00b7ff;
+  text-decoration: none;
+}
+body .header .navigation {
+  background: #333;
+  overflow: hidden;
+  font-size: 14px;
   color: #6f6f6e;
   text-decoration: none;
 }
-body .header .container .navigation li {
-  margin: 0 0 0 15px;
+body .header .navigation .container {
+  padding: 0;
 }
-body .header .container .navigation a {
+body .header .navigation ul {
+  float: right;
+}
+body .header .navigation li {
+  margin: 0 0 0 30px;
+  padding: 3px 0;
+}
+body .header .navigation a {
+  color: #fff;
   text-decoration: none;
 }
 body .body {
