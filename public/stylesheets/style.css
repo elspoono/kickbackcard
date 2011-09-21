@@ -43,14 +43,21 @@ body .bg2 {
   z-index: -1;
 }
 body .header {
-  background: #dbdbdb;
+  background-color: #f4f4f4;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#f4f4f4), to(#dbdbdb));
+  background-image: -webkit-linear-gradient(top, #f4f4f4, #dbdbdb);
+  background-image: -moz-linear-gradient(top, #f4f4f4, #dbdbdb);
+  background-image: -ms-linear-gradient(top, #f4f4f4, #dbdbdb);
+  background-image: -o-linear-gradient(top, #f4f4f4, #dbdbdb);
+  background-image: linear-gradient(top, #f4f4f4, #dbdbdb);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=color1, EndColorStr=color2);
   color: #2d6031;
 }
 body .header a {
   color: #4e7a3c;
 }
 body .header .container {
-  padding: 10px 0;
+  padding: 15px 0;
   overflow: hidden;
 }
 body .header .container .logo {
@@ -67,7 +74,7 @@ body .header .container .sign-up {
 }
 body .header .container .sign-up .disclaimer {
   color: #6f6f6e;
-  font-size: 14px;
+  font-size: 12px;
   margin: 0 0 10px 0;
 }
 body .header .container .sign-up .button {
@@ -126,12 +133,12 @@ body .headline .container {
 }
 body .body {
   background-color: #dbdbdb;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#dbdbdb), to(#b5b5b5));
-  background-image: -webkit-linear-gradient(top, #dbdbdb, #b5b5b5);
-  background-image: -moz-linear-gradient(top, #dbdbdb, #b5b5b5);
-  background-image: -ms-linear-gradient(top, #dbdbdb, #b5b5b5);
-  background-image: -o-linear-gradient(top, #dbdbdb, #b5b5b5);
-  background-image: linear-gradient(top, #dbdbdb, #b5b5b5);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#dbdbdb), to(#8e8e8e));
+  background-image: -webkit-linear-gradient(top, #dbdbdb, #8e8e8e);
+  background-image: -moz-linear-gradient(top, #dbdbdb, #8e8e8e);
+  background-image: -ms-linear-gradient(top, #dbdbdb, #8e8e8e);
+  background-image: -o-linear-gradient(top, #dbdbdb, #8e8e8e);
+  background-image: linear-gradient(top, #dbdbdb, #8e8e8e);
   filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=color1, EndColorStr=color2);
 }
 body .body h2 {
@@ -239,7 +246,7 @@ body .body .container .content-area {
   max-width: 580px;
 }
 body .body .container .phone-area {
-  margin-top: -75px;
+  margin-top: -60px;
   width: 300px;
   float: right;
 }
