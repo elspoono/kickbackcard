@@ -401,10 +401,10 @@ body .faq .set .line p {
   line-height: 36px;
 }
 body .faq .set .q {
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-  background: #2d6031;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  border-radius: 8px;
+  background: #333;
 }
 body .faq .set .q h3 {
   color: #fff;
