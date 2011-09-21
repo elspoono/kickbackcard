@@ -1820,27 +1820,33 @@ app.post('/sendWelcomeEmail', securedFunction, function(req, res, next){
  * 
  * 
  **********************************/
-app.get('/', get10Vendors, function(req, res){
+var redirectLoggedIn = function(req, res, next){
   if(req.session.role == 'admin')
     res.send('',{
         Location:'/admin'
     },302);
-  else{
-    res.render('index', {
-      title: 'KickbackCard - iPhone App Loyalty Card Program'
-    });
-  }
+  else
+    next()
+}
+app.get('/', redirectLoggedIn, function(req, res){
+  res.render('index', {
+    title: 'KickbackCard - iPhone App Loyalty Card Program'
+  });
 });
-app.get('/faq', get10Vendors, function(req, res){
-  if(req.session.role == 'admin')
-    res.send('',{
-        Location:'/admin'
-    },302);
-  else{
-    res.render('faq', {
-      title: 'KickbackCard - Frequently Asked Questions'
-    });
-  }
+app.get('/faq', redirectLoggedIn, function(req, res){
+  res.render('faq', {
+    title: 'KickbackCard - Frequently Asked Questions'
+  });
+});
+app.get('/features', redirectLoggedIn, function(req, res){
+  res.render('features', {
+    title: 'KickbackCard - Features and Benefits'
+  });
+});
+app.get('/about', redirectLoggedIn, function(req, res){
+  res.render('about', {
+    title: 'KickbackCard - The team behind the product'
+  });
 });
 
 
