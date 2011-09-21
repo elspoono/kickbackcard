@@ -1848,6 +1848,11 @@ app.get('/about', redirectLoggedIn, function(req, res){
     title: 'KickbackCard - The team behind the product'
   });
 });
+app.get('/sign-up', redirectLoggedIn, function(req, res){
+  res.render('signup', {
+    title: 'KickbackCard - Beta Invite Request Form'
+  });
+});
 
 
 
