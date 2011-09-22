@@ -399,7 +399,7 @@ body .text-clump .col {
   max-width: 290px;
   margin-right: 30px;
 }
-body .text-clump .col.last {
+body .text-clump .last {
   margin-right: 0;
 }
 body .text-clump img {
@@ -419,6 +419,20 @@ body .text-clump .shift.c {
   margin-top: 60px;
 }
 body .text-clump .shift.d {
+  margin-top: 90px;
+}
+body .text-clump .op-shift {
+  margin-left: 10px;
+  float: right;
+  margin-right: -50px;
+}
+body .text-clump .op-shift.b {
+  margin-top: 30px;
+}
+body .text-clump .op-shift.c {
+  margin-top: 60px;
+}
+body .text-clump .op-shift.d {
   margin-top: 90px;
 }
 body .text-clump .spacer {
