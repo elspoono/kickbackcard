@@ -1,0 +1,28 @@
+body .header {
+  background-color: #f4f4f4;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=#f4f4f4, EndColorStr=#dbdbdb);
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr=#f4f4f4, EndColorStr=#dbdbdb)";
+}
+body .header .container .sign-up .button {
+  background-color: #69cd68;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=#69cd68, EndColorStr=#359b34);
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr=#69cd68, EndColorStr=#359b34)";
+}
+body .body {
+  background-color: #dbdbdb;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=#dbdbdb, EndColorStr=#8e8e8e);
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr=#dbdbdb, EndColorStr=#8e8e8e)";
+}
+body .body .content-area {
+  background-color: #00abff;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=#00abff, EndColorStr=#0089cc);
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr=#00abff, EndColorStr=#0089cc)";
+}
+body .body .container .phone-area {
+  margin-top: 0;
+}
+body .body .window {
+  background-color: #00abff;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=#00abff, EndColorStr=#0089cc);
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr=#00abff, EndColorStr=#0089cc)";
+}

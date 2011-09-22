@@ -1,0 +1,112 @@
+/**********************************
+ *
+ * Font and Color global defintions
+ *
+ **********************************/
+font-size = 16px
+font = font-size "Open Sans", Helvetica, Arial, sans-serif
+font2 = 'Luckiest Guy'
+
+very-dark = #2d6031
+dark = #000000
+semi-light = #aaaaaa
+very-light = #eeeeee
+light = #FFFFFF
+very-dark-alt = #4e7a3c
+semi-dark = #6f6f6e
+mostly-dark = #333333
+red = #FFCCCC
+green = #CCFFCC
+yellow = #FFFFCC
+darkShift = 60
+boxbg = rgba(190,190,190,.1)
+gray = #DBDBDB
+
+
+alt-color = #00abff
+
+attention = #359b34
+
+/********************************
+ *
+ * Generic Functions for css3/etc
+ *
+ ********************************/
+alpha-bg(color,n)
+  background rgb(color);
+  background rgba(color,n);
+box-shadow(n = 4px, color = semi-light, b = n)
+  -moz-box-shadow: n n b color
+  -webkit-box-shadow: n n b color
+  box-shadow: n n b color
+
+border-radius(n)
+  -webkit-border-radius n
+  -moz-border-radius n
+  border-radius n
+border-radius-except-top-right(n)
+  -webkit-border-radius n
+  -moz-border-radius n
+  border-radius n
+  border-top-right-radius 0
+  -moz-border-radius-topright 0
+  -webkit-border-top-right-radius 0
+border-radius-top-only(n)
+  border-top-left-radius n
+  -moz-border-radius-topleft n
+  -webkit-border-top-left-radius n
+  border-top-right-radius n
+  -moz-border-radius-topright n
+  -webkit-border-top-right-radius n
+opacity(n)
+  opacity n
+  filter alpha\(opacity\=n*100\)
+absolute()
+  display none
+  position absolute
+  top 0
+  left 0
+gradient(color1=#444444,color2=#999999)
+  background-color color1
+  filter unquote('progid:DXImageTransform.Microsoft.gradient(startColorStr='+color1+', EndColorStr='+color2+')') /* IE6–IE9 */
+  -ms-filter unquote('"progid:DXImageTransform.Microsoft.gradient(startColorStr='+color1+', EndColorStr='+color2+')"') /* IE6–IE9 */
+submit()
+  cursor pointer
+  text-decoration none
+  padding 8px 20px 0 20px
+  gradient(lighten(very-dark-alt,20),very-dark-alt)
+  box-shadow(2px, dark,4px)
+  border none
+  font-family font2
+  font-size 24px
+  border-radius(15px)
+  margin 0 6px 6px 0
+  color light
+
+/**************************************
+ *
+ * Top level "tag" definitions, e.g. h1
+ *
+ **************************************/
+body
+  /**************************************
+   *
+   * The header at the top of every page
+   *
+   **************************************/
+  .header
+    gradient(lighten(gray,10),gray)
+    .container
+      .sign-up
+        .button
+          gradient(lighten(attention,20),attention)
+  .body
+    gradient(gray,darken(gray,30))
+    .content-area
+      gradient(alt-color,darken(alt-color,10))
+  .body
+    .container
+      .phone-area
+        margin-top 0
+    .window
+      gradient(alt-color,darken(alt-color,10))
