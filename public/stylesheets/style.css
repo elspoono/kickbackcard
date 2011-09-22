@@ -389,6 +389,14 @@ body .text-clump p b {
   font-weight: normal;
   color: #00abff;
 }
+body .text-clump .shadow-me {
+  -moz-box-shadow: 4px 4px 15px #000;
+  -webkit-box-shadow: 4px 4px 15px #000;
+  box-shadow: 4px 4px 15px #000;
+  margin: 30px;
+  padding: 5px;
+  border: 1px solid #dbdbdb;
+}
 body .text-clump .col-2 {
   float: left;
   max-width: 580px;
@@ -401,9 +409,6 @@ body .text-clump .col {
 }
 body .text-clump .last {
   margin-right: 0;
-}
-body .text-clump img {
-  width: 140px;
 }
 body .text-clump .shift.a {
   margin-left: 0;
