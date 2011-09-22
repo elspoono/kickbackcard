@@ -389,6 +389,11 @@ body .text-clump p b {
   font-weight: normal;
   color: #00abff;
 }
+body .text-clump .col-2 {
+  float: left;
+  max-width: 580px;
+  margin-right: 45px;
+}
 body .text-clump .col {
   float: left;
   max-width: 290px;
@@ -399,6 +404,26 @@ body .text-clump .col.last {
 }
 body .text-clump img {
   width: 140px;
+}
+body .text-clump .shift.a {
+  margin-left: 0;
+}
+body .text-clump .shift {
+  float: left;
+  margin-left: -40px;
+}
+body .text-clump .shift.b {
+  margin-top: 30px;
+}
+body .text-clump .shift.c {
+  margin-top: 60px;
+}
+body .text-clump .shift.d {
+  margin-top: 90px;
+}
+body .text-clump .spacer {
+  display: inline-block;
+  width: 20px;
 }
 body .faq .sample {
   border: 1px solid #aaa;
