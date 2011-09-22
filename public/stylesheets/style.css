@@ -422,6 +422,7 @@ body .faq .set .line img {
   margin: 15px;
 }
 body .faq .set .line p {
+  font-family: "Luckiest Guy";
   margin-left: 65px;
   text-align: left;
   font-size: 16px;
@@ -438,6 +439,7 @@ body .faq .set .a h3 {
   color: #eee;
 }
 body .faq .set .a p {
+  font-family: "Open Sans";
   font-size: 13px;
   line-height: 28px;
   color: #eee;
