@@ -400,16 +400,18 @@ body .text-clump {
   -moz-border-radius: 8px;
   border-radius: 8px;
   background: #333;
-}
-body .text-clump h3 {
   color: #eee;
 }
-body .text-clump b {
-  color: #eee;
+body .text-clump .text-fields div {
+  float: left;
+  margin-right: 30px;
+}
+body .text-clump label {
+  display: block;
+  font-size: 11px;
 }
 body .text-clump p {
   font-size: 13px;
-  color: #eee;
   line-height: 28px;
   margin: 0 0 15px 0;
 }
@@ -421,7 +423,7 @@ body .text-clump .shadow-me {
   -moz-box-shadow: 4px 4px 15px #000;
   -webkit-box-shadow: 4px 4px 15px #000;
   box-shadow: 4px 4px 15px #000;
-  margin: 30px;
+  margin: 15px;
   padding: 5px;
   border: 1px solid #dbdbdb;
 }

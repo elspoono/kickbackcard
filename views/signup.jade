@@ -16,14 +16,22 @@
     .logo
 .headline
   .container
-    h1 Join Us
+    h1 Join Us - under maintenance
 .body
   .container
     .window
       h2 Find Business
       .text-clump
         p Enter your business name and a local zip code, or local city, to find your information and get started.
-        h2(style='text-align:center;width:500px;margin:30px auto 0 auto;color:#6F6F6E') under maintenance - check back soon
+        .text-fields
+          .one
+            label Business Name
+            input(name='name',placeholder='e.g. Sals Pizzeria',autocomplete='off')
+          .two
+            label Zip Code &nbsp;or&nbsp; City Name
+            input(placeholder='')
+
+
     .window
       h2 Modify Deal
       .text-clump
