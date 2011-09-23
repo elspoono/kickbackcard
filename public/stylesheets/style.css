@@ -372,7 +372,7 @@ body .finish-button {
   display: block;
   padding: 20px 30px 5px 30px;
   text-align: center;
-  width: 280px;
+  max-width: 450px;
   background-color: #69cd68;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#69cd68), to(#359b34));
   background-image: -webkit-linear-gradient(top, #69cd68, #359b34);
