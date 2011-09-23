@@ -406,9 +406,33 @@ body .text-clump .text-fields div {
   float: left;
   margin-right: 30px;
 }
-body .text-clump label {
+body .text-clump .text-fields div label {
   display: block;
   font-size: 11px;
+}
+body .text-clump .text-fields div .button {
+  display: block;
+  text-align: center;
+  padding: 10px 30px 5px 30px;
+  background-color: #8fd98f;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#8fd98f), to(#359b34));
+  background-image: -webkit-linear-gradient(top, #8fd98f, #359b34);
+  background-image: -moz-linear-gradient(top, #8fd98f, #359b34);
+  background-image: -ms-linear-gradient(top, #8fd98f, #359b34);
+  background-image: -o-linear-gradient(top, #8fd98f, #359b34);
+  background-image: linear-gradient(top, #8fd98f, #359b34);
+  -moz-box-shadow: 2px 2px 8px #000;
+  -webkit-box-shadow: 2px 2px 8px #000;
+  box-shadow: 2px 2px 8px #000;
+  margin: 10px auto 0 auto;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  border-radius: 15px;
+  font-size: 24px;
+  font-weight: normal;
+  font-family: "Luckiest Guy";
+  color: #fff;
+  text-decoration: none;
 }
 body .text-clump p {
   font-size: 13px;
