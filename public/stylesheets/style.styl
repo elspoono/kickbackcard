@@ -30,6 +30,7 @@ yellow = #FFFFCC
 darkShift = 60
 boxbg = rgba(190,190,190,.1)
 gray = #DBDBDB
+almost-dark = lighten(dark,10)
 
 
 alt-color = #00abff
@@ -217,7 +218,7 @@ body
       gradient(alt-color,darken(alt-color,10))
       border-radius(8px)
       box-shadow(2px,dark,8px)
-      color lighten(dark,10)
+      color almost-dark
     .step-copy
       margin 15px
       li
@@ -411,14 +412,14 @@ body
           display block
           text-align center
           padding 10px 30px 5px 30px
-          gradient(lighten(attention,30),attention)
+          gradient(alt-color,darken(alt-color,20))
           box-shadow(2px,dark,8px)
           margin 10px auto 0 auto
           border-radius(15px)
           font-size 24px
           font-weight normal
           font-family font2
-          color light
+          color almost-dark
           text-decoration none
     p
       font-size 13px
@@ -549,7 +550,7 @@ body
       gradient(alt-color,darken(alt-color,10))
       border-radius(8px)
       box-shadow(2px,dark,8px)
-      color lighten(dark,10)
+      color almost-dark
   .window
     border-radius-except-top-right(8px)
     color very-dark

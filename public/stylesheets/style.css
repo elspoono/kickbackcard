@@ -414,13 +414,13 @@ body .text-clump .text-fields div .button {
   display: block;
   text-align: center;
   padding: 10px 30px 5px 30px;
-  background-color: #8fd98f;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#8fd98f), to(#359b34));
-  background-image: -webkit-linear-gradient(top, #8fd98f, #359b34);
-  background-image: -moz-linear-gradient(top, #8fd98f, #359b34);
-  background-image: -ms-linear-gradient(top, #8fd98f, #359b34);
-  background-image: -o-linear-gradient(top, #8fd98f, #359b34);
-  background-image: linear-gradient(top, #8fd98f, #359b34);
+  background-color: #00abff;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#00abff), to(#006799));
+  background-image: -webkit-linear-gradient(top, #00abff, #006799);
+  background-image: -moz-linear-gradient(top, #00abff, #006799);
+  background-image: -ms-linear-gradient(top, #00abff, #006799);
+  background-image: -o-linear-gradient(top, #00abff, #006799);
+  background-image: linear-gradient(top, #00abff, #006799);
   -moz-box-shadow: 2px 2px 8px #000;
   -webkit-box-shadow: 2px 2px 8px #000;
   box-shadow: 2px 2px 8px #000;
@@ -431,7 +431,7 @@ body .text-clump .text-fields div .button {
   font-size: 24px;
   font-weight: normal;
   font-family: "Luckiest Guy";
-  color: #fff;
+  color: #1a1a1a;
   text-decoration: none;
 }
 body .text-clump p {
