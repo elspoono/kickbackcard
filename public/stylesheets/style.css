@@ -393,6 +393,12 @@ body .finish-button {
   color: #fff;
   text-decoration: none;
 }
+body .wide {
+  margin: 0 0 30px 0;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  border-radius: 8px;
+}
 body .text-clump {
   overflow: hidden;
   padding: 30px;
