@@ -34,6 +34,9 @@ body .body .col-right {
 body .window {
   padding: 10px;
 }
+body .window .wide {
+  width: 480px;
+}
 body .faq .set .line p {
   margin-left: 5px;
 }
