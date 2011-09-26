@@ -32,10 +32,14 @@ body .body .col-right {
   display: none;
 }
 body .window {
-  padding: 10px;
+  padding: 30px 10px 10px 10px;
 }
 body .window .wide {
   width: 480px;
+}
+body .text-clump .shift,
+body .text-clump .op-shift {
+  width: 65px;
 }
 body .faq .set .line p {
   margin-left: 5px;
