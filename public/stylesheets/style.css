@@ -337,6 +337,11 @@ body .footer {
   text-align: center;
   background: #333;
 }
+body .footer .above {
+  padding: 5px 0 0 0;
+  color: #6f6f6e;
+  font-size: 12px;
+}
 body .footer .other {
   padding: 0 0 15px 0;
   color: #6f6f6e;
