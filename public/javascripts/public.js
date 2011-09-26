@@ -288,6 +288,7 @@ $(function(){
   var current = 0;
   var oneUnit = 252;
   var slideUl = $('.screenshot .screens ul');
+  var total = slideUl.find('li').length-1;
   var mousePos = [0,0];
   var startPos = [0,0];
   var slideMoving = false;
@@ -297,8 +298,8 @@ $(function(){
   }
   var doSlide = function(){
     slideUl.stop(true,false);
-    if(current < -oneUnit*8){
-      current =  -oneUnit*8;
+    if(current < -oneUnit*total){
+      current =  -oneUnit*total;
       slideUl.animate({marginLeft:current},500); 
     }else if(current > 0){
       current = 0;
@@ -368,7 +369,7 @@ $(function(){
         current = current + oneUnit;
       else{
         current = current - oneUnit;
-        if(current < -oneUnit*8)
+        if(current < -oneUnit*total)
           current = 0;
       }
 
