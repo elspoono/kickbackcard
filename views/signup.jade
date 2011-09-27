@@ -25,12 +25,13 @@
         .text-fields
           .one
             label Business Name
-            input(name='name',placeholder='e.g. Sals Pizzeria',autocomplete='off')
+            input.name(name='name',placeholder='e.g. Sals Pizzeria',autocomplete='off')
           .two
             label Zip Code &nbsp;or&nbsp; City Name
-            input(placeholder='e.g. 85260')
+            input.zip(placeholder='e.g. 85260')
           .three
-            a.button(href='#') Search
+            a.button.search(href='#') Search
+        .results
     .window
       h2 Modify Deal
       .text-clump

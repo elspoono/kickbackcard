@@ -318,9 +318,35 @@ var factual_secret = "gZRGCuGs1OE7YhOilzNyDmfmJ52GvF8BQN4VkRoC";
 var factual = new OAuth(null, null, factual_key, factual_secret,'1.0', null,'HMAC-SHA1');
 
 
-app.post('/factual',function(req,res){
+app.post('/factual',function(req,res,next){
+
+  var zip = req.body.address;
+  if(zip && zip.replace(/\s/g,'').length){
+   
+    geo.geocoder(geo.google, zip, false, function(formattedAddress, latitude, longitude, details){
+      req.coordinates = [latitude, longitude];
+      req.address = formattedAddress;
+      next();
+    }); 
+  }else{
+    req.coordinates = [33.449777,-112.068787];
+    next();
+  }
+}, function(req,res,next){
+  var filters = '{"name":"'
+    +req.body.name
+    +'"}';
+  var geo = '{"$circle":{"$center":['
+    +req.coordinates[0]
+    +','
+    +req.coordinates[1]
+    +'],"$meters":15000}}';
+
+  var builtString = ''
+    +'http://api.v3.factual.com/t/places.json?limit=3&filters='+escape(filters)+'&geo='+escape(geo);
+
   factual.get(
-    'http://api.v3.factual.com/t/places.json?q='+escape(req.body.name)+','+escape(req.body.address)+'&limit=1',
+    builtString,
     null,
     null,
     function (err, data, result) {
@@ -330,8 +356,9 @@ app.post('/factual',function(req,res){
       }else{
         res.send({err: 'Error'})
       }
-    });
-})
+    }
+  );
+});
 
 
 
@@ -1854,6 +1881,7 @@ app.get('/about', redirectLoggedIn, function(req, res){
 });
 app.get('/sign-up', redirectLoggedIn, function(req, res){
   res.render('signup', {
+    script: 'signup',
     title: 'KickbackCard - Beta Invite Request Form'
   });
 });

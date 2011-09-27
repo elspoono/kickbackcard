@@ -43,12 +43,12 @@ $(function(){
   $('div.logo').click(function(){document.location.href='/'})
 
   $('.convert-date').each(function(){
-    
     var $t = $(this);
     var d = new Date($t.html());
     $t.html((d+'').replace(/GMT-[^ ]*/,''));
-
   })
+
+  
   /***********************************
    *
    *

@@ -409,7 +409,39 @@ body
     border-radius(8px)
     background mostly-dark
     color almost-light
+    .results
+      margin 20px 0 0 0
+      color semi-dark
+      text-align center
+      .selected
+        color almost-dark
+        background alt-color
+        border-radius(4px)
+      li
+        text-align left
+        cursor pointer
+        margin 10px 0 0 0
+        padding 5px 30px
+        display block
+        float none
+        overflow hidden
+        .name
+          float left
+          width 200px
+          overflow hidden
+          margin-right 60px
+        .address
+          float left
+          width 200px
+          overflow hidden
+          margin-right 60px
+        .phone
+          float left
+          width 200px
+          overflow hidden
+        
     .text-fields
+      overflow hidden
       div
         float left
         margin-right 30px
@@ -420,9 +452,9 @@ body
           display block
           text-align center
           padding 10px 30px 5px 30px
+          margin 0 10px 0 0
           gradient(alt-color,darken(alt-color,20))
           box-shadow(2px,dark,8px)
-          margin 10px auto 0 auto
           border-radius(15px)
           font-size 24px
           font-weight normal
