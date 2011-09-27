@@ -104,6 +104,9 @@ var app = module.exports = express.createServer();
 app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
+  app.set('view options', {
+    script:false
+  });
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.cookieParser());
@@ -1830,6 +1833,7 @@ var redirectLoggedIn = function(req, res, next){
 }
 app.get('/', redirectLoggedIn, function(req, res){
   res.render('index', {
+    script: 'home',
     title: 'KickbackCard - iPhone App Loyalty Card Program'
   });
 });
@@ -2095,6 +2099,7 @@ app.post('/login', validateLogin, function(req, res, next){
 app.get('/admin', securedArea, get10Vendors, function(req,res, next){
   res.render('admin', {
     vendors: req.data,
+    script: 'admin',
     view: 'vendors',
     title: 'KickbackCard.com: Admin'
   })
@@ -2102,6 +2107,7 @@ app.get('/admin', securedArea, get10Vendors, function(req,res, next){
 app.get('/users', securedArea, get10Users, function(req,res, next){
   res.render('admin', {
     users: req.data,
+    script: 'admin',
     view: 'users',
     title: 'KickbackCard.com: Admin: Users'
   })
@@ -2109,6 +2115,7 @@ app.get('/users', securedArea, get10Users, function(req,res, next){
 app.get('/vendors', securedArea, get10Vendors, function(req,res, next){
   res.render('admin', {
     vendors: req.data,
+    script: 'admin',
     view: 'vendors',
     title: 'KickbackCard.com: Admin: Vendors'
   })
