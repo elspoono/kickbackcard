@@ -759,17 +759,6 @@ body .window fieldset .fields .loading {
   border: 1px solid #555;
   background: #eee;
 }
-body .window fieldset .fields .real-address {
-  float: right;
-  height: 40px;
-  width: 246px;
-  padding: 5px;
-  display: block;
-  border: 1px solid #6f6f6e;
-  border-bottom: 0;
-  font-size: 10px;
-  text-align: right;
-}
 body .window fieldset .fields .google-map {
   float: right;
   height: 100px;

@@ -12,17 +12,22 @@ form(method='POST')
         label zip or city
         input.input.address(name='address',placeholder='e.g. 85260',autocomplete='off')
       .fields
-        .real-address
-          =vendor.address
         - if (typeof(vendor.coordinates)=='object' && vendor.coordinates.length && vendor.coordinates.length == 3)
           img.google-map(src='//maps.googleapis.com/maps/api/staticmap?center='+vendor.coordinates[0]+','+vendor.coordinates[1]+'&markers=color:red%7Clabel:V%7C'+vendor.coordinates[0]+','+vendor.coordinates[1]+'&zoom=13&size=256x100&sensor=false')
         - else
           img.google-map.disabled(src='//maps.googleapis.com/maps/api/staticmap?center=Times%20Square%20NY&markers=color:red%7Clabel:V%7CTimes%20Square%20NY&zoom=13&size=256x100&sensor=false')
-      .factual-details
-        ul
-          li=vendor.contact
-          li=vendor.site_url
-          li=vendor.yelp_url
+      .fields
+        label address
+        input.input.real-address(name='address',placeholder='',autocomplete='off',value=vendor.address)
+      .fields
+        label phone
+        input.input.contact(name='contact',placeholder='',autocomplete='off',value=vendor.contact)
+      .fields
+        label site url
+        input.input.site_url(name='site_url',placeholder='',autocomplete='off',value=vendor.site_url)
+      .fields
+        label yelp url
+        input.input.yelp_url(name='yelp_url',placeholder='',autocomplete='off',value=vendor.yelp_url)
       .fields
         label hours
         textarea.input.hours(name='hours')=vendor.hours

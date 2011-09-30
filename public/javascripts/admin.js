@@ -843,6 +843,7 @@ $(function(){
               tabs.hide()
 
             var currentFactual = {};
+            var allToUpdate = $('.address,.google-map,.contact,.site_url,.yelp_url');
             var updateFactualAndMap = function(){
               $.ajax({
                 url: '/factual',
@@ -851,6 +852,7 @@ $(function(){
                   address: win.find('.address').val()
                 },
                 success: function(records){
+                  allToUpdate.fadeTo(0,1);
                   if(records && records.length > 0 ){
                     currentFactual = records[0];
                     $('.real-address').html(records[0].name+'<br>'+records[0].address+'<br>'+(records[0].address_extended||''));
@@ -862,16 +864,8 @@ $(function(){
                       window.open('//maps.google.com/?q='+address)
                     })
                     win.find('.google-map').replaceWith($img)
-                    $('.factual-details').html(
-                      '<ul>'
-                        +'<li>'+currentFactual.tel+'</li>'
-                        +'<li>'+currentFactual.website+'</li>'
-                      +'</ul>'
-                    )
-                  }else{
-                    $('.real-address').html('');
-                    $('.google-map').attr('src','');
-                    $('.factual-details').html('');
+                    $('.contact').val(currentFactual.tel);
+                    $('.site_url').val(currentFactual.website);
                   }
                 },
                 error: function(){
@@ -888,6 +882,7 @@ $(function(){
             var nameT = 0
             win.find('.name').keyup(function(e){
               var $t = $(this)
+              allToUpdate.fadeTo(0,.4);
               if(name!=this.value){
                 clearTimeout(nameT)
                 name = this.value
@@ -918,6 +913,7 @@ $(function(){
             var address = $p.find('.address').text() || ''
             var addressT = 0
             win.find('.address').keyup(function(e){
+              allToUpdate.fadeTo(0,.4);
               var $t = $(this)
               if(address!=this.value){
                 clearTimeout(addressT)
@@ -976,7 +972,11 @@ $(function(){
                   id: $p.attr('id'),
                   name: win.find('.name').val(),
                   factual: currentFactual,
-                  hours: win.find('.hours').val()
+                  hours: win.find('.hours').val(),
+                  address: win.find('.real-address').val(),
+                  site_url: win.find('.site_url').val(),
+                  yelp_url: win.find('.yelp_url').val(),
+                  contact: win.find('.contact').val()
                 };
                 loadLoading({},function(err,win,modal){
                   _gaq.push(['_trackPageview','/admin/vendor/save']);

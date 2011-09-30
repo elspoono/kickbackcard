@@ -1186,6 +1186,7 @@ app.post('/saveVendor', securedFunction, function(req, res, next){
         }
       });
     }else{
+      req.yelp_url = params.yelp_url;
       next();
     }
   }
@@ -1211,7 +1212,7 @@ app.post('/saveVendor', securedFunction, function(req, res, next){
   var yelp_url = req.yelp_url;
   var params = req.body || {}
 
-  if(yelp_url){
+  if(params.factual && yelp_url && yelp_url!=''){
     var options =   {
       method: 'POST',
       host: 'www.historyhelp.net',
@@ -1286,22 +1287,37 @@ app.post('/saveVendor', securedFunction, function(req, res, next){
   var yelp_url = req.yelp_url||false;
   var foundHours = req.foundHours||false;
   var params = req.body || {};
-  //console.log(1);
-  vendor.name = params.name;
+
   if(params.factual){
+    vendor.name = params.name;
     vendor.address = params.factual.address+' '+(params.factual.address_extended||'');
     vendor.coordinates = [params.factual.latitude, params.factual.longitude];
     vendor.site_url = params.factual.website||false;
     vendor.yelp_url = yelp_url;
     vendor.contact = params.factual.tel;
+    vendor.hours = foundHours || params.hours;
+    vendor.save(function(err,data){
+      req.data = data;
+      next();
+    })
+  }else{
+    geo.geocoder(geo.google, params.address, false, function(formattedAddress, latitude, longitude, details){
+      var vendor = req.vendor;
+      var params = req.body || {};
+
+      vendor.name = params.name;
+      vendor.coordinates = [latitude||0, longitude||0];
+      vendor.address = formattedAddress || params.address;
+      vendor.site_url = params.site_url;
+      vendor.yelp_url = params.yelp_url;
+      vendor.contact = params.contact;
+      vendor.hours = params.hours;
+      vendor.save(function(err,data){
+        req.data = data;
+        next();
+      })
+    });
   }
-  vendor.hours = foundHours || params.hours;
-  //console.log(vendor);
-  vendor.save(function(err,data){
-    //console.log(err);
-    req.data = data;
-    next();
-  })
 }, function(req, res, next){
   //console.log(req.data);
   if(req.err)
