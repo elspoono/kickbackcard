@@ -29,6 +29,10 @@ $(function(){
    *
    ************************************/
 
+   var createNew = function(){
+     
+   };
+
    var updateSearch = function(){
     $.ajax({
       url: '/factual',
@@ -41,19 +45,29 @@ $(function(){
           var $ul = $('<ul>');
           for(var i in records){
             var $li = $('<li>');
-            $li.html('<div class="name">'+records[i].name+'</div><div class="address">'+records[i].address+'</div><div class="phone">'+records[i].tel+'</div>');
+            $li.html(
+              '<div class="slider"></div>'
+              +'<div class="name">'+records[i].name+'</div>'
+              +'<div class="address">'+records[i].address+'</div>'
+              +'<div class="phone">'+records[i].tel+'</div>'
+            );
             $ul.append($li);
           }
           $results.html('')
-            .append($ul);
+            .append($ul)
+            .append(
+              '<p class="bottom">Not found? <a href="#" class="add">Create new listing</a></p>'
+            );
           var $lis = $ul.find('li');
-          $ul.find('li:first').addClass('selected');
           $lis.click(function(){
             $lis.removeClass('selected');
-            $(this).addClass('selected');
+            $(this).addClass('selected')
+              .find('.slider').show().animate({left:60},300,'easeInCirc',function(){$(this).hide().css({left:8})});
           });
+          $ul.find('li:first').click();
+          $bottom.show();
         }else{
-          $results.html('No Results');
+          $results.html('<p class="centered">No Results</p>');
         }
       },
       error: function(){
@@ -66,7 +80,7 @@ $(function(){
      var $t = $(this);
      $t.data('timer',0);
      $t.keyup(function(){
-        $results.html('Loading ...');
+        $results.html('<p class="centered">Loading ...</p>');
         clearTimeout($t.data('timer'));
         $t.data('timer',
           setTimeout(function(){
@@ -75,6 +89,11 @@ $(function(){
         );
      });
    });
+   $name.focus()
+   $('.search').click(function(){
+      $name.keyup();
+     return false;
+   })
 
   /***********************************
    *

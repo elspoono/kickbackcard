@@ -410,34 +410,50 @@ body
     background mostly-dark
     color almost-light
     .results
+      height 200px
       margin 20px 0 0 0
       color semi-dark
       text-align center
+      overflow auto
+      p.centered
+        padding 70px 0 0 0
+      p.bottom
+        padding 10px 0 0 0
       .selected
         color almost-dark
-        background alt-color url('/images/checkmark.png') no-repeat left center
+        background alt-color url('/images/checkmark.png') no-repeat 15px 1px
         border-radius(4px)
       li
+        background url('/images/checkmark-off.png') no-repeat 15px 1px
+        position relative
         text-align left
         cursor pointer
         margin 10px 0 0 0
-        padding 5px 15px 5px 120px
+        padding 10px 15px 10px 120px
         display block
         float none
         overflow hidden
+        .slider
+          position absolute
+          background alt-color
+          height 50px
+          width 60px
+          top 0
+          left 8px
+          display none
         .name
           float left
-          width 200px
+          width 150px
           overflow hidden
           margin-right 60px
         .address
           float left
-          width 200px
+          width 150px
           overflow hidden
           margin-right 60px
         .phone
           float left
-          width 200px
+          width 150px
           overflow hidden
         
     .text-fields
