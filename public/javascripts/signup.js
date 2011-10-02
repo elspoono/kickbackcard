@@ -33,6 +33,7 @@ $(function(){
    var createNew = function(){
      $('.selected').removeClass('selected');
      $newlisting.addClass('selected').hide().slideDown();
+     $('.new-contact').focus()
      return false;
    };
 
@@ -63,7 +64,6 @@ $(function(){
             .append(
               '<p class="bottom">Not found? <a href="#" class="add">Create new listing</a></p>'
             );
-          $results.find('.add').click(createNew);
           var $lis = $ul.find('li');
           $lis.click(function(){
             $('.selected').removeClass('selected');
@@ -72,9 +72,9 @@ $(function(){
           });
           $ul.find('li:first').click();
         }else{
-          $results.html('<p class="centered">No Results - please enter your information</p>');
-          createNew();
+          $results.html('<p class="centered">No Results -  <a href="#" class="add">Create new listing</a></p>');
         }
+        $results.find('.add').click(createNew);
       },
       error: function(){
         
