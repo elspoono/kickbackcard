@@ -19,6 +19,7 @@ $(function(){
   var $name = $('.name');
   var $zip = $('.zip');
   var $results = $('.results');
+  var $newlisting = $('.new-listing');
   
   /***********************************
    *
@@ -30,10 +31,14 @@ $(function(){
    ************************************/
 
    var createNew = function(){
-     
+     $('.selected').removeClass('selected');
+     $newlisting.addClass('selected').hide().slideDown();
+     return false;
    };
 
    var updateSearch = function(){
+    $newlisting.find('.new-name').val($name.val())
+    $newlisting.find('.new-address').val($zip.val())
     $.ajax({
       url: '/factual',
       data: {
@@ -58,16 +63,17 @@ $(function(){
             .append(
               '<p class="bottom">Not found? <a href="#" class="add">Create new listing</a></p>'
             );
+          $results.find('.add').click(createNew);
           var $lis = $ul.find('li');
           $lis.click(function(){
-            $lis.removeClass('selected');
+            $('.selected').removeClass('selected');
             $(this).addClass('selected')
               .find('.slider').show().animate({left:60},300,'easeInCirc',function(){$(this).hide().css({left:8})});
           });
           $ul.find('li:first').click();
-          $bottom.show();
         }else{
-          $results.html('<p class="centered">No Results</p>');
+          $results.html('<p class="centered">No Results - please enter your information</p>');
+          createNew();
         }
       },
       error: function(){
@@ -81,6 +87,7 @@ $(function(){
      $t.data('timer',0);
      $t.keyup(function(){
         $results.html('<p class="centered">Loading ...</p>');
+        $newlisting.removeClass('selected').slideUp();
         clearTimeout($t.data('timer'));
         $t.data('timer',
           setTimeout(function(){

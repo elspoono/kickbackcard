@@ -409,12 +409,23 @@ body
     border-radius(8px)
     background mostly-dark
     color almost-light
+    .new-listing
+      display none
+      padding 0 0 0 120px
+      .field-row
+        margin 15px 0
+        input
+          width 180px
+    .new-listing.selected
+      display block
+      color almost-dark
+      background alt-color url('/images/checkmark.png') no-repeat 15px 60px
+      border-radius(4px)
     .results
       height 200px
       margin 20px 0 0 0
       color semi-dark
       text-align center
-      overflow auto
       p.centered
         padding 70px 0 0 0
       p.bottom
@@ -444,16 +455,19 @@ body
         .name
           float left
           width 150px
+          height 22px
           overflow hidden
           margin-right 60px
         .address
           float left
           width 150px
+          height 22px
           overflow hidden
           margin-right 60px
         .phone
           float left
           width 150px
+          height 22px
           overflow hidden
         
     .text-fields
