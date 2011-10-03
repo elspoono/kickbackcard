@@ -246,7 +246,7 @@ $(function(){
           },
           success: function(response){
             loadConfirm({
-              content: 'We will let you know when it\'s ready for you!<br><br>Click ok to return to the home page.',
+              content: 'Looks Good!<br><Br>We received your request. We\'ll contact you in 1-2 business days.<br><br>Click ok to return to the home page.',
               width: 500,
               Ok: function(err,win2,modal2){
                 document.location.href = '/'
