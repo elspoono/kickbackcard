@@ -288,6 +288,25 @@ var MapClientSchema = new Schema({
 var MapClient = mongoose.model('MapClient',MapClientSchema);
 
 
+
+
+var SignupSchema = new Schema({
+  name: {type: String},
+  zip: {type: String},
+  address: {type: String},
+  contact: {type: String},
+  site_url: {type: String},
+  yelp_url: {type: String},
+  hours: {type: String},
+  buy_qty: {type: String},
+  buy_item: {type: String},
+  get_item: {type: String},
+  email: {type: String},
+  password_encrypted: {type: String}
+})
+var Signup = mongoose.model('Signup',SignupSchema);
+
+
 /***
 
 
@@ -307,8 +326,25 @@ app.get('*',function(req,res,next){
 })
 
 
+app.post('/sign-up',function(req,res,next){
 
-
+  var signup = new Signup();
+  signup.name = req.body.name;
+  signup.zip = req.body.zip;
+  signup.address = req.body.address;
+  signup.contact = req.body.contact;
+  signup.site_url = req.body.site_url;
+  signup.yelp_url = req.body.yelp_url;
+  signup.hours = req.body.hours;
+  signup.buy_qty = req.body.buy_qty;
+  signup.buy_item = req.body.buy_item;
+  signup.get_item = req.body.get_item;
+  signup.email = req.body.email;
+  signup.password_encrypeted = encrypted(req.body.password);
+  signup.save(function(err,data){
+    res.send({Success:true});
+  })
+});
 
 
 
@@ -340,7 +376,7 @@ app.post('/factual',function(req,res,next){
     +req.coordinates[0]
     +','
     +req.coordinates[1]
-    +'],"$meters":15000}}';
+    +'],"$meters":5000000}}';
 
   var builtString = ''
     +'http://api.v3.factual.com/t/places.json?limit=3&filters='+escape(filters)+'&geo='+escape(geo);

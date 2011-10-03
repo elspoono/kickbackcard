@@ -19,7 +19,7 @@
     h1 Join Us
 .body
   .container
-    .window
+    .window.step-1
       h2 Find Your Business
       .text-clump
         .text-fields
@@ -27,12 +27,13 @@
             label Business Name
             input.name(name='name',placeholder='e.g. Sals Pizzeria',autocomplete='off')
           .two
-            label Zip Code &nbsp;or&nbsp; City Name
+            label Zip Code
             input.zip(placeholder='e.g. 85260')
+            span.subtitle ... or full address or intersection
           .three
             a.button.search(href='#') Search
         .results
-          p.centered Please type a business name to begin the search, results will load here automatically.
+          p.centered Start typing your name to begin the search, results will load here automatically.
         .new-listing
           .text-fields
             .field-row
@@ -55,14 +56,36 @@
               .one
                 label Business Hours
                 input.new-hours
-    .window
+    .window.step-2
       h2 Modify Deal
       .text-clump
-        p Select the quantity, type of item that should be purchased, and then any reward (free, discount, anything)
-        h2(style='text-align:center;width:500px;margin:30px auto 0 auto;color:#6F6F6E') under maintenance - check back soon
-    .window
+        .text-fields
+          ul.deal-list
+            li Buy 
+            li
+              select.buy_qty
+                -for(var i = 1; i<=20; i++)
+                  option(value=i,selected=(10==i))=i
+            li
+              input.buy_item(value='lunches')
+              span.subtitle what customers will buy
+            li get 
+            li
+              input.get_item(value='1 lunch FREE!')
+              span.subtitle the reward
+    .window.step-3
       h2 Get Access
       .text-clump
-        p Enter the email address and password that will be used to access your analytics dashboard.
-        h2(style='text-align:center;width:500px;margin:30px auto 0 auto;color:#6F6F6E') under maintenance - check back soon
-    //a.finish-button(href='#') finish sign up
+        .text-fields
+          .one
+            label Email Address
+            input.email(placeholder='e.g. me@me.com')
+            span.subtitle no verification, no newsletter
+          .one
+            label Password
+            input.password(type='password')
+            span.subtitle at least 6 characters
+          .one
+            label Repeat Password
+            input.repeat-password(type='password')
+    a.step-4.finish-button(href='#') Beta Request

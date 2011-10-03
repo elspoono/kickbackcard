@@ -245,10 +245,16 @@ body
     .separator
       margin 30px 15px
     .my-copy
-      border 4px dashed darken(alt-color,20)
+      border-radius(8px)
+      background mostly-dark
+      color semi-dark
+      padding 1px
       margin 15px
       p
         margin 15px 15px
+      b
+        font-weight normal
+        color almost-light
     .col-left,.col-right
       margin 15px
       text-align center
@@ -409,6 +415,23 @@ body
     border-radius(8px)
     background mostly-dark
     color almost-light
+
+
+    /**************************************
+     *
+     * .deal-list  / .results / .new-listing are all for the sign up page right now
+     *
+     **************************************/
+    .deal-list
+      li
+        line-height 34px
+        margin 15px 15px
+        span
+          line-height 16px
+    .subtitle
+      font-size 12px
+      color semi-dark
+      display block
     .new-listing
       display none
       padding 0 0 0 120px
@@ -471,6 +494,10 @@ body
           overflow hidden
         
     .text-fields
+      .error
+        background red
+      .valid
+        background green
       overflow hidden
       div
         float left
@@ -482,7 +509,7 @@ body
           display block
           text-align center
           padding 10px 30px 5px 30px
-          margin 0 10px 0 0
+          margin 11px 0 0 0
           gradient(alt-color,darken(alt-color,20))
           box-shadow(2px,dark,8px)
           border-radius(15px)
