@@ -1212,6 +1212,7 @@ app.post('/saveVendor', securedFunction, function(req, res, next){
   var yelp_url = req.yelp_url;
   var params = req.body || {}
 
+/*
   if(params.factual && yelp_url && yelp_url!=''){
     var options =   {
       method: 'POST',
@@ -1219,7 +1220,7 @@ app.post('/saveVendor', securedFunction, function(req, res, next){
       port: 80,
       path: '/inc/request.php?action=update',
       headers: {
-        'Accept' : '*/*',
+        'Accept' : '*\/*',
         'Accept-Charset':'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
         'Accept-Encoding':'gzip,deflate,sdch',
         'Accept-Language':'en-US,en;q=0.8',
@@ -1238,7 +1239,7 @@ app.post('/saveVendor', securedFunction, function(req, res, next){
         var finalUrl = res1.headers.location;
         //console.log(finalUrl);
         options.method = 'GET';
-        options.path = finalUrl.replace(/http:\/\/[^\/]*/,'');
+        options.path = finalUrl.replace(/http:\/\/[^\/]*\/,'');
         var req2 = http.request(
           options,
           function(res2){
@@ -1279,8 +1280,9 @@ app.post('/saveVendor', securedFunction, function(req, res, next){
     req1.write('a='+yelp_url);
     req1.end();
   }else{
+*/
     next();
-  }
+//  }
 }, function(req, res, next){
 
   var vendor = req.vendor;
