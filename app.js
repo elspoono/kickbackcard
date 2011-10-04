@@ -2065,7 +2065,7 @@ var findNearVendors = function(req, res, next){
       coordinates : { $near : [params.latitude, params.longitude], $maxDistance: finalDelta },
       _id : { $nin : req.mapClient.vendor_ids},
       active: true,
-      type: 'Active' || req.params.type
+      type: req.params.type || 'Active'
     },
     ['coordinates','name','address','contact','yelp_url','site_url'],
     {skip:0,limit:10},
