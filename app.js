@@ -343,7 +343,31 @@ app.post('/sign-up',function(req,res,next){
   signup.password_encrypeted = encrypted(req.body.password);
   signup.save(function(err,data){
     res.send({Success:true});
-  })
+  });
+
+
+  // send an e-mail
+  nodemailer.send_mail({
+    sender: 'notices@kickbackcard.com',
+    to:'derek@kickbackcard.com,scott@kickbackcard.com',
+    subject:'KickbackCard: Beta Request '+signup.name,
+    html: '<h3>New Beta Request</h3>'
+      +'<ul>'+
+        +'<li>'+signup.name+'</li>'
+        +'<li>'+signup.zip+'</li>'
+        +'<li>'+signup.address+'</li>'
+        +'<li>'+signup.contact+'</li>'
+        +'<li>'+signup.site_url+'</li>'
+        +'<li>'+signup.yelp_url+'</li>'
+        +'<li>'+signup.hours+'</li>'
+        +'<li>Buy '+signup.buy_qty+' '+signup.buy_item+' get '+signup.get_item+'</li>'
+        +'<li>'+signup.email+'</li>'
+      +'</ul>',
+    body:'New Beta Request: '+signup.email
+  },function(err, data){
+    
+  });
+
 });
 
 
