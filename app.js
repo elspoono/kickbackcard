@@ -293,7 +293,9 @@ var MapClient = mongoose.model('MapClient',MapClientSchema);
 var SignupSchema = new Schema({
   name: {type: String},
   zip: {type: String},
+  factual_id: {type: String},
   address: {type: String},
+  coordinates: [Number],
   contact: {type: String},
   site_url: {type: String},
   yelp_url: {type: String},
@@ -328,10 +330,45 @@ app.get('*',function(req,res,next){
 
 app.post('/sign-up',function(req,res,next){
 
+    if(req.body.factual && req.body.factual.factual_id){
+      factual.get(
+      'http://api.v3.factual.com/places/crosswalk?factual_id='+req.body.factual.factual_id,
+      null,
+      null,
+      function (err, data, result) {
+        var results = JSON.parse(data);
+        if(results.status == 'ok'){
+          var links = results.response.data;
+          for(var i in links){
+            if (links[i].url.match(/yelp\.com/i))
+              req.body.yelp_url = links[i].url;
+          }
+          req.body.address = req.body.factual.address+' '+(req.body.factual.address_extended||'');
+          req.body.coordinates = [req.body.factual.latitude, req.body.factual.longitude];
+          req.body.site_url = req.body.factual.website||false;
+          req.body.contact = req.body.factual.tel;
+          next();
+        }else{
+          res.send({err: 'Error'})
+        }
+      });
+
+    }else{
+      geo.geocoder(geo.google, req.body.address, false, function(formattedAddress, latitude, longitude, details){
+        req.body.coordinates = [latitude, longitude];
+        req.body.address = formattedAddress;
+        next();
+      });
+    }
+
+},function(req,res,next){
+
   var signup = new Signup();
   signup.name = req.body.name;
   signup.zip = req.body.zip;
+  signup.factual_id = (req.body.factual?req.body.factual.factual_id:false);
   signup.address = req.body.address;
+  signup.coordinates = req.body.coordinates;
   signup.contact = req.body.contact;
   signup.site_url = req.body.site_url;
   signup.yelp_url = req.body.yelp_url;
@@ -342,8 +379,10 @@ app.post('/sign-up',function(req,res,next){
   signup.email = req.body.email;
   signup.password_encrypeted = encrypted(req.body.password);
   signup.save(function(err,data){
+    console.log(err);
     res.send({Success:true});
   });
+
 
 
   // send an e-mail
@@ -351,21 +390,23 @@ app.post('/sign-up',function(req,res,next){
     sender: 'notices@kickbackcard.com',
     to:'derek@kickbackcard.com,scott@kickbackcard.com',
     subject:'KickbackCard: Beta Request '+signup.name,
-    html: '<h3>New Beta Request</h3>'
-      +'<ul>'+
-        +'<li>'+signup.name+'</li>'
-        +'<li>'+signup.zip+'</li>'
-        +'<li>'+signup.address+'</li>'
-        +'<li>'+signup.contact+'</li>'
-        +'<li>'+signup.site_url+'</li>'
-        +'<li>'+signup.yelp_url+'</li>'
-        +'<li>'+signup.hours+'</li>'
-        +'<li>Buy '+signup.buy_qty+' '+signup.buy_item+' get '+signup.get_item+'</li>'
-        +'<li>'+signup.email+'</li>'
-      +'</ul>',
+    html: '<h3>Beta Request '+signup.name+'</h3>'
+    +'<ul>'
+      +'<li>'+signup.name+'</li>'
+      +'<li>'+signup.zip+'</li>'
+      +'<li>'+signup.factual_id+'</li>'
+      +'<li>'+signup.address+'</li>'
+      +'<li>'+signup.coordinates+'</li>'
+      +'<li>'+signup.contact+'</li>'
+      +'<li>'+signup.site_url+'</li>'
+      +'<li>'+signup.yelp_url+'</li>'
+      +'<li>'+signup.hours+'</li>'
+      +'<li>Buy '+signup.buy_qty+' '+signup.buy_item+' get '+signup.get_item+'</li>'
+      +'<li>'+signup.email+'</li>'
+    +'</ul>',
     body:'New Beta Request: '+signup.email
   },function(err, data){
-    
+
   });
 
 });

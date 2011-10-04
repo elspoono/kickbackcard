@@ -20,6 +20,7 @@ $(function(){
   var $zip = $('.zip');
   var $results = $('.results');
   var $newlisting = $('.new-listing');
+  var factuals = {};
   
   /***********************************
    *
@@ -52,7 +53,8 @@ $(function(){
         if(records && records.length > 0 ){
           var $ul = $('<ul>');
           for(var i in records){
-            var $li = $('<li>');
+            var $li = $('<li factual_id="'+records[i].factual_id+'">');
+            factuals[records[i].factual_id] = records[i];
             $li.html(
               '<div class="slider"></div>'
               +'<div class="name">'+records[i].name+'</div>'
@@ -233,6 +235,7 @@ $(function(){
           data: {
             name: $name.val(),
             zip: $zip.val(),
+            factual: factuals[$('.selected').attr('factual_id')],
             address: $('.new-address').val(),
             contact: $('.new-contact').val(),
             site_url: $('.new-site_url').val(),
