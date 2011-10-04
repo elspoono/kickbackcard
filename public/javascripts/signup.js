@@ -121,9 +121,28 @@ $(function(){
       clearTimeout($t.data('timer'));
       $t.data('timer',
         setTimeout(function(){
-          if($t.val().match(/.{1,}@.{1,}\..{1,}/))
+          if($t.val().match(/.{1,}@.{1,}\..{1,}/)){
             $t.removeClass('error').addClass('valid');
-          else
+            $.ajax({
+              url: '/checkEmail',
+              data: {
+                email: $t.val()
+              },
+              success: function(data){
+                if(data.err){
+                }else if(data.data==0){
+                  $t.removeClass('error').addClass('valid')
+                  $t.showTooltip({message:data.email+' is good'})
+                }else{
+                  $t.removeClass('valid').addClass('error')
+                  $t.showTooltip({message:data.email+' is already registered - you are good to go. We will contact you shortly'})
+                }
+              },
+              error: function(){
+              }
+            })
+
+          }else
             $t.removeClass('valid').addClass('error').showTooltip({message:'Is that an email?'});
         },1000)
       );
@@ -248,13 +267,23 @@ $(function(){
             password: $('.password').val()
           },
           success: function(response){
-            loadConfirm({
-              content: 'Looks Good!<br><Br>We received your request. We\'ll contact you in 1-2 business days.<br><br>Click ok to return to the home page.',
-              width: 500,
-              Ok: function(err,win2,modal2){
-                document.location.href = '/'
-              }
-            },function(){})
+            console.log(response)
+            if(response && response.err)
+              loadConfirm({
+                content: '<p>'+response.err+'</p>',
+                width: 500,
+                Ok: function(err,win2,modal2){
+                  modal2.click()
+                }
+              },function(){})
+            else
+              loadConfirm({
+                content: 'Looks Good!<br><Br>We received your request. We\'ll contact you in 1-2 business days.<br><br>Click ok to return to the home page.',
+                width: 500,
+                Ok: function(err,win2,modal2){
+                  document.location.href = '/'
+                }
+              },function(){})
           },
           error: function(){
             loadConfirm({

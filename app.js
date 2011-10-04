@@ -331,6 +331,15 @@ app.get('*',function(req,res,next){
 
 app.post('/sign-up',function(req,res,next){
 
+  User.count({email:req.body.email,active:true},function(err,already){
+    console.log(already)
+    if(already>0)
+      res.send({err:''+req.body.email+' is already registered. We will contact you shortly.'})
+    else
+      next()
+  });
+
+},function(req,res,next){
     if(req.body.factual && req.body.factual.factual_id){
       factual.get(
       'http://api.v3.factual.com/places/crosswalk?factual_id='+req.body.factual.factual_id,
@@ -436,6 +445,27 @@ app.post('/sign-up',function(req,res,next){
       +'<li><b>Deal:</b> Buy '+signup.buy_qty+' '+signup.buy_item+' get '+signup.get_item+'</li>'
       +'<li><b>Their email address for account:</b> '+signup.email+'</li>'
     +'</ul>',
+    body:'New Beta Request: '+signup.email
+  },function(err, data){
+
+  });
+
+  // send an e-mail
+  nodemailer.send_mail({
+    sender: 'notices@kickbackcard.com',
+    to: signup.email,
+    subject:'KickbackCard: Beta Request for '+signup.name+' received',
+    html: '<h3>Beta Request '+signup.name+'</h3>'
+    +'<div>'
+      +'<div><b>Name:</b> '+signup.name+'</div>'
+      +'<div>'+signup.address+'</div>'
+      +'<div>'+signup.contact+'</div>'
+      +'<div>'+signup.site_url+'</div>'
+      +'<div>'+signup.yelp_url+'</div>'
+      +'<div>'+signup.hours+'</div>'
+      +'<div><b>Deal:</b> Buy '+signup.buy_qty+' '+signup.buy_item+' get '+signup.get_item+'</div>'
+      +'<div><b>Email Registered:</b> '+signup.email+'</div>'
+    +'</div>',
     body:'New Beta Request: '+signup.email
   },function(err, data){
 
@@ -1051,9 +1081,9 @@ var checkEmail = function(req, res, next){
     next()
   };
   if(params.id)
-    User.count({email:req.email,_id:{$ne:params.id}},handleReturn)
+    User.count({email:req.email,active:true,_id:{$ne:params.id}},handleReturn)
   else
-    User.count({email:req.email},handleReturn)
+    User.count({email:req.email,active:true},handleReturn)
 }
 var saveUser = function(req, res, next){
   var params = req.body || {}
