@@ -2297,16 +2297,16 @@ app.get('/_:partial', function(req, res, next){
   })
 })
 
+app.get('/robots.txt', function(req, res, next){
+  res.send('User-agent: *\nDisallow: ',{'Content-Type':'text/plain'})
+});
+
 app.get(/^(?!(\/favicon.ico|\/images|\/stylesheets|\/javascripts)).*$/, function(req, res, next){
   res.send('',{
       Location:'/'
   },301);
 });
 
-
-app.get('/robots.txt', function(req, res, next){
-  res.send('User-agent: *\nDisallow: /',{'Content-Type':'text/plain'})
-});
 
 
 app.listen(process.env.PORT || 3000);
