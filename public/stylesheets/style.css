@@ -96,24 +96,24 @@ body .header .container .sign-up .button {
   color: #fff;
   text-decoration: none;
 }
-body .header .navigation {
+body .navigation {
   background: #333;
   overflow: hidden;
   font-size: 14px;
   color: #6f6f6e;
   text-decoration: none;
 }
-body .header .navigation .container {
+body .navigation .container {
   padding: 0;
 }
-body .header .navigation ul {
+body .navigation ul {
   float: right;
 }
-body .header .navigation li {
+body .navigation li {
   margin: 0 0 0 30px;
   padding: 3px 0;
 }
-body .header .navigation a {
+body .navigation a {
   color: #fff;
   text-decoration: none;
 }

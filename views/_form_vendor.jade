@@ -31,9 +31,15 @@ form(method='POST')
       .fields
         label hours
         textarea.input.hours(name='hours')=vendor.hours
+      .fields
+        label queue
+        select.type(name='type')
+          option(value='Active', selected=(vendor.type=='Active')) Active
+          option(value='Pending', selected=(vendor.type=='Pending')) Pending
+          option(value='Deleted', selected=(vendor.type=='Deleted')) Deleted
     .buttons
       input.submit(type='submit',value='Save')
-      input.cancel.delete(type='button',value='Delete')
+      //input.cancel.delete(type='button',value='Delete')
   .tab.vendor-user(id=vendor._id)
     h2 Users
     fieldset

@@ -276,7 +276,8 @@ var VendorSchema = new Schema({
   deals: [], // I can't set stuff later in /vendors.json without this
   user_ids: [String],
   date_added: {type: Date, default: Date.now},
-  active: {type: Boolean, default: true}
+  active: {type: Boolean, default: true},
+  type: {type: String}
 })
 VendorSchema.index({coordinates:'2d'});
 var Vendor = mongoose.model('Vendor',VendorSchema);
@@ -379,11 +380,40 @@ app.post('/sign-up',function(req,res,next){
   signup.email = req.body.email;
   signup.password_encrypeted = encrypted(req.body.password);
   signup.save(function(err,data){
-    console.log(err);
     res.send({Success:true});
   });
+  
+  var vendor = new Vendor();
+  vendor.name = req.body.name;
+  vendor.zip = req.body.zip;
+  vendor.factual_id = (req.body.factual?req.body.factual.factual_id:false);
+  vendor.address = req.body.address;
+  vendor.coordinates = req.body.coordinates;
+  vendor.contact = req.body.contact;
+  vendor.site_url = req.body.site_url;
+  vendor.yelp_url = req.body.yelp_url;
+  vendor.hours = req.body.hours;
+  vendor.type = 'Pending';
+  vendor.save(function(err,vendor){
 
+    var deal = new Deal;
+    deal.vendor_id = vendor._id
+    deal.buy_qty = req.body.buy_qty;
+    deal.buy_item = req.body.buy_item;
+    deal.get_item = req.body.get_item;
+    deal.save(function(err,data){
+    });
 
+    var user = new User()
+    user.email = req.body.email;
+    user.password_encrypeted = encrypted(req.body.password);
+    user.roles = [{key:'vendor'}]
+    user.vendor_id = vendor._id;
+    user.save(function(err,data){
+
+    });
+
+  })
 
   // send an e-mail
   nodemailer.send_mail({
@@ -859,25 +889,15 @@ var getVendor = function(req, res, next){
           if(err)
             next();
           else
-            Deal.find({vendor_id:vendor._id,active:true},function(err, data){
+            Deal.find({vendor_id:vendor._id,active:true},function(err, deals){
               req.err = err;
-              vendor.deals = data;
+              vendor.deals = deals;
+              vendor.users = users;
               req.vendor = vendor;
-              req.users = users;
               next();
             })
         })
     });
-}
-var get10Vendors = function(req, res, next){
-  var params = req.body || {};
-  var skip = params.skip || 0;
-
-  Vendor.find({active:true},['coordinates','name','address','contact'],{skip:skip,limit:10,sort:{name:1}},function(err, data){
-    req.err = err;
-    req.data = data;
-    next();
-  });
 }
 var checkName = function(req, res, next){
   var params = req.body || {}
@@ -953,10 +973,10 @@ var deleteVendor = function(req, res, next){
         req.err = err
         next()
       }else{
-        vendor.active = false;
+        vendor.type = 'Deleted';
         vendor.save(function(err,data){
-          req.err = err
-          next()
+          req.err = err;
+          next();
         })
       }
     })
@@ -1095,9 +1115,9 @@ var saveUser = function(req, res, next){
     user.password_encrypted = encrypted(params.password)
     user.roles = [{key:params.role}]
     user.save(function(err,data){
-      req.data = data
-      req.err = err
-      next()
+      req.data = data;
+      req.err = err;
+      next();
     })
   }
 }
@@ -1111,7 +1131,7 @@ var deleteUser = function(req, res, next){
         user.active = false;
         user.save(function(err,data){
           next();
-        })
+        });
       }
     })
   }else{
@@ -1223,23 +1243,12 @@ app.post('/deleteUser', securedFunction, deleteUser, function(req, res, next){
 
 /**********************************
  * 
- * User schema routes
+ * Vendor schema routes
  * 
  * 
  * 
  * 
  **********************************/
-app.post('/get10Vendors', securedFunction, get10Vendors, function(req, res, next){
-  if(req.err)
-    res.send({
-      err: req.err
-    })
-  else
-    res.render('_list_vendors', {
-      layout: 'layout_partial.jade',
-      vendors: req.data
-    })
-})
 app.post('/getVendor', securedFunction, getVendor, function(req, res, next){
   if(req.err)
     res.send({
@@ -1401,6 +1410,7 @@ app.post('/saveVendor', securedFunction, function(req, res, next){
     vendor.yelp_url = yelp_url;
     vendor.contact = params.factual.tel;
     vendor.hours = foundHours || params.hours;
+    vendor.type = params.type;
     vendor.save(function(err,data){
       req.data = data;
       next();
@@ -1417,6 +1427,7 @@ app.post('/saveVendor', securedFunction, function(req, res, next){
       vendor.yelp_url = params.yelp_url;
       vendor.contact = params.contact;
       vendor.hours = params.hours;
+      vendor.type = params.type;
       vendor.save(function(err,data){
         req.data = data;
         next();
@@ -2245,13 +2256,10 @@ app.post('/login', validateLogin, function(req, res, next){
  * 
  * 
  **********************************/
-app.get('/admin', securedArea, get10Vendors, function(req,res, next){
-  res.render('admin', {
-    vendors: req.data,
-    script: 'admin',
-    view: 'vendors',
-    title: 'KickbackCard.com: Admin'
-  })
+app.get('/admin', securedArea, function(req,res, next){
+  res.send('',{
+      Location:'/vendorsActive'
+  },302);
 })
 app.get('/users', securedArea, get10Users, function(req,res, next){
   res.render('admin', {
@@ -2260,15 +2268,41 @@ app.get('/users', securedArea, get10Users, function(req,res, next){
     view: 'users',
     title: 'KickbackCard.com: Admin: Users'
   })
+});
+
+var get10Vendors = function(req, res, next){
+  var params = req.body || {};
+  var skip = params.skip || 0;
+
+  Vendor.find({
+    active: true,
+    type: req.params.type
+  },['coordinates','name','address','contact'],{skip:skip,limit:10,sort:{name:1}},function(err, data){
+    req.err = err;
+    req.data = data;
+    next();
+  });
+}
+app.post('/get10Vendors:type', securedFunction, get10Vendors, function(req, res, next){
+  if(req.err)
+    res.send({
+      err: req.err
+    })
+  else
+    res.render('_list_vendors', {
+      layout: 'layout_partial.jade',
+      vendors: req.data
+    })
 })
-app.get('/vendors', securedArea, get10Vendors, function(req,res, next){
+app.get('/vendors:type', securedArea, get10Vendors, function(req,res, next){
   res.render('admin', {
     vendors: req.data,
     script: 'admin',
     view: 'vendors',
-    title: 'KickbackCard.com: Admin: Vendors'
+    type: req.params.type,
+    title: 'KickbackCard.com: Admin: Vendors '+req.params.type
   })
-})
+});
 app.get('/logout', function(req, res, next){
   req.session.destroy(function(err){
     next()

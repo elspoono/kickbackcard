@@ -1,7 +1,20 @@
 .headline
   .container
-    h1 Vendors
+    h1
+      =type 
+      |  Vendors
+    .navigation
+      ul
+        li
+          a(href='/vendorsActive') active vendors
+        li
+          a(href='/vendorsPending') pending vendors
+        li
+          a(href='/vendorsDeleted') deleted vendors
 .container.vendor
-  .add-row
-    a.add(href='#') add vendor
+  -if(type=='Active')
+    .add-row
+      a.add(href='#') add vendor
   != partial('row_vendor',{collection:vendors,as:'vendor'})
+.assets
+  .type-indicator=type

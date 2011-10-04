@@ -750,7 +750,8 @@ $(function(){
                   address: win.find('.real-address').val(),
                   site_url: win.find('.site_url').val(),
                   yelp_url: win.find('.yelp_url').val(),
-                  contact: win.find('.contact').val()
+                  contact: win.find('.contact').val(),
+                  type: win.find('.type').val()
                 };
                 loadLoading({},function(err,win,modal){
                   _gaq.push(['_trackPageview','/admin/vendor/save']);
@@ -858,7 +859,7 @@ $(function(){
         if(bottomOfWindow > bottomOfVendorBox && !currentlyLoadingVendors){
           currentlyLoadingVendors = true
           $.ajax({
-            url: '/get10Vendors',
+            url: '/get10Vendors'+$('.type-indicator').html(),
             data: {
               skip: alreadyFoundVendors
             },
