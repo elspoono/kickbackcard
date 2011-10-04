@@ -334,7 +334,7 @@ app.post('/sign-up',function(req,res,next){
   User.count({email:req.body.email,active:true},function(err,already){
     console.log(already)
     if(already>0)
-      res.send({err:''+req.body.email+' is already registered. We will contact you shortly.'})
+      res.send({err:'We have recieved the beta request for '+req.body.email+' already. '+req.body.email+' is good to go.'})
     else
       next()
   });

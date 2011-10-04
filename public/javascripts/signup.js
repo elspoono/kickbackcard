@@ -135,7 +135,7 @@ $(function(){
                   $t.showTooltip({message:data.email+' is good'})
                 }else{
                   $t.removeClass('valid').addClass('error')
-                  $t.showTooltip({message:data.email+' is already registered - you are good to go. We will contact you shortly'})
+                  $t.showTooltip({message:'<p>We have recieved the beta request for '+data.email+' already. '+data.email+' is good to go.</p>'})
                 }
               },
               error: function(){
