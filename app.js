@@ -2116,7 +2116,7 @@ var findNearVendors = function(req, res, next){
 
 }
 
-app.post('/vendors.json\?:type?', findOrSetMapClientId, findNearVendors, function(req, res){
+app.post('/vendors.json/:type?', findOrSetMapClientId, findNearVendors, function(req, res){
   //console.log(req.vendors)
   res.send({
     vendors: req.vendors,
