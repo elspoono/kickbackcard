@@ -2065,7 +2065,7 @@ var findNearVendors = function(req, res, next){
       coordinates : { $near : [params.latitude, params.longitude], $maxDistance: finalDelta },
       _id : { $nin : req.mapClient.vendor_ids},
       active: true,
-      type: 'Active'
+      type: 'Active' || req.params.type
     },
     ['coordinates','name','address','contact','yelp_url','site_url'],
     {skip:0,limit:10},
@@ -2116,7 +2116,7 @@ var findNearVendors = function(req, res, next){
 
 }
 
-app.post('/vendors.json', findOrSetMapClientId, findNearVendors, function(req, res){
+app.post('/vendors:type?.json', findOrSetMapClientId, findNearVendors, function(req, res){
   //console.log(req.vendors)
   res.send({
     vendors: req.vendors,
