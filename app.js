@@ -392,19 +392,19 @@ app.post('/sign-up',function(req,res,next){
     subject:'KickbackCard: Beta Request '+signup.name,
     html: '<h3>Beta Request '+signup.name+'</h3>'
     +'<ul>'
-      +'<li>'+signup.name+'</li>'
-      +'<li>'+signup.zip+'</li>'
-      +'<li>'+signup.factual_id+'</li>'
+      +'<li><b>name they entered:</b> '+signup.name+'</li>'
+      +'<li><b>zip they typed:</b> '+signup.zip+'</li>'
+      +'<li><b>factual id:</b> '+signup.factual_id+'</li>'
       +'<li>'+signup.address+'</li>'
-      +'<li><p>'+signup.coordinates+''
+      +'<li><p>'
         +'<img src="http://maps.googleapis.com/maps/api/staticmap?center='+signup.coordinates+'&markers=color:red%7Clabel:V%7C'+signup.coordinates+'&zoom=13&size=256x100&sensor=false">'
       +'</p></li>'
       +'<li>'+signup.contact+'</li>'
       +'<li>'+signup.site_url+'</li>'
       +'<li>'+signup.yelp_url+'</li>'
       +'<li>'+signup.hours+'</li>'
-      +'<li>Buy '+signup.buy_qty+' '+signup.buy_item+' get '+signup.get_item+'</li>'
-      +'<li>'+signup.email+'</li>'
+      +'<li><b>Deal:</b> Buy '+signup.buy_qty+' '+signup.buy_item+' get '+signup.get_item+'</li>'
+      +'<li><b>Their email address for account:</b> '+signup.email+'</li>'
     +'</ul>',
     body:'New Beta Request: '+signup.email
   },function(err, data){
