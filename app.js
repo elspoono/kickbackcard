@@ -388,7 +388,7 @@ app.post('/sign-up',function(req,res,next){
   // send an e-mail
   nodemailer.send_mail({
     sender: 'notices@kickbackcard.com',
-    to:'derek@kickbackcard.com,scott@kickbackcard.com',
+    to:'derek@kickbackcard.com,scott@kickbackcard.com,johnny@kickbackcard.com',
     subject:'KickbackCard: Beta Request '+signup.name,
     html: '<h3>Beta Request '+signup.name+'</h3>'
     +'<ul>'
@@ -396,7 +396,9 @@ app.post('/sign-up',function(req,res,next){
       +'<li>'+signup.zip+'</li>'
       +'<li>'+signup.factual_id+'</li>'
       +'<li>'+signup.address+'</li>'
-      +'<li>'+signup.coordinates+'</li>'
+      +'<li>'+signup.coordinates+''
+        +'<img class="google-map" src="//maps.googleapis.com/maps/api/staticmap?center='+signup.coordinates+'&markers=color:red%7Clabel:V%7C'+signup.coordinates+'&zoom=13&size=256x100&sensor=false" />'
+      +'</li>'
       +'<li>'+signup.contact+'</li>'
       +'<li>'+signup.site_url+'</li>'
       +'<li>'+signup.yelp_url+'</li>'
