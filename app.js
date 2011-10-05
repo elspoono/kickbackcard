@@ -415,7 +415,7 @@ app.post('/sign-up',function(req,res,next){
 
     var user = new User()
     user.email = req.body.email;
-    user.password_encrypeted = encrypted(req.body.password);
+    user.password_encrypted = encrypted(req.body.password);
     user.roles = [{key:'vendor'}]
     user.vendor_id = vendor._id;
     user.save(function(err,data){
@@ -1003,7 +1003,7 @@ var deleteVendor = function(req, res, next){
         req.err = err
         next()
       }else{
-        vendor.type = 'Deleted';
+        vendor.active = false;
         vendor.save(function(err,data){
           req.err = err;
           next();
@@ -2268,9 +2268,13 @@ app.post('/login', validateLogin, function(req, res, next){
       res.send('',{
           Location:myPreviousPath
       },302);
-    }else
+    }else if(req.session.role == 'admin')
       res.send('',{
           Location:'/admin'
+      },302);
+    else
+      res.send('',{
+          Location:'/vendor'
       },302);
   }
 })
