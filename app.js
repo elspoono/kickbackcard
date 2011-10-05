@@ -332,7 +332,6 @@ app.get('*',function(req,res,next){
 app.post('/sign-up',function(req,res,next){
 
   User.count({email:req.body.email,active:true},function(err,already){
-    console.log(already)
     if(already>0)
       res.send({err:'We have recieved the beta request for '+req.body.email+' already. '+req.body.email+' is good to go.'})
     else
@@ -454,8 +453,12 @@ app.post('/sign-up',function(req,res,next){
   nodemailer.send_mail({
     sender: 'notices@kickbackcard.com',
     to: signup.email,
-    subject:'KickbackCard: Beta Request for '+signup.name+' received',
-    html: '<h3>Beta Request '+signup.name+'</h3>'
+    subject:'KickbackCard: Beta request for '+signup.name+' received',
+    html: ''
+    +'<p>Hi,</p>'
+    +'<p>Your beta request has been received.  We will contact you in the next 1-2 business days.  Thank you for your interest in Kickback Card and we look forward to your participation.</p>'
+    +'<p>Below is your vendor information that was submitted.</p>'
+    +'<h3>'+signup.name+'</h3>'
     +'<div>'
       +'<div><b>Name:</b> '+signup.name+'</div>'
       +'<div>'+signup.address+'</div>'
@@ -1174,7 +1177,7 @@ var validateLogin = function(req, res, next){
   var params = req.body || {}
   req.email = params.email || ''
   req.email = req.email.toLowerCase()
-  User.authenticate(req.email,params.password,function(err, data){
+  User.authenticate(req.email,params.password,function(err, user){
     if(err)
       error(err)
     else{
@@ -1184,17 +1187,26 @@ var validateLogin = function(req, res, next){
        */
 
       /* I think we'll base most decisions off of this session.role */
-      req.session.role = data.roles[0].key
-      req.session.email = data.email
+      req.session.user = user;
     }
-    req.data = data;
+    req.data = user;
     req.err = err;
     next()
   })
 }
 /* Secures an area based on the above session variables */
+var securedAreaVendor = function(req, res, next){
+  if(req.session.user && req.session.user.roles[0].key == 'vendor')
+    next()
+  else{
+    req.session.previousPath = req.route.path;
+    res.send('',{
+        Location:'/login'
+    },302);
+  }
+}
 var securedArea = function(req, res, next){
-  if(req.session.role == 'admin')
+  if(req.session.user && req.session.user.roles[0].key == 'admin')
     next()
   else{
     req.session.previousPath = req.route.path;
@@ -1204,7 +1216,7 @@ var securedArea = function(req, res, next){
   }
 }
 var securedFunction = function(req, res, next){
-  if (req.session.role != 'admin')
+  if (req.session.user && req.session.user.roles[0].key != 'admin')
     res.send({
       err: 'no permissions'
     })
@@ -2013,9 +2025,13 @@ app.post('/sendWelcomeEmail', securedFunction, function(req, res, next){
  * 
  **********************************/
 var redirectLoggedIn = function(req, res, next){
-  if(req.session.role == 'admin')
+  if(req.session.user && req.session.user.roles[0].key == 'admin')
     res.send('',{
         Location:'/admin'
+    },302);
+  else if(req.session.user && req.session.user.roles[0].key == 'vendor')
+    res.send('',{
+        Location:'/dashboard'
     },302);
   else
     next()
@@ -2268,18 +2284,45 @@ app.post('/login', validateLogin, function(req, res, next){
       res.send('',{
           Location:myPreviousPath
       },302);
-    }else if(req.session.role == 'admin')
+    }else if(req.session.user.roles[0].key == 'admin')
       res.send('',{
           Location:'/admin'
       },302);
-    else
-      res.send('',{
-          Location:'/vendor'
-      },302);
+    else{
+      Vendor.find({_id:req.session.user.vendor_id,active:true,type:'Active'},function(err,vendor){
+        if(vendor){
+          req.session.vendor = vendor;
+          res.send('',{
+              Location:'/dashboard'
+          },302);
+        }else{
+          res.render('login', {
+            title: 'KickbackCard.com: Login: Error',
+            err: 'Our apologies - that account is not yet active'
+          })
+        }
+      });
+    }
   }
 })
 
 
+
+/**********************************
+ * 
+ * Vendor Login Navigation
+ * 
+ * After logging in - dashboard / settings / etc
+ * 
+ * 
+ **********************************/
+app.get('/dashboard', securedAreaVendor, function(req, res, next){
+  next();
+},function(req,res, next){
+  res.render('dashboard', {
+    title: 'KickbackCard.com: : Analytics Dashboard'
+  })
+});
 
 
 
