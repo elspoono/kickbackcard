@@ -102,19 +102,20 @@ var app = module.exports = express.createServer();
 var io = require('socket.io').listen(app);
 
 // Configuration
-
+var sessionStore = new mongoStore({db: db, username: dbAuth.username, password: dbAuth.password});
 app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
   app.set('view options', {
-    script:false
+    script:false,
+    scripts: []
   });
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.cookieParser());
   app.use(express.session({
     secret: 'fkd32aFD5Ssnfj$5#@$0k;',
-    store: new mongoStore({db: db, username: dbAuth.username, password: dbAuth.password})
+    store: sessionStore
   }));
   app.use(require('stylus').middleware({ src: __dirname + '/public' }));
   app.use(app.router);
@@ -412,15 +413,20 @@ app.post('/sign-up',function(req,res,next){
     deal.buy_item = req.body.buy_item;
     deal.get_item = req.body.get_item;
     deal.save(function(err,data){
-    });
-
-    var user = new User()
-    user.email = req.body.email;
-    user.password_encrypted = encrypted(req.body.password);
-    user.roles = [{key:'vendor'}]
-    user.vendor_id = vendor._id;
-    user.save(function(err,data){
-
+      vendor.deal_ids.push(data._id);
+      vendor.save(function(err,vendor){
+        var user = new User()
+        user.email = req.body.email;
+        user.password_encrypted = encrypted(req.body.password);
+        user.roles = [{key:'vendor'}]
+        user.vendor_id = vendor._id;
+        user.save(function(err,data){
+          vendor.user_ids.push(data._id);
+          vendor.save(function(err,vendor){
+            
+          })
+        });
+      });
     });
 
   })
@@ -2291,17 +2297,20 @@ app.post('/login', validateLogin, function(req, res, next){
           Location:'/admin'
       },302);
     else{
-      Vendor.find({_id:req.session.user.vendor_id,active:true,type:'Active'},function(err,vendor){
-        if(vendor){
-          req.session.vendor = vendor;
+      Vendor.find({_id:req.session.user.vendor_id,active:true,type:'Active'},function(err,vendors){
+        console.log(vendors);
+        if(vendors.length){
+          req.session.vendor = vendors[0];
           res.send('',{
               Location:'/dashboard'
           },302);
         }else{
-          res.render('login', {
-            title: 'KickbackCard.com: Login: Error',
-            err: 'Our apologies - that account is not yet active'
-          })
+          req.session.destroy(function(err){
+            res.render('login', {
+              title: 'KickbackCard.com: Login: Error',
+              err: 'Error: I see the account in the system, but it is still pending review'
+            });
+          });
         }
       });
     }
@@ -2322,10 +2331,39 @@ app.get('/dashboard', securedAreaVendor, function(req, res, next){
   next();
 },function(req,res, next){
   res.render('dashboard', {
-    title: 'KickbackCard.com: : Analytics Dashboard'
+    title: 'KickbackCard.com: : Analytics Dashboard',
+    scripts: [
+      '/socket.io/socket.io.js',
+      '/javascripts/dashboard.js'
+    ]
   })
 });
+io.configure(function (){
+  io.set('authorization', function (data, next) {
+    var cookies = data.headers.cookie.split(/; */);
+    var sid = false;
+    for(var i in cookies){
+      var cookie = cookies[i].split(/=/);
+      if(cookie[0]=='connect.sid')
+        sid = cookie[1]
+    }
+    sessionStore.get(unescape(sid),function(err,session){
+      if(session){
+        data.session = session;
+        next(null,true)
+      }else
+        next(null,false)
+    });
+  });
+});
+io.sockets.on('connection',function(socket){
+  var hs = socket.handshake;
+  if(hs.session && hs.session.user && hs.session.user.vendor_id)
+    Vendor.find({_id:hs.session.user.vendor_id},function(err,vendor){
+      socket.emit('vendor-load',vendor);
 
+    })
+})
 
 
 /**********************************

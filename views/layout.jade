@@ -35,3 +35,5 @@ html
     script(src='/javascripts/public.js')
     - if(script)
       script(src='/javascripts/'+script+'.js')
+    - for(var i in scripts)
+      script(src=scripts[i])

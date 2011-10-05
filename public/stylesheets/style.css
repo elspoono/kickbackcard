@@ -1,7 +1,79 @@
 @import "reset.css";
+/**************************************
+ *
+ * ^^^^^
+ * Get the Basics out of the way, import fonts and reset css
+ * 
+ **************************************/
+/**********************************
+ *
+ * Font and Color global defintions
+ *
+ **********************************/
+/********************************
+ *
+ * Generic Functions for css3/etc
+ *
+ ********************************/
+/**************************************
+ *
+ * Top level "tag" definitions, e.g. h1
+ *
+ **************************************/
 body {
   font: 16px "Open Sans", Helvetica, Arial, sans-serif;
   background: #333;
+/**************************************
+   *
+   * The grey fade stripe below the header 
+   *
+   **************************************/
+/**************************************
+   *
+   * The header at the top of every page
+   *
+   **************************************/
+/************************************************
+   *
+   * Body top level tag definitions, e.g. p margins
+   *
+   ************************************************/
+/**************************************
+   *
+   * Containers are for width boundaries
+   * only
+   *
+   **************************************/
+/**************************************
+   *
+   * FAQ Page
+   * questions and answers
+   *
+   **************************************/
+/**************************************
+   *
+   * These are the little popups above
+   * fields that say 'valid' or 'error'
+   *
+   **************************************/
+/**************************************
+   *
+   * The modal background and window
+   * used everywhere.
+   *
+   **************************************/
+/**************************************
+   *
+   * For the login screen, the modal and
+   * window within a container.
+   *
+   **************************************/
+/**************************************
+   *
+   * For loading html to be cloned or 
+   * shown by javascript later.
+   *
+   **************************************/
 }
 body h1,
 body h2,
@@ -42,10 +114,15 @@ body .bg2 {
 body .header {
   background-color: #f4f4f4;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#f4f4f4), to(#dbdbdb));
+/* Saf4+, Chrome */
   background-image: -webkit-linear-gradient(top, #f4f4f4, #dbdbdb);
+/* Chrome 10+, Saf5.1+, iOS 5+ */
   background-image: -moz-linear-gradient(top, #f4f4f4, #dbdbdb);
+/* FF3.6 */
   background-image: -ms-linear-gradient(top, #f4f4f4, #dbdbdb);
+/* IE10 */
   background-image: -o-linear-gradient(top, #f4f4f4, #dbdbdb);
+/* Opera 11.10+ */
   background-image: linear-gradient(top, #f4f4f4, #dbdbdb);
   color: #2d6031;
 }
@@ -78,10 +155,15 @@ body .header .container .sign-up .button {
   padding: 20px 30px 5px 30px;
   background-color: #69cd68;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#69cd68), to(#359b34));
+/* Saf4+, Chrome */
   background-image: -webkit-linear-gradient(top, #69cd68, #359b34);
+/* Chrome 10+, Saf5.1+, iOS 5+ */
   background-image: -moz-linear-gradient(top, #69cd68, #359b34);
+/* FF3.6 */
   background-image: -ms-linear-gradient(top, #69cd68, #359b34);
+/* IE10 */
   background-image: -o-linear-gradient(top, #69cd68, #359b34);
+/* Opera 11.10+ */
   background-image: linear-gradient(top, #69cd68, #359b34);
   -moz-box-shadow: 4px 4px 8px #1b4f1a;
   -webkit-box-shadow: 4px 4px 8px #1b4f1a;
@@ -130,11 +212,28 @@ body .headline .container {
 body .body {
   background-color: #dbdbdb;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#dbdbdb), to(#8e8e8e));
+/* Saf4+, Chrome */
   background-image: -webkit-linear-gradient(top, #dbdbdb, #8e8e8e);
+/* Chrome 10+, Saf5.1+, iOS 5+ */
   background-image: -moz-linear-gradient(top, #dbdbdb, #8e8e8e);
+/* FF3.6 */
   background-image: -ms-linear-gradient(top, #dbdbdb, #8e8e8e);
+/* IE10 */
   background-image: -o-linear-gradient(top, #dbdbdb, #8e8e8e);
+/* Opera 11.10+ */
   background-image: linear-gradient(top, #dbdbdb, #8e8e8e);
+/**************************************
+     *
+     * Home Page specific containers and structure
+     *
+     **************************************/
+/**************************************
+     *
+     * Generic row and row alt styling used
+     * in vendors and users long scrolling
+     * pages.
+     *
+     **************************************/
 }
 body .body h2 {
   font-size: 2em;
@@ -150,10 +249,15 @@ body .body p {
 body .body .content-area {
   background-color: #00abff;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#00abff), to(#0089cc));
+/* Saf4+, Chrome */
   background-image: -webkit-linear-gradient(top, #00abff, #0089cc);
+/* Chrome 10+, Saf5.1+, iOS 5+ */
   background-image: -moz-linear-gradient(top, #00abff, #0089cc);
+/* FF3.6 */
   background-image: -ms-linear-gradient(top, #00abff, #0089cc);
+/* IE10 */
   background-image: -o-linear-gradient(top, #00abff, #0089cc);
+/* Opera 11.10+ */
   background-image: linear-gradient(top, #00abff, #0089cc);
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
@@ -305,10 +409,15 @@ body .body .add-row a {
   padding: 8px 20px 0 20px;
   background-color: #7eb468;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#7eb468), to(#4e7a3c));
+/* Saf4+, Chrome */
   background-image: -webkit-linear-gradient(top, #7eb468, #4e7a3c);
+/* Chrome 10+, Saf5.1+, iOS 5+ */
   background-image: -moz-linear-gradient(top, #7eb468, #4e7a3c);
+/* FF3.6 */
   background-image: -ms-linear-gradient(top, #7eb468, #4e7a3c);
+/* IE10 */
   background-image: -o-linear-gradient(top, #7eb468, #4e7a3c);
+/* Opera 11.10+ */
   background-image: linear-gradient(top, #7eb468, #4e7a3c);
   -moz-box-shadow: 2px 2px 4px #000;
   -webkit-box-shadow: 2px 2px 4px #000;
@@ -389,10 +498,15 @@ body .finish-button {
   max-width: 450px;
   background-color: #69cd68;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#69cd68), to(#359b34));
+/* Saf4+, Chrome */
   background-image: -webkit-linear-gradient(top, #69cd68, #359b34);
+/* Chrome 10+, Saf5.1+, iOS 5+ */
   background-image: -moz-linear-gradient(top, #69cd68, #359b34);
+/* FF3.6 */
   background-image: -ms-linear-gradient(top, #69cd68, #359b34);
+/* IE10 */
   background-image: -o-linear-gradient(top, #69cd68, #359b34);
+/* Opera 11.10+ */
   background-image: linear-gradient(top, #69cd68, #359b34);
   -moz-box-shadow: 4px 4px 8px #1b4f1a;
   -webkit-box-shadow: 4px 4px 8px #1b4f1a;
@@ -421,6 +535,11 @@ body .text-clump {
   border-radius: 8px;
   background: #333;
   color: #eee;
+/**************************************
+     *
+     * .deal-list  / .results / .new-listing are all for the sign up page right now
+     *
+     **************************************/
 }
 body .text-clump .deal-list li {
   line-height: 34px;
@@ -535,10 +654,15 @@ body .text-clump .text-fields div .button {
   margin: 11px 0 0 0;
   background-color: #00abff;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#00abff), to(#006799));
+/* Saf4+, Chrome */
   background-image: -webkit-linear-gradient(top, #00abff, #006799);
+/* Chrome 10+, Saf5.1+, iOS 5+ */
   background-image: -moz-linear-gradient(top, #00abff, #006799);
+/* FF3.6 */
   background-image: -ms-linear-gradient(top, #00abff, #006799);
+/* IE10 */
   background-image: -o-linear-gradient(top, #00abff, #006799);
+/* Opera 11.10+ */
   background-image: linear-gradient(top, #00abff, #006799);
   -moz-box-shadow: 2px 2px 8px #000;
   -webkit-box-shadow: 2px 2px 8px #000;
@@ -718,10 +842,15 @@ body .window {
 body .body .window {
   background-color: #00abff;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#00abff), to(#0089cc));
+/* Saf4+, Chrome */
   background-image: -webkit-linear-gradient(top, #00abff, #0089cc);
+/* Chrome 10+, Saf5.1+, iOS 5+ */
   background-image: -moz-linear-gradient(top, #00abff, #0089cc);
+/* FF3.6 */
   background-image: -ms-linear-gradient(top, #00abff, #0089cc);
+/* IE10 */
   background-image: -o-linear-gradient(top, #00abff, #0089cc);
+/* Opera 11.10+ */
   background-image: linear-gradient(top, #00abff, #0089cc);
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
@@ -747,6 +876,21 @@ body .window {
   top: 0;
   left: 0;
   overflow: hidden;
+/**************************************
+     *
+     * Tabs for vendors multiple forms
+     *
+     **************************************/
+/**************************************
+     *
+     * Print Dialog
+     *
+     **************************************/
+/**************************************
+     *
+     * Buttons at the bottom of most windows
+     *
+     **************************************/
 }
 body .window a {
   color: #2d6031;
@@ -893,10 +1037,15 @@ body .window fieldset .row .buttons .print {
   padding: 8px 20px 0 20px;
   background-color: #7eb468;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#7eb468), to(#4e7a3c));
+/* Saf4+, Chrome */
   background-image: -webkit-linear-gradient(top, #7eb468, #4e7a3c);
+/* Chrome 10+, Saf5.1+, iOS 5+ */
   background-image: -moz-linear-gradient(top, #7eb468, #4e7a3c);
+/* FF3.6 */
   background-image: -ms-linear-gradient(top, #7eb468, #4e7a3c);
+/* IE10 */
   background-image: -o-linear-gradient(top, #7eb468, #4e7a3c);
+/* Opera 11.10+ */
   background-image: linear-gradient(top, #7eb468, #4e7a3c);
   -moz-box-shadow: 2px 2px 4px #000;
   -webkit-box-shadow: 2px 2px 4px #000;
@@ -920,10 +1069,15 @@ body .window fieldset .add-row a {
   padding: 8px 20px 0 20px;
   background-color: #7eb468;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#7eb468), to(#4e7a3c));
+/* Saf4+, Chrome */
   background-image: -webkit-linear-gradient(top, #7eb468, #4e7a3c);
+/* Chrome 10+, Saf5.1+, iOS 5+ */
   background-image: -moz-linear-gradient(top, #7eb468, #4e7a3c);
+/* FF3.6 */
   background-image: -ms-linear-gradient(top, #7eb468, #4e7a3c);
+/* IE10 */
   background-image: -o-linear-gradient(top, #7eb468, #4e7a3c);
+/* Opera 11.10+ */
   background-image: linear-gradient(top, #7eb468, #4e7a3c);
   -moz-box-shadow: 2px 2px 4px #000;
   -webkit-box-shadow: 2px 2px 4px #000;
@@ -940,7 +1094,7 @@ body .window fieldset .add-row a {
 body .window .print .option {
   margin: 15px 0;
   padding: 15px;
-  background: rgba(190,190,190,0.1);
+  background: rgba(190,190,190,0.10);
   -moz-box-shadow: 4px 4px 4px #aaa;
   -webkit-box-shadow: 4px 4px 4px #aaa;
   box-shadow: 4px 4px 4px #aaa;
@@ -989,10 +1143,15 @@ body .window .buttons .submit {
   padding: 8px 20px 0 20px;
   background-color: #7eb468;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#7eb468), to(#4e7a3c));
+/* Saf4+, Chrome */
   background-image: -webkit-linear-gradient(top, #7eb468, #4e7a3c);
+/* Chrome 10+, Saf5.1+, iOS 5+ */
   background-image: -moz-linear-gradient(top, #7eb468, #4e7a3c);
+/* FF3.6 */
   background-image: -ms-linear-gradient(top, #7eb468, #4e7a3c);
+/* IE10 */
   background-image: -o-linear-gradient(top, #7eb468, #4e7a3c);
+/* Opera 11.10+ */
   background-image: linear-gradient(top, #7eb468, #4e7a3c);
   -moz-box-shadow: 2px 2px 4px #000;
   -webkit-box-shadow: 2px 2px 4px #000;
