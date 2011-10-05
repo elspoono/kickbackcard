@@ -28,8 +28,15 @@ $(function(){
 
 
   var socket = io.connect('/');
+  var vendor = false;
   socket.on('vendor-load',function(vendor){
     console.log(vendor);
+    $('.vendor-title').html(vendor.name);
+  })
+
+  socket.on('deal-load',function(deal){
+    console.log(deal);
+    $('.deal-title').html(deal.tag_line);
   })
 
 

@@ -2358,11 +2358,20 @@ io.configure(function (){
 });
 io.sockets.on('connection',function(socket){
   var hs = socket.handshake;
-  if(hs.session && hs.session.user && hs.session.user.vendor_id)
-    Vendor.find({_id:hs.session.user.vendor_id},function(err,vendor){
-      socket.emit('vendor-load',vendor);
-
+  if(hs.session && hs.session.user && hs.session.user.vendor_id){
+    socket.join('Vendor '+hs.session.user.vendor_id)
+    Vendor.find({_id:hs.session.user.vendor_id},function(err,vendors){
+      if(vendors.length){
+        socket.emit('vendor-load',vendors[0]); 
+        Deal.find({_id:{$in:vendors[0].deal_ids}},function(err,deals){
+          if(deals.length){
+            deals[0].tag_line = deals[0].default_tag_line;
+            socket.emit('deal-load', deals[0]);
+          }
+        })
+      }
     })
+  }
 })
 
 
