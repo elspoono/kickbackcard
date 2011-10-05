@@ -99,6 +99,8 @@ var Schema = mongoose.Schema, ObjectId = Schema.ObjectId;
 
 var app = module.exports = express.createServer();
 
+var io = require('socket.io').listen(app);
+
 // Configuration
 
 app.configure(function(){
