@@ -2121,7 +2121,7 @@ var findNearVendors = function(req, res, next){
       active: true,
       type: req.params.type || 'Active'
     },
-    ['coordinates','name','address','contact','yelp_url','site_url'],
+    ['coordinates','name','address','contact','yelp_url','site_url','hours'],
     {skip:0,limit:10},
     function(err, vendors){
       Vendor.find(
