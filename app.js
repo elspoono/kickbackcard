@@ -767,7 +767,7 @@ app.post('/k:id',function(req,res,next){
               if(err||!deal)
                 res.send({err:err||'Deal not found'})
               else{
-                Vendor.find({deal_ids:deal._id,active:true},function(err, vendor){
+                Vendor.find({deal_ids:deal._id,active:true},function(err, vendors){
 
 
 
@@ -791,7 +791,7 @@ app.post('/k:id',function(req,res,next){
                   /*
                     See if there's an existing "kick" with this scan id
                   */
-                  if(err||!deal)
+                  if(err||vendors.length==0)
                     res.send({err:err||'Vendor not found'})
                   else
                     Kick.find({scan_id:req.body.scan_id},[],function(err,scan){
@@ -812,7 +812,7 @@ app.post('/k:id',function(req,res,next){
                             scan: scan,
                             deal: deal,
                             kicker: kicker,
-                            vendor: vendor
+                            vendor: vendors[0]
                           })
                         }else{
                           /*
@@ -835,7 +835,7 @@ app.post('/k:id',function(req,res,next){
                                 err: err,
                                 deal: deal,
                                 kicker: kicker,
-                                vendor: vendor
+                                vendor: vendors[0]
                               });
                             })
                           }else{
@@ -849,7 +849,7 @@ app.post('/k:id',function(req,res,next){
                                 if(previousKick.length){
                                   res.send({
                                     deal: deal,
-                                    vendor: vendor,
+                                    vendor: vendors[0],
                                     kicker: kicker,
                                     previousKick: previousKick
                                   })
@@ -868,7 +868,7 @@ app.post('/k:id',function(req,res,next){
                                       err: err,
                                       deal: deal,
                                       kicker: kicker,
-                                      vendor: vendor
+                                      vendor: vendors[0]
                                     });
                                   })
                                 }
