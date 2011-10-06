@@ -759,13 +759,13 @@ app.post('/k:id',function(req,res,next){
         Kicker.find({url_string:req.params.id,active:true}, [], function(err,kickers){
           if(err || kickers.length==0)
             res.send({
-              err: err || 'Kicker not found'
+              err: err || 'It looks like that kicker is not active.'
             })
           else{
             var kicker = kickers[0];
             Deal.findById(kicker.deal_id,function(err,deal){
               if(err||!deal)
-                res.send({err:err||'Deal not found'})
+                res.send({err:err||'It looks like that deal is not active.'})
               else{
                 Vendor.find({deal_ids:deal._id,active:true},function(err, vendors){
 
@@ -792,7 +792,7 @@ app.post('/k:id',function(req,res,next){
                     See if there's an existing "kick" with this scan id
                   */
                   if(err||vendors.length==0)
-                    res.send({err:err||'Vendor not found'})
+                    res.send({err:err||'It looks like that vendor/location is not active.'})
                   else
                     Kick.find({scan_id:req.body.scan_id},[],function(err,scan){
                       if(err)
