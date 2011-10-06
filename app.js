@@ -791,92 +791,95 @@ app.post('/k:id',function(req,res,next){
                   /*
                     See if there's an existing "kick" with this scan id
                   */
-                  Kick.find({scan_id:req.body.scan_id},[],function(err,scan){
-                    if(err)
-                      res.send({err:err})
-                    else{
-                      
+                  if(err||!deal)
+                    res.send({err:err||'Vendor not found'})
+                  else
+                    Kick.find({scan_id:req.body.scan_id},[],function(err,scan){
+                      if(err)
+                        res.send({err:err})
+                      else{
+                        
 
-                      /* Set tag line to default or what it is */
-                      deal.tag_line = deal.default_tag_line;
+                        /* Set tag line to default or what it is */
+                        deal.tag_line = deal.default_tag_line;
 
 
-                      if(scan.length){
-                        /*
-                          Send scan info back if already exists
-                        */
-                        res.send({
-                          scan: scan,
-                          deal: deal,
-                          kicker: kicker,
-                          vendor: vendor
-                        })
-                      }else{
-                        /*
-
-                        Check if it's a paper kick and already used by someone else??
-
-                        */
-                        if(kicker.reusable){
+                        if(scan.length){
                           /*
-                            Otherwise, create a new kick
+                            Send scan info back if already exists
                           */
-                          var kick = new Kick();
-                          kick.scan_id = req.body.scan_id;
-                          kick.redeemed = false;
-                          kick.kicker_id = kicker._id;
-                          kick.deal_id = deal._id;
-                          kick.client_id = client._id;
-                          kick.save(function(err,data){
-                            res.send({
-                              err: err,
-                              deal: deal,
-                              kicker: kicker,
-                              vendor: vendor
-                            });
+                          res.send({
+                            scan: scan,
+                            deal: deal,
+                            kicker: kicker,
+                            vendor: vendor
                           })
                         }else{
                           /*
-                            See if there's an existing "kick" with this scan id
-                          */
-                          Kick.find({kicker_id:kicker._id},[],function(err,previousKick){
-                            if(err)
-                              res.send({err:err})
-                            else{
-                              if(previousKick.length){
-                                res.send({
-                                  deal: deal,
-                                  vendor: vendor,
-                                  kicker: kicker,
-                                  previousKick: previousKick
-                                })
-                              }else{
-                                /*
-                                  Otherwise, create a new kick
-                                */
-                                var kick = new Kick();
-                                kick.scan_id = req.body.scan_id;
-                                kick.redeemed = false;
-                                kick.kicker_id = kicker._id;
-                                kick.deal_id = deal._id;
-                                kick.client_id = client._id;
-                                kick.save(function(err,data){
-                                  res.send({
-                                    err: err,
-                                    deal: deal,
-                                    kicker: kicker,
-                                    vendor: vendor
-                                  });
-                                })
-                              }
 
-                            }
-                          });
-                          
+                          Check if it's a paper kick and already used by someone else??
+
+                          */
+                          if(kicker.reusable){
+                            /*
+                              Otherwise, create a new kick
+                            */
+                            var kick = new Kick();
+                            kick.scan_id = req.body.scan_id;
+                            kick.redeemed = false;
+                            kick.kicker_id = kicker._id;
+                            kick.deal_id = deal._id;
+                            kick.client_id = client._id;
+                            kick.save(function(err,data){
+                              res.send({
+                                err: err,
+                                deal: deal,
+                                kicker: kicker,
+                                vendor: vendor
+                              });
+                            })
+                          }else{
+                            /*
+                              See if there's an existing "kick" with this scan id
+                            */
+                            Kick.find({kicker_id:kicker._id},[],function(err,previousKick){
+                              if(err)
+                                res.send({err:err})
+                              else{
+                                if(previousKick.length){
+                                  res.send({
+                                    deal: deal,
+                                    vendor: vendor,
+                                    kicker: kicker,
+                                    previousKick: previousKick
+                                  })
+                                }else{
+                                  /*
+                                    Otherwise, create a new kick
+                                  */
+                                  var kick = new Kick();
+                                  kick.scan_id = req.body.scan_id;
+                                  kick.redeemed = false;
+                                  kick.kicker_id = kicker._id;
+                                  kick.deal_id = deal._id;
+                                  kick.client_id = client._id;
+                                  kick.save(function(err,data){
+                                    res.send({
+                                      err: err,
+                                      deal: deal,
+                                      kicker: kicker,
+                                      vendor: vendor
+                                    });
+                                  })
+                                }
+
+                              }
+                            });
+                            
+                          }
                         }
                       }
-                    }
-                  })
+                    })
                 })
               }
             })
