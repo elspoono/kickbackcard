@@ -893,7 +893,8 @@ body .window {
      **************************************/
 }
 body .window a {
-  color: #2d6031;
+  color: #00abff;
+  text-decoration: none;
 }
 body .window h2 {
   font-size: 1.5em;
@@ -1172,10 +1173,45 @@ body .window .buttons .cancel {
 body .container .modal {
   display: none;
 }
+body .clear {
+  clear: both;
+}
 body .container .window {
   display: block;
   position: relative;
   margin: 0 auto 60px auto;
+}
+body .window.left {
+  float: left;
+  width: 500px;
+  margin-right: 30px;
+}
+body .window.left .nav-left {
+  float: left;
+}
+body .window.left .nav-right {
+  float: right;
+}
+body .window.left .nav-left,
+body .window.left .nav-right {
+  font-size: 12px;
+  margin-top: 10px;
+}
+body .window.left .legend table td {
+  padding: 2px;
+}
+body .window.right {
+  float: right;
+  width: 240px;
+}
+body .window.right .item {
+  border-bottom: 1px solid #6f6f6e;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+body .window.right .item .date {
+  font-size: 12px;
+  color: #6f6f6e;
 }
 body .assets {
   display: none;

@@ -40,6 +40,13 @@ $(function(){
   })
 
 
-
+    var kicks = {data:[[0, 3], [4, 8], [8, 5], [9, 13]],label:'Kicks'};
+    var redeems = {data:[[0, 1], [4, 2], [8, 3], [9, 1]],label:'Redeems'};
+    
+    $.plot($('.deal-chart').height(300), [ kicks, redeems ], {
+      legend: {
+        backgroundOpacity: .6
+      }
+    });
 
 });

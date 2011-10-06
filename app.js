@@ -250,6 +250,17 @@ var Kick = mongoose.model('Kick',KickSchema);
 var Redeem = mongoose.model('Redeem',RedeemSchema);
 
 
+
+var ShareSchema = new Schema({
+  client_id: String,
+  deal_id: String,
+  kick_id: [String],
+  date_added: {type: Date, default: Date.now}
+})
+var Share = mongoose.model('Share',ShareSchema);
+
+
+
 var DealSchema = new Schema({
   buy_item: String,
   buy_qty: Number,
@@ -741,6 +752,34 @@ app.get('/r:id',function(req,res,next){
     }
   });
 });
+
+app.post('/share',function(req,res,next){
+  Client.findById(req.body.client_id,function(err,client){
+    if(err)
+      res.send({err:err})
+    else{
+
+      /*
+        Validate the shared token against the secret/client_id/kick_id
+      */
+
+      var isValid = bcrypt.compare_sync(client.client_secret+client._id+(req.body.kick_id||req.body.deal_id), req.body.client_shared);
+      if(!isValid)
+        res.send({err:'Invalid Token'})
+      else{
+        var share = new Share();
+        share.deal_id = req.body.deal_id;
+        share.kick_id = req.body.kick_id;
+        share.client_id = req.body.client_id;
+        share.save(function(err,share){
+          res.send({
+            Success: 'True'
+          })
+        });
+      }
+    }
+  })
+})
 
 app.post('/k:id',function(req,res,next){
   Client.findById(req.body.client_id,function(err,client){
@@ -2337,6 +2376,8 @@ app.get('/dashboard', securedAreaVendor, function(req, res, next){
     title: 'KickbackCard.com: : Analytics Dashboard',
     scripts: [
       '/socket.io/socket.io.js',
+      '/javascripts/excanvas.min.js',
+      '/javascripts/jquery.flot.min.js',
       '/javascripts/dashboard.js'
     ]
   })
