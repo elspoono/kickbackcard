@@ -2411,11 +2411,33 @@ io.sockets.on('connection',function(socket){
     socket.join('Vendor '+hs.session.user.vendor_id)
     Vendor.find({_id:hs.session.user.vendor_id},function(err,vendors){
       if(vendors.length){
-        socket.emit('vendor-load',vendors[0]); 
+        var vendor = vendors[0];
+        
+        // Vendor Load
+        socket.emit('vendor-load',vendor); 
+
         Deal.find({_id:{$in:vendors[0].deal_ids}},function(err,deals){
           if(deals.length){
-            deals[0].tag_line = deals[0].default_tag_line;
-            socket.emit('deal-load', deals[0]);
+            var deal = deals[0];
+            deal.tag_line = deal.default_tag_line;
+
+            // Deal Load
+            socket.emit('deal-load', deal);
+
+            // Kick Total
+            Kick.count({deal_id:deal._id},function(err,total){
+              socket.emit('kick-total',total);
+            });
+
+            // Redeem Total
+            Redeem.count({deal_id:deal._id},function(err,total){
+              socket.emit('redeem-total',total);
+            });
+
+            // Share Total
+            Share.count({deal_id:deal._id},function(err,total){
+              socket.emit('share-total',total);
+            });
           }
         })
       }

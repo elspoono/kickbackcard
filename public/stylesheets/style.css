@@ -1223,6 +1223,14 @@ body .window.left .nav-right {
 body .window.left .legend table td {
   padding: 2px;
 }
+body .data-view {
+  color: #6f6f6e;
+  font-size: 14px;
+}
+body .data-view .label {
+  float: left;
+  width: 100px;
+}
 body .window.right {
   float: right;
   width: 240px;

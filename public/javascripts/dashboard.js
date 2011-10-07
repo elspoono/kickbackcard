@@ -30,14 +30,22 @@ $(function(){
   var socket = io.connect('/');
   var vendor = false;
   socket.on('vendor-load',function(vendor){
-    console.log(vendor);
     $('.vendor-title').html(vendor.name);
-  })
+  });
 
   socket.on('deal-load',function(deal){
-    console.log(deal);
     $('.deal-title').html(deal.tag_line);
-  })
+  });
+
+  socket.on('kick-total',function(total){
+    $('.all .kicks .value').html(total);
+  });
+  socket.on('redeem-total',function(total){
+    $('.all .redeems .value').html(total);
+  });
+  socket.on('share-total',function(total){
+    $('.all .shares .value').html(total);
+  });
 
 
     var kicks = {data:[[0, 3], [4, 8], [8, 5], [9, 13]],label:'Kicks'};
