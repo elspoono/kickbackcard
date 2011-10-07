@@ -458,8 +458,19 @@ body .footer {
   text-align: center;
   background: #333;
 }
+body .footer .really-above {
+  color: #6f6f6e;
+  font-size: 12px;
+  padding-bottom: 10px;
+}
+body .footer .really-above a {
+  font-size: 12px;
+  color: #6f6f6e;
+  text-decoration: none;
+}
 body .footer .above {
-  padding: 5px 0 0 0;
+  border-top: 1px solid #6f6f6e;
+  padding: 20px 0 0 0;
   color: #6f6f6e;
   font-size: 12px;
 }
@@ -474,8 +485,7 @@ body .footer .other a {
   text-decoration: none;
 }
 body .footer .container {
-  border-top: 1px solid #6f6f6e;
-  padding: 5px 0 0 0;
+  padding: 0;
 }
 body .footer ul {
   text-align: center;
@@ -523,6 +533,15 @@ body .finish-button {
   font-family: "Luckiest Guy";
   color: #fff;
   text-decoration: none;
+}
+body .small {
+  width: 200px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  border-radius: 8px;
+}
+body .center {
+  text-align: center;
 }
 body .wide {
   margin: 0 0 30px 0;

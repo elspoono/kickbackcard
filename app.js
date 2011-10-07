@@ -2107,6 +2107,11 @@ app.get('/about', redirectLoggedIn, function(req, res){
     title: 'KickbackCard - The team behind the product'
   });
 });
+app.get('/printables', redirectLoggedIn, function(req, res){
+  res.render('printables', {
+    title: 'KickbackCard - Stuff to take with you'
+  });
+});
 app.get('/sign-up', redirectLoggedIn, function(req, res){
   res.render('signup', {
     script: 'signup',
