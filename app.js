@@ -2344,7 +2344,7 @@ app.post('/login', validateLogin, function(req, res, next){
           Location:'/admin'
       },302);
     else{
-      Vendor.find({_id:req.session.user.vendor_id,active:true,type:'Active'},function(err,vendors){
+      Vendor.find({_id:req.session.user.vendor_id,active:true,type:/(Active|Pending)/},function(err,vendors){
         console.log(vendors);
         if(vendors.length){
           req.session.vendor = vendors[0];
