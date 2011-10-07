@@ -111,6 +111,10 @@ body .bg2 {
   display: block;
   z-index: -1;
 }
+body a.vert-center img {
+  margin-bottom: -5px;
+  margin-right: 5px;
+}
 body .header {
   background-color: #f4f4f4;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#f4f4f4), to(#dbdbdb));
@@ -700,6 +704,7 @@ body .text-clump .col-2 {
 body .text-clump .col {
   float: left;
   max-width: 240px;
+  min-width: 200px;
   margin-right: 30px;
 }
 body .text-clump .last {
