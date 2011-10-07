@@ -1,22 +1,45 @@
+/**********************************
+ *
+ * Font and Color global defintions
+ *
+ **********************************/
+/********************************
+ *
+ * Generic Functions for css3/etc
+ *
+ ********************************/
+/**************************************
+ *
+ * Top level "tag" definitions, e.g. h1
+ *
+ **************************************/
 body .header {
   background-color: #f4f4f4;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=#f4f4f4, EndColorStr=#dbdbdb);
+/* IE6–IE9 */
   -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr=#f4f4f4, EndColorStr=#dbdbdb)";
+/* IE6–IE9 */
 }
 body .header .container .sign-up .button {
   background-color: #69cd68;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=#69cd68, EndColorStr=#359b34);
+/* IE6–IE9 */
   -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr=#69cd68, EndColorStr=#359b34)";
+/* IE6–IE9 */
 }
 body .body {
   background-color: #dbdbdb;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=#dbdbdb, EndColorStr=#8e8e8e);
+/* IE6–IE9 */
   -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr=#dbdbdb, EndColorStr=#8e8e8e)";
+/* IE6–IE9 */
 }
 body .body .content-area {
   background-color: #00abff;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=#00abff, EndColorStr=#0089cc);
+/* IE6–IE9 */
   -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr=#00abff, EndColorStr=#0089cc)";
+/* IE6–IE9 */
 }
 body .body .container .phone-area {
   margin-top: 0;
@@ -24,5 +47,7 @@ body .body .container .phone-area {
 body .body .window {
   background-color: #00abff;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=#00abff, EndColorStr=#0089cc);
+/* IE6–IE9 */
   -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr=#00abff, EndColorStr=#0089cc)";
+/* IE6–IE9 */
 }

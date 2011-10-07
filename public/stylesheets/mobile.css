@@ -2,7 +2,16 @@ body .body .container {
   padding: 15px;
 }
 body .body .container .phone-area {
-  margin-top: 30px;
+  display: block;
+  margin: 30px auto;
+  width: 335px;
+  float: none;
+}
+body .body .container .content-area {
+  float: none;
+  overflow: hidden;
+  margin-right: 0;
+  max-width: 100%;
 }
 body .body .step-copy .scan {
   background: url("/images/step1-scan.png") no-repeat 20px 0;
@@ -30,6 +39,11 @@ body .body .step-copy .burger div {
 body .body .col-left,
 body .body .col-right {
   display: none;
+}
+body .headline .container,
+body .navigation .container {
+  padding-left: 15px;
+  padding-right: 15px;
 }
 body .window {
   padding: 30px 10px 10px 10px;

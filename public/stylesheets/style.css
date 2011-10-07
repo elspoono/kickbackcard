@@ -348,11 +348,10 @@ body .body .clear {
 }
 body .body .container .content-area {
   float: left;
-  max-width: 580px;
+  max-width: 565px;
 }
 body .body .container .phone-area {
   margin-top: -60px;
-  width: 300px;
   float: right;
 }
 body .body .container .phone-area .screenshot {
