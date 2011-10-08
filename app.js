@@ -2122,7 +2122,7 @@ app.get('/sign-up', redirectLoggedIn, function(req, res){
 
 app.get('/app', function(req, res){
   res.send('',{
-    Location: 'http://itunes.apple.com/us/app/kickback-card/id469331064?mt=8'
+    Location: 'http://itunes.apple.com/us/app/kickback-card/id469331064?ls=1&mt=8'
   },302);
 })
 
