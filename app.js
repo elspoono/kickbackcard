@@ -2415,7 +2415,12 @@ io.configure(function (){
 io.sockets.on('connection',function(socket){
   var hs = socket.handshake;
   if(hs.session && hs.session.user && hs.session.user.vendor_id){
-    socket.join('Vendor '+hs.session.user.vendor_id)
+    socket.join('Vendor '+hs.session.user.vendor_id);
+    socket.on('load-kicks',function(options){
+      Kick.find({deal_id:deal._id,date_added:{"$gte": options.startDate, "$lt": options.endDate}},[],function(err,kicks){
+        socket.emit(kicks);
+      });
+    });
     Vendor.find({_id:hs.session.user.vendor_id},function(err,vendors){
       if(vendors.length){
         var vendor = vendors[0];
@@ -2445,8 +2450,6 @@ io.sockets.on('connection',function(socket){
             Share.count({deal_id:deal._id},function(err,total){
               socket.emit('share-total',total);
             });
-            
-            Kick.find({deal_id:deal._id})
 
           }
         })
