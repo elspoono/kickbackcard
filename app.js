@@ -2180,7 +2180,8 @@ var findNearVendors = function(req, res, next){
       Vendor.find(
         {
           coordinates : { $near : [params.latitude, params.longitude], $maxDistance: finalDelta },
-          active: true
+          active: true,
+          type: req.params.type || 'Active'
         },
         ['name'],
         {skip:0,limit:20},
