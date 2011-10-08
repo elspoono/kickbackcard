@@ -2120,6 +2120,12 @@ app.get('/sign-up', redirectLoggedIn, function(req, res){
 });
 
 
+app.get('/app', function(req, res){
+  res.send('',{
+    Location: 'http://itunes.apple.com/us/app/kickback-card/id469331064?mt=8'
+  },302);
+})
+
 
   /*
     Find their Map Client ID or create it
@@ -2438,6 +2444,9 @@ io.sockets.on('connection',function(socket){
             Share.count({deal_id:deal._id},function(err,total){
               socket.emit('share-total',total);
             });
+            
+            Kick.find({deal_id:deal._id})
+
           }
         })
       }
