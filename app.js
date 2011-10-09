@@ -2397,7 +2397,7 @@ app.get('/dashboard', securedAreaVendor, function(req, res, next){
 });
 io.configure(function (){
 
-  //io.set('transports', ['xhr-polling']);
+  io.set('transports', ['xhr-polling']);
 
 /*
   io.set('authorization', function (data, next) {
