@@ -101,6 +101,7 @@ var app = module.exports = express.createServer();
 
 var io = require('socket.io').listen(app);
 
+
 // Configuration
 var sessionStore = new mongoStore({db: db, username: dbAuth.username, password: dbAuth.password});
 app.configure(function(){
@@ -2395,6 +2396,9 @@ app.get('/dashboard', securedAreaVendor, function(req, res, next){
   })
 });
 io.configure(function (){
+
+  io.set('transports', ['flashsocket', 'xhr-polling', 'jsonp-polling', 'htmlfile']);
+
   io.set('authorization', function (data, next) {
     var cookies = data.headers.cookie.split(/; */);
     var sid = false;

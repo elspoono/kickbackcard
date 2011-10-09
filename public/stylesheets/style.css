@@ -252,17 +252,17 @@ body .body p {
 }
 body .body .content-area {
   background-color: #00abff;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#00abff), to(#0089cc));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#00abff), to(#006799));
 /* Saf4+, Chrome */
-  background-image: -webkit-linear-gradient(top, #00abff, #0089cc);
+  background-image: -webkit-linear-gradient(top, #00abff, #006799);
 /* Chrome 10+, Saf5.1+, iOS 5+ */
-  background-image: -moz-linear-gradient(top, #00abff, #0089cc);
+  background-image: -moz-linear-gradient(top, #00abff, #006799);
 /* FF3.6 */
-  background-image: -ms-linear-gradient(top, #00abff, #0089cc);
+  background-image: -ms-linear-gradient(top, #00abff, #006799);
 /* IE10 */
-  background-image: -o-linear-gradient(top, #00abff, #0089cc);
+  background-image: -o-linear-gradient(top, #00abff, #006799);
 /* Opera 11.10+ */
-  background-image: linear-gradient(top, #00abff, #0089cc);
+  background-image: linear-gradient(top, #00abff, #006799);
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
   border-radius: 8px;
