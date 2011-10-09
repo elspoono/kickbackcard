@@ -2397,7 +2397,7 @@ app.get('/dashboard', securedAreaVendor, function(req, res, next){
 });
 io.configure(function (){
 
-  io.set('transports', ['flashsocket', 'json-polling', 'jsonp-polling', 'htmlfile']);
+  io.set('transports', ['flashsocket']);
 
   io.set('authorization', function (data, next) {
     var cookies = data.headers.cookie.split(/; */);
