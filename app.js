@@ -2509,7 +2509,7 @@ io.sockets.on('connection',function(socket){
             });
 
             // All News
-            News.find({deal_id:deal._id},[type,date_added],{skip:0,limit:10,sort:{date_added:1}},function(err,allNews){
+            News.find({deal_id:deal._id},[type,date_added],{skip:0,limit:10,sort:{date_added:0}},function(err,allNews){
               socket.emit('news-load', allNews);
             })
 
