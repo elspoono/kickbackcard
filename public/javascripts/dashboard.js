@@ -75,11 +75,12 @@ $(function(){
     if(allNews.length==10){
       $('.latest').append('<p><a href="#" class="load-more">Load More</a></p>');
       $('.load-more').click(function(){
-        $(this).remove();
         socket.emit('load-news',{
           skip: 10,
           limit: 90
         });
+        $(this).hide();
+        return false;
       })      
     }
   });
