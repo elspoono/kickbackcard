@@ -25,15 +25,64 @@ $(function(){
 
 
 
+  var getMonthRange = function(inDate){
+    var eval = new Date(inDate);
+    var month = eval.getMonth();
+    eval.setDate(1);
+    eval.setHours(0);
+    eval.setMinutes(0);
+    eval.setSeconds(0);
+    eval.setMilliseconds(0);
+    var startDate = new Date(eval);
+    eval.setMonth(month+1)
+    var endDate = eval;
 
+    return {
+      startDate: startDate,
+      endDate: endDate
+    }
+  }
 
+  var now = new Date();
   var socket = io.connect('/');
+  var a = getMonthRange(now);
+
+  $('.date-title').html(a.startDate.format('mmmm yyyy'));
+  $('.next-date').html(a.endDate.format('mmmm')+' >');
+  $('.prev-date').html('< ' + new Date(a.startDate-1).format('mmmm'));
+
+  var loadRange = function(){
+    socket.emit('load-range',{
+      startDate: a.startDate,
+      endDate: a.endDate
+    });
+  }
+
+  var kicks = {data:[],label:'Kicks'};
+  var redeems = {date:[],label:'Redeems'};
+  var updateChart = function(){
+    $.plot($('.deal-chart').height(300), [ kicks, redeems ], {
+      legend: {
+        backgroundOpacity: .6
+      }
+    });
+  }
+  socket.on('load-kicks-range',function(allKicks){
+    console.log(allKicks);
+    kicks.data = [[0, 3], [4, 8], [8, 5], [9, 13]];
+    redeems.data = [[0, 1], [4, 2], [8, 3], [9, 1]];
+    updateChart();
+  })
+
   socket.on('vendor-load',function(vendor){
     $('.vendor-title').html(vendor.name);
+    a.vendor = vendor;
   });
 
   socket.on('deal-load',function(deal){
     $('.deal-title').html(deal.tag_line);
+    a.deal = deal;
+    loadRange();
   });
 
   socket.on('kick-total',function(total){
@@ -91,13 +140,5 @@ $(function(){
   });
 
 
-    var kicks = {data:[[0, 3], [4, 8], [8, 5], [9, 13]],label:'Kicks'};
-    var redeems = {data:[[0, 1], [4, 2], [8, 3], [9, 1]],label:'Redeems'};
-    
-    $.plot($('.deal-chart').height(300), [ kicks, redeems ], {
-      legend: {
-        backgroundOpacity: .6
-      }
-    });
 
 });

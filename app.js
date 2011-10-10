@@ -850,8 +850,8 @@ app.post('/share',function(req,res,next){
 
 app.post('/k:id',function(req,res,next){
   Client.findById(req.body.client_id,function(err,client){
-    if(err)
-      res.send({err:err})
+    if(err||!client)
+      res.send({err:err||'Client Not Found'})
     else{
 
       /*
@@ -2499,10 +2499,73 @@ io.sockets.on('connection',function(socket){
 
             socket.on('load-news',function(options){
               // All News
-              News.find({deal_id:deal._id},['type','date_added'],{skip:options.skip,limit:options.limit,sort:{date_added:-1}},function(err,allNews){
-                socket.emit('news-load', allNews);
-              })
-            })
+              News.find(
+                {deal_id:deal._id},
+                ['type','date_added'],
+                {skip:options.skip,limit:options.limit,sort:{date_added:-1}},
+                function(err,allNews){
+                  socket.emit('news-load', allNews);
+                }
+              );
+            });
+
+
+            socket.on('load-range',function(options){
+
+              var myDealId = deal._id;
+              mongoose.connection.db.executeDbCommand(
+                {
+                  mapreduce: "kicks", //the name of the collection we are map-reducing *note, this is the model Ping we defined above...mongoose automatically appends an 's' to the model name within mongoDB
+                  map:
+                    "function() {"
+                      +"day = Date.UTC(this.date_added.getFullYear(), this.date_added.getMonth(), this.date_added.getDate());"
+                      +"emit({day: day, deal_id: this.deal_id},{count:1});"
+                    +"}",
+                  reduce:
+                    "function(key, values) {"
+                      +"var count = 0;"
+                      +"values.forEach(function(v){"
+                        +"count += v['count'];"
+                      +"});"
+                      +"return {count: count};"
+                    +"}",
+                  out: "kicks_results",
+                  query: {
+                    deal_id: myDealId+'',
+                    date_added:{
+                      $gte:options.startDate*1,
+                      $lt:options.endDate*1
+                    }
+                  }
+                },
+                function(err, response) { 
+                  //If you need to alert users, etc. that the mapreduce has been run, enter code here
+                  console.log(response.documents[0].counts);
+                }
+              );
+
+
+
+
+
+
+
+              // All Kicks for that range
+              Kick.find(
+                {
+                  deal_id:deal._id,
+                  date_added:{
+                    $gte:options.startDate,
+                    $lt:options.endDate
+                  }
+                },
+                ['date_added'],
+                function(err,kicks){
+                  console.log(kicks);
+                  socket.emit('load-kicks-range',kicks);
+                }
+              );
+            });
 
             // Kick Total
             Kick.count({deal_id:deal._id},function(err,total){

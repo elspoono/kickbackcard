@@ -271,6 +271,10 @@ body .body .content-area {
   box-shadow: 2px 2px 8px #000;
   color: #1a1a1a;
 }
+body .body .iphones-web img {
+  margin: 30px auto 0 auto;
+  display: block;
+}
 body .body .step-copy {
   margin: 15px;
 }
