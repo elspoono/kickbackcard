@@ -46,7 +46,30 @@ $(function(){
     $('.all .shares .value').html(total);
   });
   socket.on('new news',function(newsItem){
-    console.log(newsItem);
+    $('.latest').prepend(
+      '<div class="item">'
+        +'<div class="description">'
+          +.type
+        +'</div>'
+        +'<div class="date">'
+          +newsItem.date_added.format('mmmm d, yyyy - HH:MM:ss')
+        +'</div>'
+      '</div>'
+    ).hide().fadeIn();
+  });
+  socket.on('news-load',function(allNews){
+    for(var i in allNews){
+      $('.latest').append(
+        '<div class="item">'
+          +'<div class="description">'
+            +allNews[i].type
+          +'</div>'
+          +'<div class="date">'
+            +allNews[i].date_added.format('mmmm d, yyyy - HH:MM:ss')
+          +'</div>'
+        '</div>'
+      );
+    }
   });
 
 
