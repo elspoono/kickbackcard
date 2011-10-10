@@ -58,7 +58,7 @@ $(function(){
     );
 
     $('.latest').prepend(item);
-    item.hide().fadeIn(1500);
+    item.hide().slideDown(1500);
   });
   socket.on('news-load',function(allNews){
     for(var i in allNews){
