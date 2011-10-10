@@ -57,7 +57,7 @@ $(function(){
       +'</div>';
 
     $('.latest').prepend(item);
-    item.hide().slideDown(1500);
+    item.hide().fadeIn(1500);
   });
   socket.on('news-load',function(allNews){
     for(var i in allNews){
@@ -76,12 +76,12 @@ $(function(){
       $('.latest').append('<p><a href="#" class="load-more">Load More</a></p>');
       $('.load-more').click(function(){
         socket.emit('load-news',{
-          skip: 10,
-          limit: 90
+          skip: $('.latest').children().length,
+          limit: 100
         });
-        $(this).hide();
+        $(this).remove();
         return false;
-      })      
+      });  
     }
   });
 
