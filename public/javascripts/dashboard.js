@@ -45,6 +45,9 @@ $(function(){
   socket.on('share-total',function(total){
     $('.all .shares .value').html(total);
   });
+  socket.on('new news',function(newsItem){
+    console.log(newsItem);
+  });
 
 
     var kicks = {data:[[0, 3], [4, 8], [8, 5], [9, 13]],label:'Kicks'};

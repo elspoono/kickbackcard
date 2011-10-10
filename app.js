@@ -598,7 +598,7 @@ var logNews = function(options){
   news.share_id = options.share_id;
   news.redeem_id = options.redeem_id;
   news.save(function(err,newsSaved){
-    io.sockets.emit('message',newsSaved);
+    io.sockets.in('deal '+newsSaved.deal_id).emit('new news',newsSaved);
     console.log('SENT: deal '+newsSaved.deal_id);
   });
 }
@@ -2476,10 +2476,6 @@ io.configure(function (){
 io.sockets.on('connection',function(socket){
   var hs = socket.handshake;
   if(hs.session && hs.session.user && hs.session.user.vendor_id){
-    socket.on('message',function(news){
-      console.log('NEWS');
-      console.log(news);
-    })
     socket.on('load-kicks',function(options){
       Kick.find({deal_id:deal._id,date_added:{"$gte": options.startDate, "$lt": options.endDate}},[],function(err,kicks){
         socket.emit(kicks);
@@ -2496,6 +2492,8 @@ io.sockets.on('connection',function(socket){
           if(deals.length){
             var deal = deals[0];
             deal.tag_line = deal.default_tag_line;
+
+            socket.join('deal '+deal._id);
             console.log('JOINED: deal '+deal._id);
             // Deal Load
             socket.emit('deal-load', deal);
