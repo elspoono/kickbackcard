@@ -49,12 +49,12 @@ $(function(){
     $('.latest').prepend(
       '<div class="item">'
         +'<div class="description">'
-          +.type
+          +newsItem.type
         +'</div>'
         +'<div class="date">'
           +newsItem.date_added.format('mmmm d, yyyy - HH:MM:ss')
         +'</div>'
-      '</div>'
+      +'</div>'
     ).hide().fadeIn();
   });
   socket.on('news-load',function(allNews){
@@ -67,7 +67,7 @@ $(function(){
           +'<div class="date">'
             +allNews[i].date_added.format('mmmm d, yyyy - HH:MM:ss')
           +'</div>'
-        '</div>'
+        +'</div>'
       );
     }
   });
