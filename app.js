@@ -572,27 +572,19 @@ if (url.auth) {
   var auth = url.auth.split(':', 2);
   client.auth(auth[1]);
 }
-
-client.on("subscribe", function (channel, count) {
-  console.log('b');
-});
-
-client.on("message", function (channel, message) {
-  console.log('a');
-  console.log(message)
-});
-
-client.subscribe("central messaging");
-
-
-
 var client2 = redis.createClient(url.port,url.hostname);
 if (url.auth) {
   var auth = url.auth.split(':', 2);
   client2.auth(auth[1]);
 }
-client2.publish("central messaging", "test");
-client2.end();
+
+client.on("message", function (channel, message) {
+  var parsed = JSON.parse(message);
+  console.log(parsed);
+});
+
+client.subscribe("central messaging");
+client2.publish("central messaging", JSON.stringify({"a":"b"}));
 
 
 
