@@ -2399,9 +2399,8 @@ io.configure(function (){
 
   io.set('transports', ['xhr-polling']);
 
-/*
   io.set('authorization', function (data, next) {
-    var cookies = data.headers.cookie.split(/; *\/);
+    var cookies = data.headers.cookie.split(/; */);
     var sid = false;
     for(var i in cookies){
       var cookie = cookies[i].split(/=/);
@@ -2416,11 +2415,11 @@ io.configure(function (){
         next(null,false)
     });
   });
-*/
 
 });
-io.sockets.on('connection',function(socket){/*
+io.sockets.on('connection',function(socket){
   var hs = socket.handshake;
+  /*
   if(hs.session && hs.session.user && hs.session.user.vendor_id){
     socket.join('Vendor '+hs.session.user.vendor_id);
     socket.on('load-kicks',function(options){
