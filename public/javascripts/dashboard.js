@@ -58,7 +58,11 @@ $(function(){
     );
 
     $('.latest').prepend(item);
-    item.hide().slideDown(1500);
+    item.hide().slideDown(1500,'linear');
+    var all = $('.all .'+newsItem.type.toLowerCase()+' .value');
+    all.html(all.html()*1+1);
+    all.hide().fadeIn(1500,'linear');
+
   });
   socket.on('news-load',function(allNews){
     for(var i in allNews){
