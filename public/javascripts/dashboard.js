@@ -25,11 +25,9 @@ $(function(){
 
 
 
-/*
+
 
   var socket = io.connect('/');
-
-*/
 
   /*
   socket.on('vendor-load',function(vendor){
