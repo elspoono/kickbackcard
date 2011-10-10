@@ -2419,7 +2419,6 @@ io.configure(function (){
 });
 io.sockets.on('connection',function(socket){
   var hs = socket.handshake;
-  /*
   if(hs.session && hs.session.user && hs.session.user.vendor_id){
     socket.join('Vendor '+hs.session.user.vendor_id);
     socket.on('load-kicks',function(options){
@@ -2461,7 +2460,7 @@ io.sockets.on('connection',function(socket){
         })
       }
     })
-  }*/
+  }
 })
 
 
