@@ -577,7 +577,10 @@ client.on("message", function (channel, message) {
 
 client.subscribe("central messaging");
 
-var client2 = redis.createClient(process.env.REDISTOGO_URL);
+
+
+var url = require('url').parse(process.env.REDISTOGO_URL||'');
+var client2 = redis.createClient(url.port,url.hostname);
 client2.publish("central messaging", "test");
 client2.end();
 
