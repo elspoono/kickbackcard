@@ -61,7 +61,7 @@ $(function(){
     item.hide().slideDown(1500,'linear');
     var all = $('.all .'+(newsItem.type=='Kick'?'kicks':(newsItem.type=='Share'?'shares':'redeems'))+' .value');
     all.html(all.html()*1+1);
-    all.hide().fadeIn(1500,'linear');
+    all.hide().slideDown(1500,'linear');
 
   });
   socket.on('news-load',function(allNews){

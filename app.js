@@ -837,6 +837,11 @@ app.post('/share',function(req,res,next){
           res.send({
             Success: 'True'
           })
+          logNews({
+            type: 'Share',
+            share_id: share._id,
+            deal_id: req.body.deal_id
+          });
         });
       }
     }
@@ -2372,6 +2377,12 @@ app.post('/redeem',function(req, res){
                         deal: deal,
                         redeem: redeem
                       })
+
+                      logNews({
+                        type: 'Redemption',
+                        redeem_id: data._id,
+                        deal_id: deal._id
+                      });
                     });
                     // IOS will use javascript/canvas / UIWebView to draw it http://d-project.googlecode.com/svn/trunk/misc/qrcode/js/
                     
