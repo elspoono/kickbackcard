@@ -598,7 +598,7 @@ var logNews = function(options){
   news.share_id = options.share_id;
   news.redeem_id = options.redeem_id;
   news.save(function(err,newsSaved){
-    io.sockets.emit('deal '+newsSaved.deal_id,newsSaved);
+    io.sockets.in('deal '+newsSaved.deal_id).emit('new news',newsSaved);
     console.log('SENT: deal '+newsSaved.deal_id);
   });
 }
@@ -2493,9 +2493,9 @@ io.sockets.on('connection',function(socket){
             var deal = deals[0];
             deal.tag_line = deal.default_tag_line;
 
-//            socket.join();
+            socket.join('deal '+deal._id);
             console.log('JOINED: deal '+deal._id);
-            socket.on('deal '+deal._id,function(news){
+            socket.on('new news',function(news){
               console.log('NEWS');
               console.log(news);
             })
