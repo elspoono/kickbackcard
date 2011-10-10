@@ -1230,6 +1230,12 @@ body .data-view {
 body .data-view .label {
   float: left;
   width: 100px;
+  clear: left;
+}
+body .data-view .value {
+  float: left;
+  width: 100px;
+  clear: right;
 }
 body .window.right {
   float: right;
