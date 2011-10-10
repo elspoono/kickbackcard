@@ -46,7 +46,7 @@ $(function(){
     $('.all .shares .value').html(total);
   });
   socket.on('new news',function(newsItem){
-    var item = 
+    var item = $(
       '<div class="item">'
         +'<div class="description">'
           +newsItem.type
@@ -54,7 +54,8 @@ $(function(){
         +'<div class="date">'
           +new Date(newsItem.date_added).format('mmmm d, yyyy - HH:MM:ss')
         +'</div>'
-      +'</div>';
+      +'</div>'
+    );
 
     $('.latest').prepend(item);
     item.hide().fadeIn(1500);
