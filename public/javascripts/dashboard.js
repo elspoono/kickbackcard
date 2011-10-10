@@ -46,7 +46,7 @@ $(function(){
     $('.all .shares .value').html(total);
   });
   socket.on('new news',function(newsItem){
-    $('.latest').prepend(
+    var item = 
       '<div class="item">'
         +'<div class="description">'
           +newsItem.type
@@ -54,8 +54,10 @@ $(function(){
         +'<div class="date">'
           +new Date(newsItem.date_added).format('mmmm d, yyyy - HH:MM:ss')
         +'</div>'
-      +'</div>'
-    ).hide().fadeIn();
+      +'</div>';
+
+    $('.latest').prepend(item);
+    item.hide().slideDown(1500);
   });
   socket.on('news-load',function(allNews){
     for(var i in allNews){
@@ -69,6 +71,16 @@ $(function(){
           +'</div>'
         +'</div>'
       );
+    }
+    if(allNews.length==10){
+      $('.latest').append('<p><a href="#" class="load-more">Load More</a></p>');
+      $('.load-more').click(function(){
+        $(this).remove();
+        socket.emit('load-news',{
+          skip: 10,
+          limit: 90
+        });
+      })      
     }
   });
 

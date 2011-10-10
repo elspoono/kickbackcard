@@ -2493,6 +2493,13 @@ io.sockets.on('connection',function(socket){
             // Deal Load
             socket.emit('deal-load', deal);
 
+            socket.on('load-news',function(options){
+              // All News
+              News.find({deal_id:deal._id},['type','date_added'],{skip:options.skip,limit:options.limit,sort:{date_added:-1}},function(err,allNews){
+                socket.emit('news-load', allNews);
+              })
+            })
+
             // Kick Total
             Kick.count({deal_id:deal._id},function(err,total){
               socket.emit('kick-total',total);
