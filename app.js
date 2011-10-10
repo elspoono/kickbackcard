@@ -2430,6 +2430,8 @@ io.configure(function (){
 
   io.set('transports', ['xhr-polling']);
 
+  io.set('polling duration', 10);
+
   io.set('authorization', function (data, next) {
     var cookies = data.headers.cookie.split(/; */);
     var sid = false;
