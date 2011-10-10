@@ -561,7 +561,7 @@ app.post('/factual',function(req,res,next){
 
 
 
-
+/*
 
 var redis = require("redis");
 
@@ -588,7 +588,19 @@ client2.publish("central messaging", JSON.stringify({"a":"b"}));
 
 
 
+*/
 
+var logNews = function(options){
+  var news = new News();
+  news.type = options.type;
+  news.deal_id = options.deal_id;
+  news.kick_id = options.kick_id;
+  news.share_id = options.share_id;
+  news.redeem_id = options.redeem_id;
+  news.save(function(err,newsSaved){
+    socket.broadcast.to('deal '+newsSaved.deal_id).emit('new news',newsSaved);
+  });
+}
 
 
 
@@ -908,6 +920,11 @@ app.post('/k:id',function(req,res,next){
                                 kicker: kicker,
                                 vendor: vendors[0]
                               });
+                              logNews({
+                                type: 'Kick',
+                                kick_id: data._id,
+                                deal_id: deal._id
+                              });
                             })
                           }else{
                             /*
@@ -940,6 +957,11 @@ app.post('/k:id',function(req,res,next){
                                       deal: deal,
                                       kicker: kicker,
                                       vendor: vendors[0]
+                                    });
+                                    logNews({
+                                      type: 'Kick',
+                                      kick_id: data._id,
+                                      deal_id: deal._id
                                     });
                                   });
                                 }
@@ -2453,7 +2475,6 @@ io.configure(function (){
 io.sockets.on('connection',function(socket){
   var hs = socket.handshake;
   if(hs.session && hs.session.user && hs.session.user.vendor_id){
-    socket.join('Vendor '+hs.session.user.vendor_id);
     socket.on('load-kicks',function(options){
       Kick.find({deal_id:deal._id,date_added:{"$gte": options.startDate, "$lt": options.endDate}},[],function(err,kicks){
         socket.emit(kicks);
@@ -2471,6 +2492,7 @@ io.sockets.on('connection',function(socket){
             var deal = deals[0];
             deal.tag_line = deal.default_tag_line;
 
+            socket.join('deal '+deal._id);
             // Deal Load
             socket.emit('deal-load', deal);
 
@@ -2492,6 +2514,9 @@ io.sockets.on('connection',function(socket){
           }
         })
       }
+    })
+    socket.on('new news',function(news){
+      console.log(news);
     })
   }
 })
