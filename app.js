@@ -598,7 +598,7 @@ var logNews = function(options){
   news.share_id = options.share_id;
   news.redeem_id = options.redeem_id;
   news.save(function(err,newsSaved){
-    io.sockets.broadcast.to('deal '+newsSaved.deal_id).emit('new news',newsSaved);
+    io.sockets.to('deal '+newsSaved.deal_id).emit('new news',newsSaved);
   });
 }
 
