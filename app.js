@@ -82,7 +82,7 @@ var url = require('url').parse(db_uri);
 var mongodb = require('mongodb');
 var dbAuth = {};
 if (url.auth) {
-  auth = url.auth.split(':', 2);
+  var auth = url.auth.split(':', 2);
   dbAuth.username = auth[0];
   dbAuth.password = auth[1];
 }
@@ -564,7 +564,14 @@ app.post('/factual',function(req,res,next){
 
 
 var redis = require("redis");
-var client = redis.createClient(process.env.REDISTOGO_URL);
+
+
+var url = require('url').parse(process.env.REDISTOGO_URL||'');
+var client = redis.createClient(url.port,url.hostname);
+if (url.auth) {
+  var auth = url.auth.split(':', 2);
+  client.auth(auth[1]);
+}
 
 client.on("subscribe", function (channel, count) {
   console.log('b');
@@ -579,8 +586,11 @@ client.subscribe("central messaging");
 
 
 
-var url = require('url').parse(process.env.REDISTOGO_URL||'');
 var client2 = redis.createClient(url.port,url.hostname);
+if (url.auth) {
+  var auth = url.auth.split(':', 2);
+  client2.auth(auth[1]);
+}
 client2.publish("central messaging", "test");
 client2.end();
 
