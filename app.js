@@ -255,10 +255,21 @@ var Redeem = mongoose.model('Redeem',RedeemSchema);
 var ShareSchema = new Schema({
   client_id: String,
   deal_id: String,
-  kick_id: [String],
+  kick_id: String,
   date_added: {type: Date, default: Date.now}
 })
 var Share = mongoose.model('Share',ShareSchema);
+
+var NewsSchema = new Schema({
+  deal_id: String,
+  client_id: String,
+  type: String,
+  kick_id: String,
+  share_id: String,
+  redeem_id: String,
+  date_added: {type: Date, default: Date.now}
+});
+var News = mongoose.model('News',NewsSchema);
 
 
 
@@ -552,8 +563,23 @@ app.post('/factual',function(req,res,next){
 
 
 
+var redis = require("redis");
+var client = redis.createClient();
 
+client.on("subscribe", function (channel, count) {
+  console.log('b');
+});
 
+client.on("message", function (channel, message) {
+  console.log('a');
+  console.log(message)
+});
+
+client.subscribe("central messaging");
+
+var client2 = redis.createClient();
+client2.publish("central messaging", "test");
+client2.end();
 
 
 
@@ -910,7 +936,7 @@ app.post('/k:id',function(req,res,next){
                                       kicker: kicker,
                                       vendor: vendors[0]
                                     });
-                                  })
+                                  });
                                 }
 
                               }
