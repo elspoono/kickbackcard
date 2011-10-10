@@ -65,7 +65,7 @@ $(function(){
             +allNews[i].type
           +'</div>'
           +'<div class="date">'
-            +allNews[i].date_added.format('mmmm d, yyyy - HH:MM:ss')
+            +new Date(allNews[i].date_added).format('mmmm d, yyyy - HH:MM:ss')
           +'</div>'
         +'</div>'
       );
