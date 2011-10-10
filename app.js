@@ -599,6 +599,7 @@ var logNews = function(options){
   news.redeem_id = options.redeem_id;
   news.save(function(err,newsSaved){
     io.sockets.to('deal '+newsSaved.deal_id).emit('new news',newsSaved);
+    console.log('SENT: deal '+newsSaved.deal_id);
   });
 }
 
@@ -2493,6 +2494,7 @@ io.sockets.on('connection',function(socket){
             deal.tag_line = deal.default_tag_line;
 
             socket.join('deal '+deal._id);
+            console.log('JOINED: deal '+deal._id);
             // Deal Load
             socket.emit('deal-load', deal);
 
