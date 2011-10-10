@@ -2495,6 +2495,10 @@ io.sockets.on('connection',function(socket){
 
             socket.join('deal '+deal._id);
             console.log('JOINED: deal '+deal._id);
+            socket.on('new news',function(news){
+              console.log('NEWS');
+              console.log(news);
+            })
             // Deal Load
             socket.emit('deal-load', deal);
 
@@ -2516,9 +2520,6 @@ io.sockets.on('connection',function(socket){
           }
         })
       }
-    })
-    socket.on('new news',function(news){
-      console.log(news);
     })
   }
 })
