@@ -100,7 +100,25 @@ var Schema = mongoose.Schema, ObjectId = Schema.ObjectId;
 var app = module.exports = express.createServer();
 
 var io = require('socket.io').listen(app);
-
+io.configure(function (){
+  io.set('transports', ['xhr-polling']);
+  io.set('authorization', function (data, next) {
+    var cookies = data.headers.cookie.split(/; */);
+    var sid = false;
+    for(var i in cookies){
+      var cookie = cookies[i].split(/=/);
+      if(cookie[0]=='connect.sid')
+        sid = cookie[1]
+    }
+    sessionStore.get(unescape(sid),function(err,session){
+      if(session){
+        data.session = session;
+        next(null,true)
+      }else
+        next(null,false)
+    });
+  });
+});
 
 // Configuration
 var sessionStore = new mongoStore({db: db, username: dbAuth.username, password: dbAuth.password});
@@ -599,7 +617,6 @@ var logNews = function(options){
   news.redeem_id = options.redeem_id;
   news.save(function(err,newsSaved){
     io.sockets.in('deal '+newsSaved.deal_id).emit('new news',newsSaved);
-    console.log('SENT: deal '+newsSaved.deal_id);
   });
 }
 
@@ -2448,30 +2465,6 @@ app.get('/dashboard', securedAreaVendor, function(req, res, next){
       '/javascripts/dashboard.js'
     ]
   })
-});
-io.configure(function (){
-
-  io.set('transports', ['xhr-polling']);
-
-  io.set('polling duration', 10);
-
-  io.set('authorization', function (data, next) {
-    var cookies = data.headers.cookie.split(/; */);
-    var sid = false;
-    for(var i in cookies){
-      var cookie = cookies[i].split(/=/);
-      if(cookie[0]=='connect.sid')
-        sid = cookie[1]
-    }
-    sessionStore.get(unescape(sid),function(err,session){
-      if(session){
-        data.session = session;
-        next(null,true)
-      }else
-        next(null,false)
-    });
-  });
-
 });
 io.sockets.on('connection',function(socket){
   var hs = socket.handshake;
