@@ -889,13 +889,16 @@ body
   .window.right
     float right
     width 240px
-    .item
-      border-bottom 1px solid semi-dark
-      padding-bottom 10px
-      margin-bottom 10px
-      .date
-        font-size 12px
-        color semi-dark
+    .latest
+      max-height 600px
+      overflow auto
+      .item
+        border-bottom 1px solid semi-dark
+        padding-bottom 10px
+        margin-bottom 10px
+        .date
+          font-size 12px
+          color semi-dark
   /**************************************
    *
    * For loading html to be cloned or 
