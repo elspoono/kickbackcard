@@ -564,7 +564,7 @@ app.post('/factual',function(req,res,next){
 
 
 var redis = require("redis");
-var client = redis.createClient();
+var client = redis.createClient(process.env.REDISTOGO_URL);
 
 client.on("subscribe", function (channel, count) {
   console.log('b');
@@ -577,7 +577,7 @@ client.on("message", function (channel, message) {
 
 client.subscribe("central messaging");
 
-var client2 = redis.createClient();
+var client2 = redis.createClient(process.env.REDISTOGO_URL);
 client2.publish("central messaging", "test");
 client2.end();
 
