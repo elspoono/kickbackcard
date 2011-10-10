@@ -52,7 +52,7 @@ $(function(){
           +newsItem.type
         +'</div>'
         +'<div class="date">'
-          +newsItem.date_added.format('mmmm d, yyyy - HH:MM:ss')
+          +new Date(newsItem.date_added).format('mmmm d, yyyy - HH:MM:ss')
         +'</div>'
       +'</div>'
     ).hide().fadeIn();
