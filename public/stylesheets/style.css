@@ -363,7 +363,6 @@ body .body .container .phone-area {
   float: right;
 }
 body .body .container .phone-area .screenshot {
-  margin-left: 15px;
   background: url("/images/screenshot_03.png");
   height: 584px;
   width: 300px;

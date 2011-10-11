@@ -255,6 +255,11 @@ var KickSchema = new Schema({
   scan_id: String,
   redeemed: Boolean,
   date_added: {type: Date, default: Date.now}
+});
+var KicktotalSchema = new Schema({
+  deal_id: String,
+  date_added: Date,
+  count: Number
 })
 var RedeemSchema = new Schema({
   url_string: String,
@@ -266,6 +271,7 @@ var RedeemSchema = new Schema({
 var Client = mongoose.model('Client',ClientSchema);
 var Kicker = mongoose.model('Kicker',KickerSchema);
 var Kick = mongoose.model('Kick',KickSchema);
+var Kicktotal = mongoose.model('kicktotals',KicktotalSchema);
 var Redeem = mongoose.model('Redeem',RedeemSchema);
 
 
@@ -2513,34 +2519,33 @@ io.sockets.on('connection',function(socket){
             socket.on('load-range',function(options){
 
               var myDealId = deal._id;
-              mongoose.connection.db.executeDbCommand(
+
+
+              Kick.collection.mapReduce(
+                "function() {"
+                  +"day = Date.UTC(this.date_added.getFullYear(), this.date_added.getMonth(), this.date_added.getDate());"
+                  +"emit({date_added: day, deal_id: this.deal_id},{count:1});"
+                +"}",
+                "function(key, values) {"
+                  +"var count = 0;"
+                  +"values.forEach(function(v){"
+                    +"count += v['count'];"
+                  +"});"
+                  +"return {count: count};"
+                +"}",
                 {
-                  mapreduce: "kicks", //the name of the collection we are map-reducing *note, this is the model Ping we defined above...mongoose automatically appends an 's' to the model name within mongoDB
-                  map:
-                    "function() {"
-                      +"day = Date.UTC(this.date_added.getFullYear(), this.date_added.getMonth(), this.date_added.getDate());"
-                      +"emit({day: day, deal_id: this.deal_id},{count:1});"
-                    +"}",
-                  reduce:
-                    "function(key, values) {"
-                      +"var count = 0;"
-                      +"values.forEach(function(v){"
-                        +"count += v['count'];"
-                      +"});"
-                      +"return {count: count};"
-                    +"}",
-                  out: "kicks_results",
+                  out: "kicktotals",
                   query: {
                     deal_id: myDealId+'',
-                    date_added:{
-                      $gte:options.startDate*1,
-                      $lt:options.endDate*1
+                    date_added: {
+                      $gte : new Date(options.startDate+''),
+                      $lt : new Date(options.endDate+'')
                     }
-                  }
+                  },
+                  include_statistics: true
                 },
-                function(err, response) { 
-                  //If you need to alert users, etc. that the mapreduce has been run, enter code here
-                  console.log(response.documents[0].counts);
+                function(err,collection,stats){
+                  console.log(stats);
                 }
               );
 
@@ -2549,22 +2554,6 @@ io.sockets.on('connection',function(socket){
 
 
 
-
-              // All Kicks for that range
-              Kick.find(
-                {
-                  deal_id:deal._id,
-                  date_added:{
-                    $gte:options.startDate,
-                    $lt:options.endDate
-                  }
-                },
-                ['date_added'],
-                function(err,kicks){
-                  console.log(kicks);
-                  socket.emit('load-kicks-range',kicks);
-                }
-              );
             });
 
             // Kick Total
