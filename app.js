@@ -257,8 +257,10 @@ var KickSchema = new Schema({
   date_added: {type: Date, default: Date.now}
 });
 var KicktotalSchema = new Schema({
-  deal_id: String,
-  date_added: Date,
+  _id:{
+    deal_id: String,
+    date_added: Date,
+  },
   count: Number
 })
 var RedeemSchema = new Schema({
@@ -2515,37 +2517,58 @@ io.sockets.on('connection',function(socket){
               );
             });
 
-
             socket.on('load-range',function(options){
 
-              var myDealId = deal._id;
 
+              var msInDay = 24 * 60 * 60 * 1000;
+              var msOffset = options.tz * 60 * 1000;
+
+              var map = "function() {"
+                +"day =  this.date_added - ((this.date_added-"+msOffset+") % ("+msInDay+"));"
+                +"emit(day,{count:1});"
+              +"}";
+              var reduce = "function(key, values) {"
+                +"var count = 0;"
+                +"values.forEach(function(v){"
+                  +"count += v['count'];"
+                +"});"
+                +"return {count: count};"
+              +"}";
+              var options = {
+                out: { inline : 1 },
+                query: {
+                  deal_id: deal._id+'',
+                  date_added: {
+                    $gte : new Date(options.startDate+''),
+                    $lt : new Date(options.endDate+'')
+                  }
+                }
+              };
 
               Kick.collection.mapReduce(
-                "function() {"
-                  +"day = Date.UTC(this.date_added.getFullYear(), this.date_added.getMonth(), this.date_added.getDate());"
-                  +"emit({date_added: day, deal_id: this.deal_id},{count:1});"
-                +"}",
-                "function(key, values) {"
-                  +"var count = 0;"
-                  +"values.forEach(function(v){"
-                    +"count += v['count'];"
-                  +"});"
-                  +"return {count: count};"
-                +"}",
-                {
-                  out: "kicktotals",
-                  query: {
-                    deal_id: myDealId+'',
-                    date_added: {
-                      $gte : new Date(options.startDate+''),
-                      $lt : new Date(options.endDate+'')
-                    }
-                  },
-                  include_statistics: true
-                },
-                function(err,collection,stats){
-                  console.log(stats);
+                map,
+                reduce,
+                options,
+                function(err,all){
+                  socket.emit('load-kicks-range',all)
+                }
+              );
+
+              Redeem.collection.mapReduce(
+                map,
+                reduce,
+                options,
+                function(err,all){
+                  socket.emit('load-redeems-range',all)
+                }
+              );
+
+              Share.collection.mapReduce(
+                map,
+                reduce,
+                options,
+                function(err,all){
+                  socket.emit('load-shares-range',all)
                 }
               );
 

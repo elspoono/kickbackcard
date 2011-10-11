@@ -46,6 +46,8 @@ $(function(){
   var now = new Date();
   var socket = io.connect('/');
   var a = getMonthRange(now);
+  a.dateInterval = 'd';
+  a.dateIntervalSpan = 24*60*60*1000;
 
   $('.date-title').html(a.startDate.format('mmmm yyyy'));
   $('.next-date').html(a.endDate.format('mmmm')+' >');
@@ -54,25 +56,52 @@ $(function(){
   var loadRange = function(){
     socket.emit('load-range',{
       startDate: a.startDate,
-      endDate: a.endDate
+      endDate: a.endDate,
+      tz: a.startDate.getTimezoneOffset(),
+      dateInterval: a.dateInterval,
+      dateIntervalSpan: a.dateIntervalSpan
     });
+  }
+  var processForChart = function(all){
+    var startInt = a.startDate.format(a.dateInterval);
+    var stopInt = new Date(a.endDate-1).format(a.dateInterval);
+    var toReturn = [];
+    for(var i = startInt; i<= stopInt; i++){
+      var total = 0;
+      for(var j in all){
+        if(new Date(all[j]._id).format(a.dateInterval) == i){
+          total = all[j].value.count;
+        }
+      }
+      toReturn.push(
+        [i,total]
+      );
+    }
+    return toReturn;
   }
 
   var kicks = {data:[],label:'Kicks'};
   var redeems = {date:[],label:'Redeems'};
+  var shares = {date:[],label:'Shares'};
   var updateChart = function(){
-    $.plot($('.deal-chart').height(300), [ kicks, redeems ], {
+    $.plot($('.deal-chart').height(300), [ kicks, redeems, shares ], {
       legend: {
         backgroundOpacity: .6
       }
     });
   }
-  socket.on('load-kicks-range',function(allKicks){
-    console.log(allKicks);
-    kicks.data = [[0, 3], [4, 8], [8, 5], [9, 13]];
-    redeems.data = [[0, 1], [4, 2], [8, 3], [9, 1]];
+  socket.on('load-kicks-range',function(all){
+    kicks.data = processForChart(all);
     updateChart();
-  })
+  });
+  socket.on('load-redeems-range',function(all){
+    redeems.data = processForChart(all);
+    updateChart();
+  });
+  socket.on('load-shares-range',function(all){
+    shares.data = processForChart(all);
+    updateChart();
+  });
 
   socket.on('vendor-load',function(vendor){
     $('.vendor-title').html(vendor.name);
