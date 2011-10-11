@@ -45,23 +45,68 @@ $(function(){
 
   var now = new Date();
   var socket = io.connect('/');
-  var a = getMonthRange(now);
-  a.dateInterval = 'd';
-  a.dateIntervalSpan = 24*60*60*1000;
+  var a = {};
 
-  $('.date-title').html(a.startDate.format('mmmm yyyy'));
-  $('.next-date').html(a.endDate.format('mmmm')+' >');
-  $('.prev-date').html('< ' + new Date(a.startDate-1).format('mmmm'));
+  var setRange = function(newDate){
+    var range = getMonthRange(newDate);
+    a = {
+      startDate : range.startDate,
+      endDate : range.endDate,
+      dateInterval : 'd'
+    }
+    $('.date-title').html(a.startDate.format('mmmm yyyy'));
+    $('.next-date').html(a.endDate.format('mmmm')+' >');
+    $('.prev-date').html('< ' + new Date(a.startDate-1).format('mmmm'));
+  }
+  setRange(new Date());
+
+  $('.next-date').click(function(){
+    setRange(a.endDate);
+    loadRange();
+    return false;
+  })
+  $('.prev-date').click(function(){
+    setRange(a.startDate-1);
+    loadRange();
+    return false;
+  })
 
   var loadRange = function(){
     socket.emit('load-range',{
       startDate: a.startDate,
       endDate: a.endDate,
       tz: a.startDate.getTimezoneOffset(),
-      dateInterval: a.dateInterval,
-      dateIntervalSpan: a.dateIntervalSpan
+      dateInterval: a.dateInterval
     });
   }
+  var showTooltip = function(x, y, contents) {
+    $('<div id="tooltip">' + contents + '</div>').css( {
+      position: 'absolute',
+      display: 'none',
+      top: y + 5,
+      left: x + 5,
+      border: '1px solid #fdd',
+      padding: '2px',
+      'background-color': '#fee',
+      opacity: 0.80
+    }).appendTo("body").fadeIn(200);
+  }
+  $('.deal-chart').bind("plothover", function (event, pos, item) {
+    if(item){
+      if(previousPoint != item.dataIndex){
+        previousPoint = item.dataIndex;
+        $("#tooltip").remove();
+        var x = item.datapoint[0].toFixed(2),
+            y = item.datapoint[1].toFixed(2);
+        showTooltip(item.pageX, item.pageY,
+          y*1 + ' ' + item.series.label + ' on ' + a.startDate.format('mmmm') + ' ' + x*1
+        );
+      }
+    }else{
+      $("#tooltip").remove();
+      previousPoint = null;            
+    }
+  });
   var processForChart = function(all){
     var startInt = a.startDate.format(a.dateInterval);
     var stopInt = new Date(a.endDate-1).format(a.dateInterval);
@@ -79,27 +124,40 @@ $(function(){
     }
     return toReturn;
   }
+  var addUp  = function(all){
+    var total = 0;
+    for(var i in all){
+      total+= all[i].value.count;
+    }
+    return total;
+  }
 
   var kicks = {data:[],label:'Kicks'};
   var redeems = {date:[],label:'Redeems'};
   var shares = {date:[],label:'Shares'};
   var updateChart = function(){
-    $.plot($('.deal-chart').height(300), [ kicks, redeems, shares ], {
+    $.plot($('.deal-chart').height(300), [ kicks, shares, redeems ], {
       legend: {
         backgroundOpacity: .6
+      },
+      grid : {
+        hoverable: true
       }
     });
   }
   socket.on('load-kicks-range',function(all){
     kicks.data = processForChart(all);
+    $('.current .kicks .value').html(addUp(all));
     updateChart();
   });
   socket.on('load-redeems-range',function(all){
     redeems.data = processForChart(all);
+    $('.current .redeems .value').html(addUp(all));
     updateChart();
   });
   socket.on('load-shares-range',function(all){
     shares.data = processForChart(all);
+    $('.current .shares .value').html(addUp(all));
     updateChart();
   });
 

@@ -1212,6 +1212,14 @@ body .window.left {
   width: 500px;
   margin-right: 30px;
 }
+body .window.left .nav-center {
+  position: absolute;
+  width: 440px;
+  padding-top: 10px;
+  text-align: center;
+  font-size: 12px;
+  color: #6f6f6e;
+}
 body .window.left .nav-left {
   float: left;
 }
