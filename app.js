@@ -293,7 +293,8 @@ var NewsSchema = new Schema({
   kick_id: String,
   share_id: String,
   redeem_id: String,
-  date_added: {type: Date, default: Date.now}
+  date_added: {type: Date, default: Date.now},
+  date_number: Number
 });
 var News = mongoose.model('News',NewsSchema);
 
@@ -2512,6 +2513,9 @@ io.sockets.on('connection',function(socket){
                 ['type','date_added'],
                 {skip:options.skip,limit:options.limit,sort:{date_added:-1}},
                 function(err,allNews){
+                  for(var i in allNews){
+                    allNews[i].date_number = allNews[i].date_added*1;
+                  }
                   socket.emit('news-load', allNews);
                 }
               );
@@ -2596,6 +2600,9 @@ io.sockets.on('connection',function(socket){
 
             // All News
             News.find({deal_id:deal._id},['type','date_added'],{skip:0,limit:10,sort:{date_added:-1}},function(err,allNews){
+              for(var i in allNews){
+                allNews[i].date_number = allNews[i].date_added*1;
+              }
               socket.emit('news-load', allNews);
             })
 

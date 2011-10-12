@@ -55,8 +55,8 @@ $(function(){
       dateInterval : 'd'
     }
     $('.date-title').html(a.startDate.format('mmmm yyyy'));
-    $('.next-date').html(a.endDate.format('mmmm')+' >');
-    $('.prev-date').html('< ' + new Date(a.startDate-1).format('mmmm'));
+    $('.next-date').html(a.endDate.format('mmmm')+' &gt;');
+    $('.prev-date').html('&lt; ' + new Date(a.startDate-1).format('mmmm'));
   }
   setRange(new Date());
 
@@ -188,13 +188,13 @@ $(function(){
           +newsItem.type
         +'</div>'
         +'<div class="date">'
-          +new Date(newsItem.date_added).format('mmmm d, yyyy - HH:MM:ss')
+          +new Date(newsItem.date_number).format('mmmm d, yyyy - HH:MM:ss')
         +'</div>'
       +'</div>'
     );
 
     $('.latest').prepend(item);
-    item.hide().fadeIn(600).delay(usualDelay).removeClass('new',600);
+    item.hide().fadeIn(600).delay(usualDelay).removeClass('new',1500);
     var all = $('.all .'+(newsItem.type=='Kick'?'kicks':(newsItem.type=='Share'?'shares':'redeems'))+' .value');
     all.html(all.html()*1+1);
     all.hide().slideDown(1500,'linear');
@@ -233,7 +233,7 @@ $(function(){
             +allNews[i].type
           +'</div>'
           +'<div class="date">'
-            +new Date(allNews[i].date_added).format('mmmm d, yyyy - HH:MM:ss')
+            +new Date(allNews[i].date_number).format('mmmm d, yyyy - HH:MM:ss')
           +'</div>'
         +'</div>'
       );
