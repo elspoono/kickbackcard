@@ -871,7 +871,6 @@ body
     width 500px
     margin-right 30px
     .nav-center
-      position absolute
       width 440px
       padding-top 10px
       text-align center
@@ -906,10 +905,17 @@ body
     .latest
       max-height 600px
       overflow auto
+      padding 0
+      a
+        margin 15px
+      .item.new
+        background alt-color
       .item
+        background mostly-dark
+        border-radius(4px)
+        padding 5px 10px
+        margin 15px
         border-bottom 1px solid semi-dark
-        padding-bottom 10px
-        margin-bottom 10px
         .date
           font-size 12px
           color semi-dark

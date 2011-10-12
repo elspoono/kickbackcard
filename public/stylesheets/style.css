@@ -1213,7 +1213,6 @@ body .window.left {
   margin-right: 30px;
 }
 body .window.left .nav-center {
-  position: absolute;
   width: 440px;
   padding-top: 10px;
   text-align: center;
@@ -1255,11 +1254,22 @@ body .window.right {
 body .window.right .latest {
   max-height: 600px;
   overflow: auto;
+  padding: 0;
+}
+body .window.right .latest a {
+  margin: 15px;
+}
+body .window.right .latest .item.new {
+  background: #00abff;
 }
 body .window.right .latest .item {
+  background: #333;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  padding: 5px 10px;
+  margin: 15px;
   border-bottom: 1px solid #6f6f6e;
-  padding-bottom: 10px;
-  margin-bottom: 10px;
 }
 body .window.right .latest .item .date {
   font-size: 12px;

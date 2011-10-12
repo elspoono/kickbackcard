@@ -183,7 +183,7 @@ $(function(){
   });
   socket.on('new news',function(newsItem){
     var item = $(
-      '<div class="item">'
+      '<div class="item new">'
         +'<div class="description">'
           +newsItem.type
         +'</div>'
@@ -194,10 +194,35 @@ $(function(){
     );
 
     $('.latest').prepend(item);
-    item.hide().slideDown(1500,'linear');
+    item.hide().fadeIn(600).delay(usualDelay).removeClass('new',600);
     var all = $('.all .'+(newsItem.type=='Kick'?'kicks':(newsItem.type=='Share'?'shares':'redeems'))+' .value');
     all.html(all.html()*1+1);
     all.hide().slideDown(1500,'linear');
+    var now = new Date();
+    if(now>a.startDate && now<a.endDate){
+      var updateData = function(dataToUpdate){
+        for(var i in dataToUpdate){
+          if(now.format(a.dateInterval) == dataToUpdate[i][0])
+            dataToUpdate[i][1]++;
+        }
+      }
+      var some;
+      if(newsItem.type=='Kick'){
+        some = $('.current .kicks .value'); 
+        updateData(kicks.data)
+      }
+      if(newsItem.type=='Share'){
+        some = $('.current .shares .value'); 
+        updateData(shares.data)
+      }
+      if(newsItem.type=='Redemption'){
+        some = $('.current .redeems .value'); 
+        updateData(redeems.data)
+      }
+      updateChart();
+      some.html(some.html()*1+1);
+      some.hide().slideDown(1500,'linear');
+    }
 
   });
   socket.on('news-load',function(allNews){
