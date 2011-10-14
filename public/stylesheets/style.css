@@ -586,6 +586,16 @@ body .text-clump .subtitle {
   color: #6f6f6e;
   display: block;
 }
+body .text-clump .listing {
+  display: block;
+  color: #eee;
+}
+body .text-clump .listing .field-row {
+  margin: 15px 0;
+}
+body .text-clump .listing .field-row input {
+  width: 180px;
+}
 body .text-clump .new-listing {
   display: none;
   padding: 0 0 0 120px;

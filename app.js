@@ -2474,9 +2474,17 @@ app.post('/login', validateLogin, function(req, res, next){
  * 
  * 
  **********************************/
-app.get('/dashboard', securedAreaVendor, function(req, res, next){
-  next();
-},function(req,res, next){
+app.get('/settings', securedAreaVendor, function(req, res, next){
+  res.render('settings', {
+    title: 'Kickbackcard.com : Vendor Settings'
+  })
+});
+app.get('/print', securedAreaVendor, function(req, res, next){
+  res.render('print', {
+    title: 'Kickbackcard.com : Print It'
+  })
+});
+app.get('/dashboard', securedAreaVendor, function(req,res, next){
   res.render('dashboard', {
     title: 'KickbackCard.com: : Analytics Dashboard',
     scripts: [
