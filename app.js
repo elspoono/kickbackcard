@@ -439,7 +439,7 @@ app.post('/sign-up',function(req,res,next){
   signup.buy_item = req.body.buy_item;
   signup.get_item = req.body.get_item;
   signup.email = req.body.email;
-  signup.password_encrypeted = encrypted(req.body.password);
+  signup.password_encrypted = encrypted(req.body.password);
   signup.save(function(err,data){
     res.send({Success:true});
   });
@@ -2859,7 +2859,84 @@ io.sockets.on('connection',function(socket){
       }
     })
   }
-})
+});
+
+
+app.post('/settings', securedAreaVendor, function(req,res,next){
+
+  if(req.body.email != req.session.user.email)
+    User.count({email:req.body.email,active:true},function(err,already){
+      if(already>0)
+        res.send({err:'Whoops, '+req.body.email+' belongs another account already? Try logging out, then logging in?'})
+      else
+        next();
+    })
+  else
+    next();
+
+}, function(req,res,next){
+
+  User.findById(req.session.user._id,function(err,user){
+    if(err)
+      res.send({err:err});
+    else{
+      if(req.body.email != req.session.user.email)
+        user.email = req.body.email;
+      if(req.body.password && req.body.password!='')
+        user.password_encrypted = encrypted(req.body.password);
+      user.save(function(err,userSaved){
+        req.session.user = userSaved;
+        if(err)
+          res.send({err:err});
+        else
+          Vendor.findById(user.vendor_id,function(err,vendor){
+            if(err)
+              res.send({err:err});
+            else{
+              vendor.name = req.body.name;
+              vendor.address = req.body.address;
+              vendor.contact = req.body.contact;
+              vendor.site_url = req.body.site_url;
+              vendor.yelp_url = req.body.yelp_url;
+              vendor.hours = req.body.hours;
+              vendor.save(function(err,vendorSaved){
+                if(err)
+                  res.send({err:err});
+                else
+                  Deal.find({vendor_id:vendor._id},function(err,deals){
+                    var deal = deals[0];
+                    deal.buy_qty = req.body.buy_qty;
+                    deal.buy_item = req.body.buy_item;
+                    deal.get_item = req.body.get_item;
+                    deal.save(function(err,dealSaved){
+                      if(err)
+                        res.send({err:err});
+                      else
+                        res.send({
+                          Success : 'True'
+                        });
+                    })
+                  })
+              })
+            }
+          })
+      }); 
+    }
+  });
+  /*
+    name: $('.name').val(),
+    address: $('.address').val(),
+    contact: $('.contact').val(),
+    site_url: $('.site_url').val(),
+    yelp_url: $('.yelp_url').val(),
+    hours: $('.hours').val(),
+    buy_qty: $('.buy_qty').val(),
+    buy_item: $('.buy_item').val(),
+    get_item: $('.get_item').val(),
+    email: $('.email').val(),
+    password: $('.password').val()
+  */
+});
 
 
 /**********************************

@@ -120,16 +120,6 @@ $(function(){
 
 
    $('.finish-button').click(function(){
-
-            loadConfirm({
-              content: 'This is still under construction, please check back soon.',
-              width: 500,
-              Ok: function(err,win2,modal2){
-                modal2.click()
-              }
-            },function(){})
-            return false;
-
       var $t = $(this);
       $t.fadeTo(300,1);
       var err = '';
@@ -160,7 +150,7 @@ $(function(){
       else
             
         $.ajax({
-          url: '/save-settings',
+          url: '/settings',
           data: {
             name: $('.name').val(),
             address: $('.address').val(),
@@ -184,7 +174,13 @@ $(function(){
                 }
               },function(){})
             else
-              document.location.href='/dashboard';
+              loadConfirm({
+                content: 'Got it!<br><br>Click ok to return to the dashboard.',
+                width: 500,
+                Ok: function(err,win2,modal2){
+                  document.location.href = '/dashboard'
+                }
+              },function(){})
           },
           error: function(){
             loadConfirm({
