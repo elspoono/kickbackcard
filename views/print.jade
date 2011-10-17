@@ -17,13 +17,21 @@
     h1 Printables
 .body
   .container
-    h2 Kickers
+    h2=deal.tag_line
     .window
       h2 Multi-Use Kicker
       .text-clump
+        .col
+          a(href='/deal/'+deal._id+'/kicker-4x6.pdf')
+            img.small(src='/images/kicker-bg-4x6.png')
+            span.subtitle.center download and print pdf
     .window
       h2 One-Time-Use Kicker
       .text-clump
+        .col
+          a(href='/deal/'+deal._id+'/kicks-500.pdf')
+            img.small(src='/images/card-bg-4x2.5.png')
+            span.subtitle.center download and print pdf for 500
     h2 Other Materials
     .window
       .text-clump

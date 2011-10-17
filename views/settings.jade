@@ -22,30 +22,58 @@
       h2 Basic Info
       .text-clump
         .listing
-          .text-fields
+          .text-fields.start-faded
             .field-row
               .one
                 label Business Name
-                input.new-name
+                input.name(value=vendor.name)
               .one
                 label Address
-                input.new-address
+                input.address(value=vendor.address)
+                span.subtitle just the street address
               .one
                 label Phone Number
-                input.new-contact
+                input.contact(value=vendor.contact)
             .field-row
               .one
                 label Site URL
-                input.new-site_url
+                input.site_url(value=vendor.site_url)
               .one
                 label Yelp URL
-                input.new-yelp_url
+                input.yelp_url(value=vendor.yelp_url)
               .one
                 label Business Hours
-                input.new-hours
+                input.hours(value=vendor.hours)
+                span.subtitle abbreviations like M-F work well
     .window
-      h2 Users
+      h2 User
       .text-clump
+        .text-fields.start-faded
+          .one
+            label Email Address
+            input.email(value=session.user.email)
+          .one
+            label Password
+            input.password(type='password')
+            span.subtitle at least 6 characters
+          .one
+            label Repeat Password
+            input.repeat-password(type='password')
     .window
-      h2 Deals
+      h2 Deal
       .text-clump
+        .text-fields.start-faded
+          ul.deal-list
+            li Buy 
+            li
+              select.buy_qty
+                -for(var i = 1; i<=20; i++)
+                  option(value=i,selected=(deal.buy_qty==i))=i
+            li
+              input.buy_item(value=deal.buy_item)
+              span.subtitle what customers will buy
+            li get 
+            li
+              input.get_item(value=deal.get_item)
+              span.subtitle the reward
+    a.finish-button(href='#') Save

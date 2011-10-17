@@ -1161,10 +1161,11 @@ var getDeal = function(req, res, next){
   if(id=='')
     next()
   else
-    Deal.findById(params.id,function(err, data){
-      req.err = err
-      req.deal = data
-      next()
+    Deal.findById(params.id,function(err, deal){
+      req.err = err;
+      deal.tag_line = deal.default_tag_line;
+      req.deal = deal;
+      next();
     });
 }
 
@@ -1333,7 +1334,7 @@ var validateLogin = function(req, res, next){
 }
 /* Secures an area based on the above session variables */
 var securedAreaVendor = function(req, res, next){
-  if(req.session.user && req.session.user.roles[0].key == 'vendor')
+  if(req.session.user && (req.session.user.roles[0].key == 'vendor' || req.session.user.roles[0].key == 'admin')) 
     next()
   else{
     req.session.previousPath = req.route.path;
@@ -1883,15 +1884,24 @@ var generateDealNameVendorText = function(req, res, next){
   var deal_text = addLineBreaks(
     req.deal.default_tag_line
   );
+  var shoe_string = '';
+  for(var i = 0; i < req.deal.buy_qty; i++){
+    shoe_string+='-';
+  }
+  if(shoe_string.length>10){
+    var p1 = Math.ceil(shoe_string.length/2);
+    shoe_string = shoe_string.substr(0,p1)+'\n'+shoe_string.substr(p1,shoe_string.length); 
+  }
   var vendor_name = addLineBreaks(req.vendor.name);
 
 
   im.convert([
     __dirname+'/public/images/_.png',
     '-background','transparent',
-    '-fill','black',
+    '-fill','#FFFFFF',
     '-font', __dirname+'/LuckiestGuy.ttf',
-    '-size','900x300',
+    '-size','950x167',
+    '-gravity','center',
     'label:'+vendor_name,
     'png:-'
   ],
@@ -1902,23 +1912,140 @@ var generateDealNameVendorText = function(req, res, next){
       '-background','transparent',
       '-fill','black',
       '-font', __dirname+'/LuckiestGuy.ttf',
-      '-size','900x300',
+      '-size','867x146',
+      '-gravity','center',
       'label:'+deal_text,
       'png:-'
     ],
     function(dealImageErr, dealImage, stderr){
 
-      if(!vendorImage || !dealImage){
-        res.send({
-          vendorImageErr: vendorImageErr,
-          dealImageErr: dealImageErr
-        })
-      }else{
-        req.vendorImage = vendorImage;
-        req.dealImage = dealImage;
-        next();
-      }
+      im.convert([
+        __dirname+'/public/images/_.png',
+        '-background','transparent',
+        '-fill','#174016',
+        '-size','950x167',
+        '-interline-spacing','-10',
+        '-kerning','-5',
+        '-font', __dirname+'/LuckiestShoesRegular.ttf',
+        '-gravity','center',
+        'label:'+shoe_string,
+        'png:-'
+      ],
+      function(shoeImageErr, shoeImage, stderr){
+
+        if(!vendorImage || !dealImage || !shoeImage){
+          res.send({
+            vendorImageErr: vendorImageErr,
+            dealImageErr: dealImageErr,
+            showImageErr: showImageErr
+          })
+        }else{
+          req.vendorImage = vendorImage;
+          req.dealImage = dealImage;
+          req.shoeImage = shoeImage;
+          next();
+        }
+      });
     });
+  });
+};
+
+
+
+
+
+// --------------------------------------------------------------------------------------------------------
+// Crop a Larger 4 x 2.5 inch card background image
+// into 6 different images to layout in a 10 up for full bleed
+// --------------------------------------------------------------------------------------------------------
+var generateCardBgs = function(req, res, next){
+
+  // Top Left Image Crop
+  im.convert([
+    __dirname+'/public/images/card-bg-4x2.5.png',
+    '-crop','1125x675-0-0',
+    'png:-'
+  ],
+  function(err, topLeftImage, stderr){
+    if(err)
+      redirectErr(res,err)
+    else{
+      req.topLeftImage = topLeftImage;
+
+      // Top Right Image Crop
+      im.convert([
+        __dirname+'/public/images/card-bg-4x2.5.png',
+        '-crop','1125x675+75-0',
+        'png:-'
+      ],
+      function(err, topRightImage, stderr){
+        if(err)
+          redirectErr(res,err)
+        else{
+          req.topRightImage = topRightImage;
+
+          // Mid Left Image Crop
+          im.convert([
+            __dirname+'/public/images/card-bg-4x2.5.png',
+            '-crop','1125x600-0+75',
+            'png:-'
+          ],
+          function(err, midLeftImage, stderr){
+            if(err)
+              redirectErr(res,err)
+            else{
+              req.midLeftImage = midLeftImage;
+
+              // Mid Right Image Crop
+              im.convert([
+                __dirname+'/public/images/card-bg-4x2.5.png',
+                '-crop','1125x600+75+75',
+                'png:-'
+              ],
+              function(err, midRightImage, stderr){
+                if(err)
+                  redirectErr(res,err)
+                else{
+                  req.midRightImage = midRightImage;
+
+
+                  // Bottom Left Image Crop
+                  im.convert([
+                    __dirname+'/public/images/card-bg-4x2.5.png',
+                    '-crop','1125x675-0+75',
+                    'png:-'
+                  ],
+                  function(err, botLeftImage, stderr){
+                    if(err)
+                      redirectErr(res,err)
+                    else{
+                      req.botLeftImage = botLeftImage;
+
+
+                      // Bottom Right Image Crop
+                      im.convert([
+                        __dirname+'/public/images/card-bg-4x2.5.png',
+                        '-crop','1125x675+75+75',
+                        'png:-'
+                      ],
+                      function(err, botRightImage, stderr){
+                        if(err)
+                          redirectErr(res,err)
+                        else{
+                          req.botRightImage = botRightImage;
+                          next();
+                        }
+                      });
+                    }
+                  });
+
+                }
+              });
+            }
+          });
+        }
+      });
+    }
   });
 };
 
@@ -1931,11 +2058,12 @@ var generateDealNameVendorText = function(req, res, next){
 var qrcode = require(__dirname + '/qrcode.js')
 
 
-app.get('/deal/:id/kicks-:qty.pdf', securedArea, getDeal, getVendorFromDeal, generateKickers, generateDealNameVendorText, function(req, res, next){
+app.get('/deal/:id/kicks-:qty.pdf', securedAreaVendor, getDeal, getVendorFromDeal, generateKickers, generateDealNameVendorText, generateCardBgs, function(req, res, next){
   
   var params = req.params || {}
   
-  var doc = new PDFDocument()
+  var doc = new PDFDocument();
+  var originalStartPoint = [54+252,36-144];
 
   doc.registerFont('Heading Font',__dirname+'/LuckiestGuy.ttf','Luckiest-Guy')
   doc.registerFont('Body Font',__dirname+'/OpenSans-Regular.ttf','Open-Sans-Regular')
@@ -1943,7 +2071,7 @@ app.get('/deal/:id/kicks-:qty.pdf', securedArea, getDeal, getVendorFromDeal, gen
 
   var length = params.qty || 500;
 
-  var originalStartPoint = [54+252,36-144]
+
   var startPoint = originalStartPoint
 
   for(var card = 0; card<length; card++){
@@ -1967,24 +2095,40 @@ app.get('/deal/:id/kicks-:qty.pdf', securedArea, getDeal, getVendorFromDeal, gen
     }
 
     setDoc()
-    doc.image(__dirname + '/public/images/bizbg.png',0,0,{fit:[252,144]})
+    var pos = card%10;
+    if(pos==0)
+      doc.image(new Buffer(fixBrokenPNG(req.topLeftImage),'binary'),offset[0]-18,offset[1]-18,{fit:[270,162]})
+    else if(pos==1)
+      doc.image(new Buffer(fixBrokenPNG(req.topRightImage),'binary'),offset[0],offset[1]-18,{fit:[270,162]})
+    else if(pos==8)
+      doc.image(new Buffer(fixBrokenPNG(req.botLeftImage),'binary'),offset[0]-18,offset[1],{fit:[270,162]})
+    else if(pos==9)
+      doc.image(new Buffer(fixBrokenPNG(req.botRightImage),'binary'),offset[0],offset[1],{fit:[270,162]})
+    else if(pos%2==0)
+      doc.image(new Buffer(fixBrokenPNG(req.midLeftImage),'binary'),offset[0]-18,offset[1],{fit:[270,144]})
+    else if(pos%2==1)
+      doc.image(new Buffer(fixBrokenPNG(req.midRightImage),'binary'),offset[0],offset[1],{fit:[270,144]})
+    //doc.image(__dirname + '/public/images/bizbg.png',0,0,{fit:[252,144]})
 
-    offset = [offset[0]+18,offset[1]+24]
+
+
+    offset = [offset[0]+9,offset[1]+24];
+    setDoc();
+    doc.image(new Buffer(fixBrokenPNG(req.vendorImage),'binary'),0,0,{fit:[165,40]});
+
+    offset = [offset[0]+0,offset[1]+36];
     setDoc()
+    doc.image(new Buffer(fixBrokenPNG(req.dealImage),'binary'),0,0,{fit:[165,40]})
 
-    doc.image(new Buffer(fixBrokenPNG(req.vendorImage),'binary'),0,0,{fit:[130,60]})
-
-    offset = [offset[0]+0,offset[1]+44]
-    setDoc()
-    doc.image(new Buffer(fixBrokenPNG(req.dealImage),'binary'),0,0,{fit:[100,50]})
-
+    offset = [offset[0]+0,offset[1]+36];
+    setDoc();
+    doc.image(new Buffer(fixBrokenPNG(req.shoeImage),'binary'),0,0,{fit:[165,40]});
 
 
-
-    offset = [offset[0]+135,offset[1]-44]
+    offset = [offset[0]+172,offset[1]-59];
     var ecclevel = 4;
-    var wd = 125;
-    var ht = 125;
+    var wd = 90;
+    var ht = 90;
 
     var string = 'http://kckb.ac/k'+req.strings[card];
     string = string.substr(0,30)
@@ -2039,10 +2183,7 @@ app.get('/deal/:id/kicks-:qty.pdf', securedArea, getDeal, getVendorFromDeal, gen
 })
 
 app.get('/deal/:id/kicker.pdf', securedArea, getDeal, getVendorFromDeal, generateKickers, generateDealNameVendorText, function(req, res, next){
-
-
   var doc = new PDFDocument()
-
   doc.registerFont('Heading Font',__dirname+'/LuckiestGuy.ttf','Luckiest-Guy')
   doc.registerFont('Body Font',__dirname+'/OpenSans-Regular.ttf','Open-Sans-Regular')
   doc.image = myImage;
@@ -2054,7 +2195,6 @@ app.get('/deal/:id/kicker.pdf', securedArea, getDeal, getVendorFromDeal, generat
     doc.y = offset[1]
   }
   setDoc()
-
   doc.image(__dirname + '/public/images/kicker-bg-opaque.png',0,0,{width:612,height:792})
 
   offset = [340,64]
@@ -2064,12 +2204,6 @@ app.get('/deal/:id/kicker.pdf', securedArea, getDeal, getVendorFromDeal, generat
   offset = [340,132];
   setDoc();
   doc.image(new Buffer(fixBrokenPNG(req.dealImage),'binary'),0,0,{fit:[180,80]})
-
-
-
-
-
-
 
   offset = [335,230]
   var ecclevel = 4;
@@ -2096,21 +2230,81 @@ app.get('/deal/:id/kicker.pdf', securedArea, getDeal, getVendorFromDeal, generat
           if( qf[j*width+i] )
               doc.rect(px*(4+i)+offset[0],px*(4+j)+offset[1],px,px).fill()   
 
-
-
-  /* Back Side */
+  /* Back Side 
   doc.addPage();
 
   offset = [0,0];
   setDoc()
   doc.image(__dirname + '/public/images/kicker-back.png',0,0,{width:612,height:792});
 
-  var output = doc.output()
+  */
+  var output = doc.output();
   res.send(new Buffer(output,'binary'),{
     'Content-Type' : 'application/pdf'
-  })
+  });
 
-})
+});
+
+
+
+app.get('/deal/:id/kicker-4x6.pdf', securedAreaVendor, getDeal, getVendorFromDeal, generateKickers, generateDealNameVendorText, function(req, res, next){
+  var doc = new PDFDocument({size:[288,432]});
+  doc.registerFont('Heading Font',__dirname+'/LuckiestGuy.ttf','Luckiest-Guy')
+  doc.registerFont('Body Font',__dirname+'/OpenSans-Regular.ttf','Open-Sans-Regular')
+
+  doc.image = myImage;
+  var offset = [0,0];
+  var setDoc = function(){
+    doc.x = offset[0]
+    doc.y = offset[1]
+  }
+  setDoc()
+  doc.image(__dirname + '/public/images/kicker-bg-4x6.png',0,0,{width:288,height:432})
+
+  offset = [30,70]
+  setDoc()
+  doc.image(new Buffer(fixBrokenPNG(req.vendorImage),'binary'),0,0,{fit:[228,40]})
+
+  offset = [40,115];
+  setDoc();
+  doc.image(new Buffer(fixBrokenPNG(req.dealImage),'binary'),0,0,{fit:[208,35]})
+
+  offset = [30,162];
+  setDoc();
+  doc.image(new Buffer(fixBrokenPNG(req.shoeImage),'binary'),0,0,{fit:[228,40]})
+
+  offset = [50,197];
+  var ecclevel = 4;
+  var wd = 220;
+  var ht = 220;
+
+  var string = 'http://kckb.ac/k'+req.strings[0];
+  
+  string = string.substr(0,30)
+  var qrCode = qrcode.genframe(string);
+  var qf = qrCode.qf
+  var width = qrCode.width
+
+  var i,j;
+  var px = wd;
+  if( ht < wd )
+      px = ht;
+  px /= width+10;
+  px=Math.round(px - 0.5);
+
+  doc.fillColor('black')
+  for( i = 0; i < width; i++ )
+      for( j = 0; j < width; j++ )
+          if( qf[j*width+i] )
+              doc.rect(px*(4+i)+offset[0],px*(4+j)+offset[1],px,px).fill()   
+
+  var output = doc.output();
+  res.send(new Buffer(output,'binary'),{
+    'Content-Type' : 'application/pdf'
+  });
+
+});
+
 
 
 
@@ -2434,7 +2628,7 @@ app.post('/login', validateLogin, function(req, res, next){
       err: req.err
     })
   else{
-    if(typeof(req.session.previousPath)!='undefined'){
+    if(typeof(req.session.previousPath)!='undefined' && !req.session.previousPath.match(/:/)){
       var myPreviousPath = req.session.previousPath
       res.send('',{
           Location:myPreviousPath
@@ -2468,20 +2662,65 @@ app.post('/login', validateLogin, function(req, res, next){
 
 /**********************************
  * 
+ * Error Page
+ * 
+ * 
+ **********************************/
+app.get('/error', function(req, res){
+  res.render('error',{
+    title: 'Kickbackcard.com : Our apologies'
+  })
+});
+var redirectErr = function(res,err){
+  res.send('',{
+      Location:'/error'
+  },302);
+}
+
+
+var findVendorAndFirstDeal = function(req,res, next){
+  Vendor.findById(req.session.user.vendor_id,function(err,vendor){
+    if(err || !vendor || !vendor.deal_ids || !vendor.deal_ids.length)
+      redirectErr(res);
+    else{
+      req.vendor = vendor;
+      Deal.findById(vendor.deal_ids[0],function(err,deal){
+        if(err || !deal)
+          redirectErr(res);
+        else{
+          deal.tag_line = deal.default_tag_line;
+          req.deal = deal; 
+          next();
+        }
+      })
+    }
+  })
+};
+
+/**********************************
+ * 
  * Vendor Login Navigation
  * 
  * After logging in - dashboard / settings / etc
  * 
  * 
  **********************************/
-app.get('/settings', securedAreaVendor, function(req, res, next){
+app.get('/settings', securedAreaVendor, findVendorAndFirstDeal, function(req, res, next){
   res.render('settings', {
-    title: 'Kickbackcard.com : Vendor Settings'
+    title: 'Kickbackcard.com : Vendor Settings',
+    vendor: req.vendor,
+    deal: req.deal,
+    session: req.session,
+    scripts: [
+      '/javascripts/settings.js'
+    ]
   })
 });
-app.get('/print', securedAreaVendor, function(req, res, next){
+app.get('/print', securedAreaVendor,findVendorAndFirstDeal, function(req, res, next){
   res.render('print', {
-    title: 'Kickbackcard.com : Print It'
+    title: 'Kickbackcard.com : Print It',
+    vendor: req.vendor,
+    deal: req.deal
   })
 });
 app.get('/dashboard', securedAreaVendor, function(req,res, next){
