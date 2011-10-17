@@ -152,7 +152,7 @@ $(function(){
                       previews.append('<a href="'+url+'" target="_blank">Download</a><iframe src="'+url+'" />');
                     }
                     if(kicker){
-                      var url = '/deal/'+$row.attr('id')+'/kicker.pdf';
+                      var url = '/deal/'+$row.attr('id')+'/kicker-4x6.pdf';
                       previews.append('<a href="'+url+'" target="_blank">Download</a><iframe src="'+url+'" />');
                     }
 
