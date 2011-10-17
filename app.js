@@ -432,6 +432,8 @@ app.post('/sign-up',function(req,res,next){
   signup.address = req.body.address;
   signup.coordinates = req.body.coordinates;
   signup.contact = req.body.contact;
+  if(!req.body.site_url.match(/^http:\/\//))
+    req.body.site_url = 'http://'+req.body.site_url;
   signup.site_url = req.body.site_url;
   signup.yelp_url = req.body.yelp_url;
   signup.hours = req.body.hours;
@@ -1603,6 +1605,8 @@ app.post('/saveVendor', securedFunction, function(req, res, next){
       vendor.name = params.name;
       vendor.coordinates = [latitude||0, longitude||0];
       vendor.address = formattedAddress || params.address;
+      if(!req.body.site_url.match(/^http:\/\//))
+        req.body.site_url = 'http://'+req.body.site_url;
       vendor.site_url = params.site_url;
       vendor.yelp_url = params.yelp_url;
       vendor.contact = params.contact;
@@ -2896,6 +2900,8 @@ app.post('/settings', securedAreaVendor, function(req,res,next){
               vendor.name = req.body.name;
               vendor.address = req.body.address;
               vendor.contact = req.body.contact;
+              if(!req.body.site_url.match(/^http:\/\//))
+                req.body.site_url = 'http://'+req.body.site_url;
               vendor.site_url = req.body.site_url;
               vendor.yelp_url = req.body.yelp_url;
               vendor.hours = req.body.hours;
@@ -2923,19 +2929,6 @@ app.post('/settings', securedAreaVendor, function(req,res,next){
       }); 
     }
   });
-  /*
-    name: $('.name').val(),
-    address: $('.address').val(),
-    contact: $('.contact').val(),
-    site_url: $('.site_url').val(),
-    yelp_url: $('.yelp_url').val(),
-    hours: $('.hours').val(),
-    buy_qty: $('.buy_qty').val(),
-    buy_item: $('.buy_item').val(),
-    get_item: $('.get_item').val(),
-    email: $('.email').val(),
-    password: $('.password').val()
-  */
 });
 
 
