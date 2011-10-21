@@ -1,7 +1,9 @@
 
-/**
+/*************************
+ * 
  * Module dependencies.
- */
+ * 
+ *************************/
 
 var express = require('express');
 
@@ -14,7 +16,6 @@ var http = require('http');
  * Generic Libraries Setup
  * 
  * geo, pdfkit, nodemailer, bcrypt and mongoose
- * 
  * 
  **********************************/
 
